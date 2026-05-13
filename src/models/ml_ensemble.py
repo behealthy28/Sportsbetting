@@ -186,14 +186,14 @@ def build_tennis_features(p1_data: dict, p2_data: dict, context: dict = None) ->
         safe(p2_data, "overall_win_rate", 0.5),                       # 5: p2 overall form
         (safe(p1_data, "recent_rank", 50) - safe(p2_data, "recent_rank", 50)) / 100.0,  # 6: rank diff
         safe(p1_surf, "first_serve_pct", 0.62) - safe(p2_surf, "first_serve_pct", 0.62),  # 7: serve diff
-        0.0,                                                           # 8: break pt save diff (approx)
+        safe(p1_surf, "bp_save_rate", 0.62) - safe(p2_surf, "bp_save_rate", 0.62),    # 8: break pt save diff
         safe(p1_surf, "ace_rate", 0.05) - safe(p2_surf, "ace_rate", 0.05),  # 9: ace rate diff
         safe(ctx, "recent_result_p1", 0.5),                           # 10: recent tourney result
         safe(ctx, "days_rest_diff", 0) / 7.0,                        # 11: rest diff
         safe(ctx, "age_diff", 0) / 10.0,                             # 12: age diff
         float(ctx.get("injury_p1", 0)),                               # 13: p1 injury flag
         float(ctx.get("injury_p2", 0)),                               # 14: p2 injury flag
-        0.0,                                                           # 15: ranking trend
+        safe(p1_data, "ranking_trend", 0.0),                          # 15: ranking trend (+ = improving)
         safe(p1_data, "overall_win_rate", 0.5) - safe(p2_data, "overall_win_rate", 0.5),  # 16: career diff
         safe(ctx, "tournament_importance", 0.85),                     # 17: tournament weight
     ], dtype=np.float32)

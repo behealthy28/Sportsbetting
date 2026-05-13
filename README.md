@@ -8,16 +8,18 @@ Multi-model sports prediction tool that generates true probabilities and calcula
 
 ## Sports supported
 
-| Sport | Accuracy target | Key data source |
-|-------|----------------|-----------------|
-| ⚽ Football / Soccer | ~63% | FBRef, Understat (xG), ESPN |
-| 🎾 Tennis | ~68% | Jeff Sackmann ATP/WTA dataset |
-| 🥊 UFC / MMA | ~63% | UFCStats.com (official) |
-| 🥊 Boxing | ~62% | Seeded ELO + BoxRec |
-| 🏏 Cricket | ~66% | CricSheet ball-by-ball data |
-| 🎯 Darts | ~67% | PDC world rankings |
-| 🏸 Badminton | ~64% | BWF world rankings |
-| 🏓 Table Tennis | ~64% | ITTF rankings |
+| Sport | Model | Key data source |
+|-------|-------|-----------------|
+| ⚽ Football / Soccer | Dixon-Coles (xG) + ELO | Understat (xG), ESPN, ClubElo |
+| 🎾 Tennis | Surface-adjusted ELO + H2H | Jeff Sackmann ATP/WTA dataset |
+| 🥊 UFC / MMA | Striking/grappling stats + ELO | UFCStats.com (official) |
+| 🥊 Boxing | ELO + style heuristics | Seeded ELO + BoxRec |
+| 🏏 Cricket | Dixon-Coles + format stats | CricSheet ball-by-ball data |
+| 🎯 Darts | ELO (PDC rankings seed) | PDC world rankings |
+| 🏸 Badminton | ELO (BWF rankings seed) | BWF world rankings |
+| 🏓 Table Tennis | ELO (ITTF rankings seed) | ITTF rankings |
+
+> No backtesting has been run on this codebase. The model outputs probabilities based on real data and established methods (Dixon-Coles, ELO, quarter-Kelly), but predicted accuracy figures have not been validated. Treat all edge numbers as model estimates, not guaranteed results.
 
 ---
 
@@ -98,14 +100,14 @@ Thresholds:
 
 ---
 
-## Accuracy targets
+## Model design rationale
 
-The 65%+ accuracy comes from four sources of alpha:
+Four reasons the model structure is reasonable, though no accuracy claims are made:
 
-1. **Dixon-Coles xG correction** — expected goals are more predictive than actual goals; corrects for lucky/unlucky scorelines
-2. **Surface-adjusted ELO** (tennis) — Djokovic's grass ELO is very different from his clay ELO; most markets use flat ratings
-3. **Injury/news timing** — model reads Google News RSS; Polymarket markets often take 24–48h to reprice on new injury news
-4. **Statistical differentials** (UFC) — UFCStats strike accuracy × defense vs opponent patterns are underweighted by casual bettors
+1. **Dixon-Coles xG** — expected goals regress to true team quality faster than actual scorelines; using xG instead of goals is mathematically sounder
+2. **Surface-adjusted ELO** (tennis) — a player's hard-court ELO and clay-court ELO differ substantially; flat ELO ignores this
+3. **Quarter-Kelly sizing** — full Kelly is theoretically optimal but requires a perfectly calibrated model; quarter-Kelly is more conservative and robust to calibration errors
+4. **Live ELO from ClubElo/eloratings.net** — ratings are fetched live rather than static seeds, so recent form is reflected
 
 ---
 

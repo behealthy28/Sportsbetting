@@ -27,41 +27,28 @@ class FootballPredictor(AbstractSport):
         "afcon", "friendly",
     ]
 
-    # National team ELO seeds (FIFA/ELO-based)
-    TEAM_ELO = {
-        "argentina": 2085, "france": 2052, "brazil": 2035, "spain": 2015,
-        "portugal": 1987, "england": 1963, "netherlands": 1941, "croatia": 1921,
-        "italy": 1875, "morocco": 1831, "germany": 1907, "belgium": 1879,
-        "manchester city": 1920, "real madrid": 1930, "barcelona": 1895,
-        "liverpool": 1870, "arsenal": 1855, "manchester united": 1820,
-        "bayern munich": 1900, "borussia dortmund": 1850, "psg": 1870,
-        "juventus": 1840, "inter milan": 1860, "ac milan": 1845,
-        "atletico madrid": 1855, "chelsea": 1830, "tottenham": 1815,
-    }
-
     def predict(self, entity1: str, entity2: str, date: str, context: dict) -> PredictionResult:
         competition = context.get("competition", "")
         is_neutral = context.get("is_neutral", False)
         comp_weight = _get_comp_weight(competition)
 
-        # 1. Fetch team data
+        # 1. Fetch team data — Understat (xG) → ESPN → ELO-derived
         home_data = fbref.get_team_data(entity1)
         away_data = fbref.get_team_data(entity2)
         h2h = fbref.get_h2h(entity1, entity2)
-        sources = ["FBRef/Understat", "H2H records"]
+        sources = list(set(
+            home_data.get("data_sources", []) + away_data.get("data_sources", [])
+        )) or ["FBRef/ESPN"]
 
         # 2. News sentiment
         home_news = news.get_sentiment(entity1)
         away_news = news.get_sentiment(entity2)
         all_flags = home_news.get("flags", []) + away_news.get("flags", [])
-        if home_news.get("flags") or away_news.get("flags"):
+        if all_flags:
             sources.append("Google News RSS")
 
-        # 3. ELO prediction
+        # 3. ELO — live ratings from ClubElo/eloratings.net via home_data["elo"]
         elo_predictor = elo_module.EloPredictor(default_elo=1700)
-        for name, elo in self.TEAM_ELO.items():
-            elo_predictor.set(name, elo)
-        # Also set from team data if available
         if home_data.get("elo"):
             elo_predictor.set(entity1.lower(), home_data["elo"])
         if away_data.get("elo"):
@@ -69,24 +56,35 @@ class FootballPredictor(AbstractSport):
 
         home_adv = 0 if is_neutral else HOME_ADVANTAGE_ELO
         elo_probs = elo_predictor.predict(entity1.lower(), entity2.lower(), home_advantage=home_adv)
-        elo_result = {"home_win": elo_probs["a_win"], "draw": elo_probs["draw"], "away_win": elo_probs["b_win"]}
+        elo_result = {
+            "home_win": elo_probs["a_win"],
+            "draw": elo_probs["draw"],
+            "away_win": elo_probs["b_win"],
+        }
 
-        # 4. Dixon-Coles prediction
+        # 4. Dixon-Coles — prefer xG (expected goals) over actual goals when available.
+        # xG is more predictive than goals scored because it removes luck from finishing.
         injury_adj_home = context.get("home_key_players", 1.0)
         injury_adj_away = context.get("away_key_players", 1.0)
 
+        home_attack_rate = home_data.get("avg_xg") or home_data.get("avg_goals", 1.35)
+        away_attack_rate = away_data.get("avg_xg") or away_data.get("avg_goals", 1.35)
+        home_concede_rate = home_data.get("avg_xga") or home_data.get("avg_conceded", 1.20)
+        away_concede_rate = away_data.get("avg_xga") or away_data.get("avg_conceded", 1.20)
+        using_xg = bool(home_data.get("avg_xg") or away_data.get("avg_xg"))
+
         dc_result = dixon_coles.quick_predict(
-            home_goals_avg=home_data.get("avg_goals", 1.35),
-            away_goals_avg=away_data.get("avg_goals", 1.35),
-            home_conceded_avg=home_data.get("avg_conceded", 1.20),
-            away_conceded_avg=away_data.get("avg_conceded", 1.20),
+            home_goals_avg=home_attack_rate,
+            away_goals_avg=away_attack_rate,
+            home_conceded_avg=home_concede_rate,
+            away_conceded_avg=away_concede_rate,
             league_avg_goals=1.35,
             neutral=is_neutral,
             injury_adj_home=injury_adj_home,
             injury_adj_away=injury_adj_away,
         )
 
-        # 5. ML ensemble
+        # 5. ML ensemble (only used when pre-trained models exist in data/models/)
         ctx_dict = {
             "h2h_home_win_rate": h2h.get("team1_win_rate", 0.35),
             "home_key_players": injury_adj_home,
@@ -99,11 +97,14 @@ class FootballPredictor(AbstractSport):
         features = ml_ensemble.build_football_features(home_data, away_data, ctx_dict)
         ml_model = ml_ensemble.MLEnsemble(sport="football", n_classes=3)
         ml_loaded = ml_model.load()
+        ml_result = None
         if ml_loaded:
             ml_dict = ml_model.predict_dict(features, ["away_win", "draw", "home_win"])
-            ml_result = {"home_win": ml_dict["home_win"], "draw": ml_dict["draw"], "away_win": ml_dict["away_win"]}
-        else:
-            ml_result = None
+            ml_result = {
+                "home_win": ml_dict["home_win"],
+                "draw": ml_dict["draw"],
+                "away_win": ml_dict["away_win"],
+            }
 
         # 6. Ensemble blend
         probs_list = [dc_result, elo_result]
@@ -120,9 +121,8 @@ class FootballPredictor(AbstractSport):
 
         # 8. Market odds
         mkt = market.get_market_odds(entity1, entity2, "football")
-        sources.append("Polymarket/Kalshi" if mkt else "No market found")
-
-        # Remap market keys
+        if mkt:
+            sources.append("Polymarket/Kalshi")
         market_mapped = None
         if mkt:
             market_mapped = {
@@ -145,6 +145,11 @@ class FootballPredictor(AbstractSport):
         # 11. Key factors
         factors = _build_factors(home_data, away_data, h2h, entity1, entity2, competition)
 
+        dc_label = "Dixon-Coles (xG)" if using_xg else "Dixon-Coles"
+        breakdown = {dc_label: dc_result, "ELO (ClubElo/eloratings)": elo_result}
+        if ml_result:
+            breakdown["ML Ensemble"] = ml_result
+
         return PredictionResult(
             sport="Football",
             entity1=entity1,
@@ -159,12 +164,8 @@ class FootballPredictor(AbstractSport):
             confidence=calibrator.confidence_score(blended),
             key_factors=factors,
             news_flags=all_flags[:5],
-            data_sources=sources,
-            model_breakdown={
-                "Dixon-Coles": dc_result,
-                "ELO": elo_result,
-                "ML Ensemble": ml_result,
-            },
+            data_sources=list(dict.fromkeys(sources)),
+            model_breakdown=breakdown,
             venue="Neutral" if is_neutral else f"{entity1} home",
             competition=competition,
             is_neutral=is_neutral,
