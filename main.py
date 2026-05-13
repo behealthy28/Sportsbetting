@@ -38,6 +38,8 @@ def _banner():
             ("    data <name>    ", "white"), ("— show raw data for a team/player before betting\n", "dim"),
             ("    today          ", "white"), ("— list today's & upcoming fixtures\n", "dim"),
             ("    dashboard      ", "white"), ("— live Bloomberg-style terminal (4-panel)\n", "dim"),
+            ("    autotrade      ", "white"), ("— one-shot: scan fixtures and auto-log dry-run bets with strong edge\n", "dim"),
+            ("    dashboard auto ", "white"), ("— dashboard + continuous auto-trading (dry-run)\n", "dim"),
             ("    ask <query>    ", "white"), ("— predict + LLM verdict (BET / SKIP / MARGINAL)\n", "dim"),
             ("    place <id>     ", "white"), ("— submit a logged real bet to Polymarket\n", "dim"),
             ("    sim <id>       ", "white"), ("— dry-run: simulate Polymarket execution (no real money)\n", "dim"),
@@ -197,6 +199,69 @@ def _show_fixtures(days_ahead: int = 3):
     console.print(f"[dim]  {len(fixtures)} fixtures found  ·  type a match name to predict it[/dim]\n")
 
 
+def _run_autotrade():
+    """One-shot autotrade scan: fetch fixtures, predict, auto-log qualifying dry-run bets."""
+    from src.data.scrapers.fixtures import get_todays_fixtures
+    from src.autotrader import scan_and_trade, MIN_EDGE_PCT, MIN_KELLY_PCT, MAX_DAILY_TRADES
+    from rich.table import Table
+    from rich import box as rich_box
+
+    console.print(
+        f"\n[dim]  Scanning fixtures for edges ≥ {MIN_EDGE_PCT}% · Kelly ≥ {MIN_KELLY_PCT}% · max {MAX_DAILY_TRADES}/day …[/dim]"
+    )
+    fixtures = get_todays_fixtures(days_ahead=3)
+    if not fixtures:
+        console.print("[yellow]  No fixtures found.[/yellow]\n")
+        return
+
+    console.print(f"[dim]  {len(fixtures)} fixtures loaded — running predictions…[/dim]")
+    new_trades = scan_and_trade(fixtures, dry_run=True)
+
+    if not new_trades:
+        console.print(
+            Panel(
+                Text("  No qualifying edges found in current fixtures.\n"
+                     "  Try again later or lower AUTOTRADE_MIN_EDGE in .env.", style="dim"),
+                title="[dim]Autotrade — no bets[/dim]",
+                border_style="dim",
+            )
+        )
+        return
+
+    table = Table(box=rich_box.SIMPLE, show_header=True, header_style="bold dim", padding=(0, 1))
+    table.add_column("ID",    style="dim",       width=8)
+    table.add_column("Match",                    min_width=22)
+    table.add_column("Bet",                      min_width=12)
+    table.add_column("Edge%", justify="right",   width=6)
+    table.add_column("Kelly%", justify="right",  width=7)
+    table.add_column("Stake",  justify="right",  width=5)
+
+    for t in new_trades:
+        edge = t.get("edge_pct")
+        edge_str = f"+{edge:.1f}" if edge else "—"
+        edge_style = "bright_green" if (edge or 0) >= 5 else "yellow"
+        table.add_row(
+            t["id"],
+            f"{t['entity1']} v {t['entity2']}",
+            t.get("bet_label", "—"),
+            f"[{edge_style}]{edge_str}[/{edge_style}]",
+            str(t.get("kelly_stake_pct") or "—"),
+            str(t.get("stake") or "—"),
+        )
+
+    console.print(
+        Panel(
+            table,
+            title=f"[bold bright_green]  Autotrade — {len(new_trades)} dry-run bet{'s' if len(new_trades) != 1 else ''} logged[/bold bright_green]",
+            border_style="bright_green",
+            padding=(0, 1),
+        )
+    )
+    console.print(
+        f"[dim]  Run 'trades' to review · 'sim <id>' to simulate execution · 'settle <id>' when results are in[/dim]\n"
+    )
+
+
 def _settle(args: str):
     from src import trades as trade_log
     from src.display import terminal
@@ -263,6 +328,15 @@ def _dispatch(line: str) -> bool:
     if low in ("dashboard", "live", "monitor", "terminal"):
         from src.dashboard import run_dashboard
         run_dashboard(scan_interval=60.0, days_ahead=2)
+        return True
+
+    if low in ("dashboard auto", "dashboard autotrade", "live auto"):
+        from src.dashboard import run_dashboard
+        run_dashboard(scan_interval=60.0, days_ahead=2, autotrade=True)
+        return True
+
+    if low in ("autotrade", "autobet", "auto"):
+        _run_autotrade()
         return True
 
     if low.startswith("ask "):
@@ -348,6 +422,11 @@ def main():
         elif low in ("dashboard", "live", "monitor", "terminal"):
             from src.dashboard import run_dashboard
             run_dashboard(scan_interval=60.0, days_ahead=2)
+        elif low in ("dashboard auto", "dashboard autotrade", "live auto"):
+            from src.dashboard import run_dashboard
+            run_dashboard(scan_interval=60.0, days_ahead=2, autotrade=True)
+        elif low in ("autotrade", "autobet", "auto"):
+            _run_autotrade()
         elif low.startswith("ask "):
             from src.verdict import ask_about
             ask_about(query.split(" ", 1)[1].strip())

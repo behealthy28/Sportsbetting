@@ -96,6 +96,9 @@ class DashboardState:
         self.alerts: list = []        # last alerts from watchlist
         self.last_alert_cycle = -999
         self.last_error: Optional[str] = None
+        # Autotrade
+        self.autotrade_enabled: bool = False
+        self.autotrade_session: list = []  # trades logged this dashboard session
         # Per-source freshness: source -> (timestamp, status)
         self.sources: dict = {
             "Fixtures": (0.0, "idle"),
@@ -103,6 +106,7 @@ class DashboardState:
             "Kalshi": (0.0, "idle"),
             "Pinnacle": (0.0, "idle"),
             "Watchlist": (0.0, "idle"),
+            "Autotrader": (0.0, "idle"),
         }
 
     def mark_source(self, name: str, status: str = "ok"):
@@ -231,6 +235,22 @@ def _refresh_alerts():
         state.mark_source("Watchlist", "err")
 
 
+def _run_autotrader():
+    """Check current fixtures for qualifying dry-run trades and log them."""
+    if not state.fixtures:
+        return
+    state.scan_status = "Autotrading..."
+    try:
+        from src.autotrader import scan_and_trade
+        new_trades = scan_and_trade(state.fixtures, dry_run=True)
+        if new_trades:
+            state.autotrade_session.extend(new_trades)
+            state.mark_source("Autotrader", "ok")
+    except Exception as e:
+        state.last_error = f"autotrade: {e}"
+        state.mark_source("Autotrader", "err")
+
+
 def run_scan_cycle(days_ahead: int, fixture_refresh_every: int = 5):
     """One full scan: optionally refresh fixtures + always refresh a batch of predictions."""
     state.cycle += 1
@@ -240,6 +260,9 @@ def run_scan_cycle(days_ahead: int, fixture_refresh_every: int = 5):
         _fetch_fixtures(days_ahead)
 
     _refresh_predictions(batch_size=4)
+
+    if state.autotrade_enabled:
+        _run_autotrader()
 
     if state.cycle - state.last_alert_cycle >= 4:
         _refresh_alerts()
@@ -315,6 +338,16 @@ def render_status() -> Panel:
     table.add_row("Cycle", f"#{state.cycle}" if state.cycle else "—")
     table.add_row("Activity", f"[{DIM}]{state.scan_status[:24]}[/{DIM}]")
     table.add_row("Mode", _mode_badge())
+
+    # Autotrade status
+    if state.autotrade_enabled:
+        from src.autotrader import summary_line, MAX_DAILY_TRADES
+        at_badge = f"[{ACCENT}]ON[/{ACCENT}]"
+        at_detail = f"[{WARN}]{summary_line()}[/{WARN}]  [{DIM}]max {MAX_DAILY_TRADES}/day[/{DIM}]"
+    else:
+        at_badge = f"[{DIM}]OFF[/{DIM}]"
+        at_detail = f"[{DIM}]type 'autotrade on' to enable[/{DIM}]"
+    table.add_row(f"[bold]Autotrade[/bold]", f"{at_badge}  {at_detail}")
     table.add_row("", "")
 
     # Per-source freshness dots
@@ -562,10 +595,11 @@ def render_footer() -> Panel:
     else:
         ticker = f"[{DIM}]> waiting for alerts…[/{DIM}]"
 
+    at_tag = f"  [{WARN}]AUTO[/{WARN}]" if state.autotrade_enabled else ""
     grid.add_row(
         ticker,
         f"[{DIM}]Ctrl+C to exit[/{DIM}]",
-        f"{_mode_badge()}  [{DIM}]·[/{DIM}]  cycle [{ACCENT}]{state.cycle}[/{ACCENT}]  ",
+        f"{_mode_badge()}{at_tag}  [{DIM}]·[/{DIM}]  cycle [{ACCENT}]{state.cycle}[/{ACCENT}]  ",
     )
     return Panel(grid, style=BRAND, box=box.HEAVY)
 
@@ -581,8 +615,9 @@ def _render_all(layout: Layout):
     layout["footer"].update(render_footer())
 
 
-def run_dashboard(scan_interval: float = 60.0, days_ahead: int = 2):
+def run_dashboard(scan_interval: float = 60.0, days_ahead: int = 2, autotrade: bool = False):
     """Launch the live dashboard. Refreshes a batch of predictions every scan_interval seconds."""
+    state.autotrade_enabled = autotrade
     layout = make_layout()
     _render_all(layout)
 
