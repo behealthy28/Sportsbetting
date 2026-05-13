@@ -486,16 +486,17 @@ def render_trades() -> Panel:
 
     table = Table(show_header=True, box=box.SIMPLE_HEAD, expand=True, padding=(0, 1))
     table.add_column("Time", width=10, style=MUTED)
-    table.add_column("Match", max_width=24)
+    table.add_column("Match", max_width=22)
     table.add_column("Spt", width=3, style=MUTED)
-    table.add_column("Bet", max_width=14)
+    table.add_column("Bet", max_width=12)
     table.add_column("Stake", justify="right", width=5)
     table.add_column("Edge%", justify="right", width=6)
+    table.add_column("Mode", justify="center", width=4)
     table.add_column("Status", justify="center", width=7)
     table.add_column("P&L", justify="right", width=7)
 
     if not all_trades:
-        table.add_row(f"[{DIM}]No trades yet — log via 'predict' → confirm[/{DIM}]", "", "", "", "", "", "", "")
+        table.add_row(f"[{DIM}]No trades yet — log via 'predict' → confirm[/{DIM}]", "", "", "", "", "", "", "", "")
     else:
         # newest first
         for t in list(reversed(all_trades))[:10]:
@@ -507,6 +508,8 @@ def render_trades() -> Panel:
             edge_pct = t.get("edge_pct")
             edge_str = "—" if edge_pct is None else f"{edge_pct:+.1f}"
             status = t.get("status", "pending")
+            is_dry = t.get("is_dry_run", False)
+            mode_str = f"[{WARN}]SIM[/{WARN}]" if is_dry else f"[{DIM}]LIVE[/{DIM}]"
             if status == "won":
                 status_str = f"[{ACCENT}]✓ WON[/{ACCENT}]"
             elif status == "lost":
@@ -517,22 +520,29 @@ def render_trades() -> Panel:
             if pnl is None:
                 pnl_str = f"[{DIM}]—[/{DIM}]"
             elif pnl >= 0:
-                pnl_str = f"[{ACCENT}]+{pnl:.1f}[/{ACCENT}]"
+                pnl_str = f"[{ACCENT}]+{pnl:.1f}[/{ACCENT}]" if not is_dry else f"[{WARN}]+{pnl:.1f}[/{WARN}]"
             else:
                 pnl_str = f"[{LOSS}]{pnl:.1f}[/{LOSS}]"
 
             table.add_row(
                 ts,
-                match[:24],
+                match[:22],
                 sport_tag,
-                (t.get("bet_label", "") or "")[:14],
+                (t.get("bet_label", "") or "")[:12],
                 f"{stake:.0f}",
                 edge_str,
+                mode_str,
                 status_str,
                 pnl_str,
             )
 
-    title = f"[bold]TRADE LOG + P&L[/bold] · {s['total']} bets · {s['win_rate']:.0f}% WR · ROI {s['roi']:+.1f}% · P&L {s['total_pnl']:+.1f}"
+    dry_count = sum(1 for t in all_trades if t.get("is_dry_run"))
+    live_count = s["total"] - dry_count
+    title = (
+        f"[bold]TRADE LOG + P&L[/bold] · "
+        f"{live_count} real · [{WARN}]{dry_count} sim[/{WARN}] · "
+        f"{s['win_rate']:.0f}% WR · ROI {s['roi']:+.1f}% · P&L {s['total_pnl']:+.1f}"
+    )
     return Panel(table, title=title, border_style=BRAND, box=box.ROUNDED)
 
 

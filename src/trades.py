@@ -32,6 +32,7 @@ def log(
     bet_label: str,
     stake: float,
     odds: Optional[float],
+    is_dry_run: bool = False,
 ) -> dict:
     """Add a new pending trade from a PredictionResult."""
     edge_info = (result.edges or {}).get(bet_outcome, {})
@@ -56,6 +57,7 @@ def log(
         "odds": odds,
         "status": "pending",
         "pnl": None,
+        "is_dry_run": is_dry_run,
     }
 
     trades = load()

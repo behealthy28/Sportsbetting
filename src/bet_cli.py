@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import datetime
 import os
+import uuid
 from typing import Optional
 
 from rich.console import Console
@@ -184,4 +185,98 @@ def place_logged_trade(trade_id: str) -> None:
     console.print(
         f"[dim]  Trade {trade_id} updated with execution metadata.[/dim]\n"
         f"[dim]  When the market settles, run 'settle {trade_id}' to record P&L.[/dim]"
+    )
+
+
+def simulate_logged_trade(trade_id: str) -> None:
+    """
+    Dry-run: simulate Polymarket execution for a logged trade.
+    Finds the market, shows what the order would look like, and records
+    the simulated execution to the trade record — no real order is sent.
+    """
+    trade = _find_trade(trade_id)
+    if trade is None:
+        console.print(f"[red]  Trade '{trade_id}' not found.[/red]")
+        console.print("[dim]  Type 'trades' to list logged trades.[/dim]")
+        return
+
+    is_dry = trade.get("is_dry_run", False)
+    label = "[yellow][SIM][/yellow]" if is_dry else "[dim][REAL→SIM][/dim]"
+    console.print()
+    console.print(Panel(
+        Text.assemble(
+            (f"  {trade['entity1']}  v  {trade['entity2']}\n", "bold white"),
+            ("  Bet      ", "dim"), (f"{trade.get('bet_label', '—')}\n", "white"),
+            ("  Stake    ", "dim"), (f"${trade.get('stake', 0):.2f} (simulated — no real money)\n", "yellow"),
+            ("  Edge     ", "dim"), (f"{trade.get('edge_pct', '—')} %\n", "white"),
+        ),
+        title=f"[bold]  DRY RUN SIMULATION  {label}[/bold]",
+        border_style="yellow",
+        box=box.ROUNDED,
+        padding=(0, 1),
+    ))
+
+    console.print("\n[dim]  Searching Polymarket for matching market...[/dim]")
+    market_id = execution.find_market(trade["entity1"], trade["entity2"])
+    if not market_id:
+        console.print("[yellow]  No active Polymarket market found — recording as market-not-found simulation.[/yellow]")
+        market_id = "SIMULATED_NO_MARKET"
+
+    outcome = Prompt.ask(
+        "\n  Which side would you bet? YES or NO",
+        choices=["yes", "no"],
+        default="yes",
+    )
+
+    default_stake = min(float(trade.get("stake") or 25), MAX_BET_USDC)
+    stake_str = Prompt.ask(
+        f"  Stake (USDC, simulated)",
+        default=f"{default_stake:.2f}",
+    )
+    try:
+        stake = float(stake_str)
+    except ValueError:
+        stake = default_stake
+
+    # Simulate order fill at mid price
+    import random
+    sim_price = round(0.45 + random.uniform(0, 0.1), 4)
+    sim_size = round(stake / sim_price, 2)
+    sim_order_id = f"SIM-{uuid.uuid4().hex[:8].upper()}"
+
+    console.print(
+        Panel(
+            Text.assemble(
+                ("  [SIMULATED — no order sent]\n\n", "bold yellow"),
+                ("  Order ID    ", "dim"), (f"{sim_order_id}\n", "white"),
+                ("  Status      ", "dim"), ("simulated_fill\n", "white"),
+                ("  Market      ", "dim"), (f"{market_id[:40]}\n", "white"),
+                ("  Side        ", "dim"), (f"{outcome.upper()}\n", "white"),
+                ("  Price       ", "dim"), (f"{sim_price}\n", "white"),
+                ("  Size        ", "dim"), (f"{sim_size}\n", "white"),
+                ("  Amount USDC ", "dim"), (f"${stake:.2f}\n", "white"),
+            ),
+            border_style="yellow",
+            box=box.ROUNDED,
+            padding=(0, 1),
+        )
+    )
+
+    _update_execution(
+        trade_id,
+        {
+            "order_id": sim_order_id,
+            "status": "simulated_fill",
+            "price": sim_price,
+            "size": sim_size,
+            "amount_usdc": stake,
+            "market_id": market_id,
+            "outcome_token": outcome,
+            "placed_at": datetime.datetime.now().isoformat(timespec="seconds"),
+            "is_simulation": True,
+        },
+    )
+    console.print(
+        f"[dim]  Dry run recorded (id: {trade_id}). "
+        f"Run 'settle {trade_id}' when the result is known.[/dim]\n"
     )

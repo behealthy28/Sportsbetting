@@ -166,7 +166,21 @@ def _parse_sportsdb_events(data: dict, league_label: str) -> list:
     return events
 
 
+def _fetch_espn_football(days_ahead: int) -> list:
+    """Fetch football/soccer fixtures from ESPN (reliable coverage)."""
+    all_events = []
+    today = datetime.utcnow()
+    for sport, league_id, label in FOOTBALL_LEAGUES:
+        for day_offset in range(days_ahead + 1):
+            date_str = (today + timedelta(days=day_offset)).strftime("%Y%m%d")
+            url = f"{ESPN_BASE}/{sport}/{league_id}/scoreboard"
+            data = _get_espn(url, params={"dates": date_str, "limit": 30})
+            all_events.extend(_parse_espn_events(data, label))
+    return all_events
+
+
 def _fetch_espn(days_ahead: int) -> list:
+    """Fetch all sports from ESPN. Used as last-resort fallback only."""
     all_events = []
     today = datetime.utcnow()
     leagues = FOOTBALL_LEAGUES + OTHER_SPORTS
@@ -199,6 +213,9 @@ def _fetch_sportsdb(days_ahead: int) -> list:
 def get_todays_fixtures(sports: list = None, days_ahead: int = 1) -> list:
     """
     Fetch today's + upcoming fixtures across all major sports.
+    Football from ESPN (reliable). Other sports always from TheSportsDB —
+    ESPN silently returns empty for tennis/UFC/boxing/cricket so we don't
+    rely on it as a fallback for those.
     Returns list of event dicts sorted by date.
     """
     cache_key = {"days": days_ahead, "sports": str(sports)}
@@ -206,12 +223,15 @@ def get_todays_fixtures(sports: list = None, days_ahead: int = 1) -> list:
     if cached:
         return cached
 
-    # Try ESPN first (best coverage, requires residential/browser-like access)
-    all_events = _fetch_espn(days_ahead)
+    # Football from ESPN (reliable, good coverage)
+    all_events = _fetch_espn_football(days_ahead)
 
-    # If ESPN came back empty, try TheSportsDB as fallback
+    # Other sports always from TheSportsDB — ESPN silently fails for these
+    all_events.extend(_fetch_sportsdb(days_ahead))
+
+    # If both returned empty, try ESPN's other endpoints as last resort
     if not all_events:
-        all_events = _fetch_sportsdb(days_ahead)
+        all_events = _fetch_espn(days_ahead)
 
     # Sort by date
     all_events.sort(key=lambda e: e.get("date", ""))

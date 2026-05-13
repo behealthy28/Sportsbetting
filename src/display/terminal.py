@@ -376,14 +376,23 @@ def render_trades(trades: list, stats: dict) -> None:
 
 def prompt_log_trade(result) -> tuple:
     """
-    Ask the user whether to log a trade. Returns (outcome_key, bet_label, stake, odds)
-    or None if they skip.
+    Ask the user whether to log a trade.
+    Returns (outcome_key, bet_label, stake, odds, is_dry_run) or None if skipped.
     """
     from rich.prompt import Prompt, Confirm
     console.print()
 
     if not Confirm.ask("[dim]  Log this as a trade?[/dim]", default=False):
         return None
+
+    # Real money or paper/dry run
+    console.print("  [dim]Mode:[/dim]")
+    console.print("    [1] Real bet  — logs for live Polymarket execution via [bold]place <id>[/bold]")
+    console.print("    [2] Dry run   — paper trade / simulation, no real money", style="dim yellow")
+    while True:
+        mode_choice = Prompt.ask("  Mode", choices=["1", "2"], default="1")
+        break
+    is_dry_run = mode_choice == "2"
 
     # Build outcome choices
     outcomes = []
@@ -423,4 +432,4 @@ def prompt_log_trade(result) -> tuple:
     except ValueError:
         odds = None
 
-    return bet_outcome, bet_label, stake, odds
+    return bet_outcome, bet_label, stake, odds, is_dry_run

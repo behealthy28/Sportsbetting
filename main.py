@@ -39,7 +39,8 @@ def _banner():
             ("    today          ", "white"), ("— list today's & upcoming fixtures\n", "dim"),
             ("    dashboard      ", "white"), ("— live Bloomberg-style terminal (4-panel)\n", "dim"),
             ("    ask <query>    ", "white"), ("— predict + LLM verdict (BET / SKIP / MARGINAL)\n", "dim"),
-            ("    place <id>     ", "white"), ("— submit a logged bet to Polymarket\n", "dim"),
+            ("    place <id>     ", "white"), ("— submit a logged real bet to Polymarket\n", "dim"),
+            ("    sim <id>       ", "white"), ("— dry-run: simulate Polymarket execution (no real money)\n", "dim"),
             ("    trades         ", "white"), ("— view your bet history & P&L\n", "dim"),
             ("    settle <id>    ", "white"), ("— mark a trade won/lost (e.g. settle a3f9)\n", "dim"),
             ("    sports         ", "white"), ("— list all supported sports\n", "dim"),
@@ -60,16 +61,25 @@ def _run_prediction(query: str):
     from src.display import terminal
     log_data = terminal.prompt_log_trade(result)
     if log_data:
-        bet_outcome, bet_label, stake, odds = log_data
+        bet_outcome, bet_label, stake, odds, is_dry_run = log_data
         from src import trades as trade_log
-        trade = trade_log.log(result, bet_outcome, bet_label, stake, odds)
-        console.print(
-            Padding(
-                Text(f"  Trade logged  [id: {trade['id']}]  — type 'settle {trade['id']}' when you know the result.",
-                     style="dim green"),
-                (0, 1),
+        trade = trade_log.log(result, bet_outcome, bet_label, stake, odds, is_dry_run=is_dry_run)
+        if is_dry_run:
+            console.print(
+                Padding(
+                    Text(f"  [SIM] Dry run logged  [id: {trade['id']}]  — type 'sim {trade['id']}' to simulate execution, 'settle {trade['id']}' when result known.",
+                         style="dim yellow"),
+                    (0, 1),
+                )
             )
-        )
+        else:
+            console.print(
+                Padding(
+                    Text(f"  Trade logged  [id: {trade['id']}]  — type 'place {trade['id']}' to execute, 'settle {trade['id']}' when result known.",
+                         style="dim green"),
+                    (0, 1),
+                )
+            )
 
     return result
 
@@ -273,6 +283,15 @@ def _dispatch(line: str) -> bool:
             console.print("  Usage: place <trade-id>", style="dim red")
         return True
 
+    if low.startswith("sim "):
+        trade_id = cmd.split(" ", 1)[1].strip()
+        if trade_id:
+            from src.bet_cli import simulate_logged_trade
+            simulate_logged_trade(trade_id)
+        else:
+            console.print("  Usage: sim <trade-id>", style="dim red")
+        return True
+
     if low.startswith("today "):
         # e.g. "today 7" for 7 days ahead
         try:
@@ -335,6 +354,9 @@ def main():
         elif low.startswith("place "):
             from src.bet_cli import place_logged_trade
             place_logged_trade(query.split(" ", 1)[1].strip())
+        elif low.startswith("sim "):
+            from src.bet_cli import simulate_logged_trade
+            simulate_logged_trade(query.split(" ", 1)[1].strip())
         elif low.startswith("data ") or low.startswith("inspect "):
             name = query.split(" ", 1)[1].strip()
             _inspect(name)
