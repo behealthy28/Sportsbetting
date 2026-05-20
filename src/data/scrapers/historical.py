@@ -208,9 +208,54 @@ _CLUB_PREFIXES = (
     "fc ", "sc ", "sv ", "fk ", "vfl ", "vfb ", "ss ",
 )
 
+# Post-normalisation aliases — map openfootball norms to StatsBomb norms (or vice versa).
+# Both directions are stored so lookup works regardless of which dataset is the query side.
+_NORM_ALIASES: dict[str, str] = {
+    # German cities: umlaut-transliterated ≠ English spelling
+    "bayernmunchen":             "bayernmunich",
+    "borussiamonchengladbach":   "borussiamnchengladbach",
+    "kln":                       "cologne",
+    "1koln":                     "cologne",
+    "1fckoln":                   "cologne",
+    "fckoln":                    "cologne",
+    "nrnberg":                   "nuremberg",
+    "1fcnurnberg":               "1fcnuremberg",
+    "mainz05":                   "fsvmainz05",
+    "fsvmainz":                  "fsvmainz05",
+    "1fsmainz05":                "fsvmainz05",
+    # French
+    "olympiquedemarseille":      "marseille",
+    "olympiquelyon":             "lyon",
+    "parisstgermain":            "parisstgermain",
+    "psg":                       "parisstgermain",
+    "stbretagne":                "stade rennais",
+    # Spanish
+    "atleticodemadrid":          "atleticomadrid",
+    "deportivoalavs":            "alavs",
+    "alavs":                     "deportivaalaves",
+    "rceltavigo":                "celtavigo",
+    "realbetisbalompi":          "realbetis",
+    "realvalladolid":            "valladolid",
+    "girona":                    "gironaf",
+    # Italian
+    "hellasveronafc":            "hellasveronafc",
+    "usdinesec":                 "udinese",
+    "cagliaricalcio":            "cagliari",
+    "empolif":                   "empoli",
+    "bresciaf":                  "brescia",
+    "leccef":                    "lecce",
+    # Reverse aliases (StatsBomb → openfootball)
+    "bayernmunich":              "bayernmunchen",
+    "borussiamnchengladbach":    "borussiamonchengladbach",
+    "cologne":                   "1fckoln",
+    "marseille":                 "olympiquedemarseille",
+    "lyon":                      "olympiquelyon",
+    "atleticomadrid":            "atleticodemadrid",
+}
+
 
 def _norm(name: str) -> str:
-    """Normalise team name for fuzzy matching — transliterates umlauts, strips club prefixes."""
+    """Normalise team name — transliterates umlauts, strips club prefixes, applies aliases."""
     n = name.lower()
     for src, dst in _UMLAUT_MAP.items():
         n = n.replace(src, dst)
@@ -218,22 +263,54 @@ def _norm(name: str) -> str:
         if n.startswith(p):
             n = n[len(p):]
             break
-    return re.sub(r"[^a-z0-9]", "", n)
+    n = re.sub(r"[^a-z0-9]", "", n)
+    return _NORM_ALIASES.get(n, n)
+
+
+def _norm_variants(name: str) -> list[str]:
+    """Return all normalised variants of a team name (primary + alias chain)."""
+    primary = _norm(name)
+    variants = [primary]
+    alias = _NORM_ALIASES.get(primary)
+    if alias and alias != primary:
+        variants.append(alias)
+    # Also check if primary appears as a value in the alias dict (reverse lookup)
+    for k, v in _NORM_ALIASES.items():
+        if v == primary and k != primary and k not in variants:
+            variants.append(k)
+    return variants
 
 
 def _merge_xg(matches: list, xg_index: dict) -> list:
-    """Attach StatsBomb xG values to openfootball matches where available."""
+    """Attach StatsBomb xG values to openfootball matches where available.
+
+    Tries all name variants (primary normalisation + aliases) to maximise match rate.
+    """
     if not xg_index:
         return matches
+
+    # Build a flat dict for fast lookup: (h_norm, a_norm, date) → (hxg, axg)
+    flat: dict[tuple, tuple] = {}
+    for k, v in xg_index.items():
+        if isinstance(k, str):
+            parts = k.split("|")
+            if len(parts) == 3:
+                flat[tuple(parts)] = v
+        else:
+            flat[k] = v
+
     enriched = []
     for m in matches:
         if m.get("home_xg") is None:
-            key = (
-                _norm(m["home_team"]),
-                _norm(m["away_team"]),
-                m["date"],
-            )
-            hit = xg_index.get(key)
+            date = m["date"]
+            hit = None
+            for h_var in _norm_variants(m["home_team"]):
+                for a_var in _norm_variants(m["away_team"]):
+                    hit = flat.get((h_var, a_var, date))
+                    if hit:
+                        break
+                if hit:
+                    break
             if hit:
                 m = dict(m)
                 m["home_xg"], m["away_xg"] = hit
