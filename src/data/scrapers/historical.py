@@ -22,12 +22,16 @@ Data is stored under data/raw/ for instant reruns.
 import io
 import json
 import re
+import subprocess
+import sys
 import time
 import requests
 import pandas as pd
 from datetime import datetime
 from pathlib import Path
 from src.data import cache
+
+_KAGGLE_DATASET_RE = re.compile(r'^[a-z0-9_-]+/[a-z0-9_-]+$')
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
@@ -67,6 +71,8 @@ def fetch_openfootball_season(league_code: str, season: str) -> list:
     Download one league-season JSON from openfootball.
     Returns list of {home_team, away_team, home_goals, away_goals, date, league, season}.
     """
+    league_code = re.sub(r"[^a-z0-9._-]", "", league_code.lower())
+    season = re.sub(r"[^a-z0-9._-]", "", season.lower())
     cache_key = f"openfb_{league_code}_{season}"
     local = RAW_DIR / f"{cache_key}.json"
     if local.exists():
@@ -396,7 +402,9 @@ def fetch_understat_league_season(league: str, season: int) -> list:
         m = re.search(r"datesData\s*=\s*JSON\.parse\('(.+?)'\)", resp.text)
         if not m:
             return []
-        raw = m.group(1).encode().decode("unicode_escape")
+        raw = re.sub(r"\\x([0-9a-fA-F]{2})", lambda h: chr(int(h.group(1), 16)),
+                     re.sub(r"\\u([0-9a-fA-F]{4})", lambda u: chr(int(u.group(1), 16)),
+                            m.group(1)))
         matches_data = json.loads(raw)
         results = []
         for match in matches_data:
@@ -526,11 +534,16 @@ def download_kaggle_dataset(dataset_id: str, output_dir: Path = None) -> Path | 
     """
     if not _kaggle_available():
         return None
+    if not _KAGGLE_DATASET_RE.match(dataset_id):
+        raise ValueError(f"Invalid Kaggle dataset_id format: {dataset_id!r}")
     if output_dir is None:
         output_dir = RAW_DIR / "kaggle" / dataset_id.replace("/", "_")
+    output_dir = output_dir.resolve()
+    kaggle_root = (RAW_DIR / "kaggle").resolve()
+    if not str(output_dir).startswith(str(kaggle_root)):
+        raise ValueError(f"dataset_id resolves outside allowed directory: {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    import subprocess, sys
     result = subprocess.run(
         [sys.executable, "-m", "kaggle", "datasets", "download",
          "-d", dataset_id, "--unzip", "-p", str(output_dir)],
@@ -538,7 +551,9 @@ def download_kaggle_dataset(dataset_id: str, output_dir: Path = None) -> Path | 
     )
     if result.returncode == 0:
         return output_dir
-    print(f"[kaggle] Download failed for {dataset_id}: {result.stderr[:200]}")
+    # Avoid leaking full stderr (may contain paths/credentials)
+    safe_err = result.stderr[:100].replace("\n", " ")
+    print(f"[kaggle] Download failed for {dataset_id}: {safe_err}")
     return None
 
 

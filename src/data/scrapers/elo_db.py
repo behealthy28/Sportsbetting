@@ -20,8 +20,8 @@ HEADERS = {
 # ── ClubElo ───────────────────────────────────────────────────────────────────
 # http://clubelo.com/API — full CSV of all club ELOs, updated weekly
 
-_CLUBELO_API = "http://clubelo.com/API"
-_CLUBELO_TEAM = "http://clubelo.com/{name}/json"
+_CLUBELO_API = "https://api.clubelo.com/API"
+_CLUBELO_TEAM = "https://api.clubelo.com/{name}"
 
 
 def _load_clubelo_all() -> dict:

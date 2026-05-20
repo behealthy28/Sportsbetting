@@ -399,9 +399,13 @@ def train_tennis(verbose: bool = True) -> dict:
 
     split_idx = int(len(matches) * 0.8)
 
-    elo_pred   = EloPredictor(default_elo=1500)
+    elo_pred    = EloPredictor(default_elo=1500)
     player_hist = defaultdict(list)
+    h2h_hist    = defaultdict(list)   # key=(p_a, p_b) sorted; value=[1 if p_a won, 0 if p_b won]
     rng = np.random.default_rng(42)
+
+    # Tournament level → importance weight
+    TOUR_LEVEL = {"G": 1.0, "M": 0.9, "A": 0.8, "D": 0.7, "F": 0.95, "C": 0.6, "S": 0.5}
 
     X_train, y_train = [], []
     X_test,  y_test  = [], []
@@ -425,12 +429,41 @@ def train_tennis(verbose: bool = True) -> dict:
             p1_stats = _rolling_player_stats(player_hist[p1], surface)
             p1_stats["elo"]         = elo_pred.get(p1.lower(), surface)
             p1_stats["recent_rank"] = player_hist[p1][-1].get("rank", 100)
+            # Short-term form: last 5 matches win rate
+            p1_short = player_hist[p1][-5:]
+            p1_stats["short_form"] = sum(x["won"] for x in p1_short) / len(p1_short)
 
             p2_stats = _rolling_player_stats(player_hist[p2], surface)
             p2_stats["elo"]         = elo_pred.get(p2.lower(), surface)
             p2_stats["recent_rank"] = player_hist[p2][-1].get("rank", 100)
+            p2_short = player_hist[p2][-5:]
+            p2_stats["short_form"] = sum(x["won"] for x in p2_short) / len(p2_short)
 
-            ctx  = {"surface": surface, "h2h_win_rate": 0.5, "tournament_importance": 0.85}
+            # Real H2H win rate for p1 vs p2
+            h2h_key = tuple(sorted([p1, p2]))
+            h2h_records = h2h_hist[h2h_key]
+            if h2h_records:
+                p1_h2h_wins = sum(1 for r in h2h_records if r == p1)
+                h2h_wr = p1_h2h_wins / len(h2h_records)
+            else:
+                h2h_wr = 0.5
+
+            # Surface-specific ELO diff (more predictive than overall ELO diff)
+            p1_surf_elo = elo_pred.get(p1.lower(), surface)
+            p2_surf_elo = elo_pred.get(p2.lower(), surface)
+            surf_elo_diff = (p1_surf_elo - p2_surf_elo) / 400.0
+
+            tour_level = m.get("tourney_level", "A")
+            tour_importance = TOUR_LEVEL.get(tour_level, 0.8)
+
+            ctx = {
+                "surface": surface,
+                "h2h_win_rate": h2h_wr,
+                "tournament_importance": tour_importance,
+                "surf_elo_diff": surf_elo_diff,
+                "p1_short_form": p1_stats["short_form"],
+                "p2_short_form": p2_stats["short_form"],
+            }
             feat = build_tennis_features(p1_stats, p2_stats, ctx)
 
             if is_train:
@@ -467,6 +500,10 @@ def train_tennis(verbose: bool = True) -> dict:
         player_hist[loser].append({"won": 0, "surface": surface,
                                    "rank": m.get("loser_rank", 100),
                                    "elo_after": new_l, **l_serve})
+
+        # Track H2H (always store who won, keyed by sorted pair)
+        h2h_key = tuple(sorted([winner, loser]))
+        h2h_hist[h2h_key].append(winner)
 
     if not X_train:
         print("[train:tennis] Insufficient data for training.")

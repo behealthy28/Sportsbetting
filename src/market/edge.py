@@ -62,3 +62,29 @@ def best_bet(edges: dict) -> tuple:
 
     best = max(positive.items(), key=lambda x: x[1]["edge"])
     return best
+
+
+# Minimum model probability to surface a bet recommendation
+MIN_BET_CONFIDENCE = 0.65
+
+
+def high_confidence_best_bet(edges: dict, model_probs: dict,
+                              min_confidence: float = MIN_BET_CONFIDENCE) -> tuple:
+    """
+    Like best_bet() but only returns the bet if the model probability
+    for that outcome is >= min_confidence AND edge is positive.
+    This targets the user's 65% win-rate goal by filtering to situations
+    where the model is sufficiently certain.
+    """
+    if not edges or not model_probs:
+        return None, None
+
+    positive = {
+        k: v for k, v in edges.items()
+        if v["edge"] > 0 and model_probs.get(k, 0) >= min_confidence
+    }
+    if not positive:
+        return None, None
+
+    best = max(positive.items(), key=lambda x: x[1]["edge"])
+    return best

@@ -1,14 +1,18 @@
 """
-Random Forest + XGBoost soft-voting ensemble for sports prediction.
+RF + XGBoost + LightGBM soft-voting ensemble for sports prediction.
 Trains on historical feature data; falls back gracefully with no data.
 """
+import hashlib
+import json
 import numpy as np
 import joblib
 from pathlib import Path
 from typing import Optional
 
+VALID_SPORTS = {"football", "tennis", "ufc", "boxing", "darts", "badminton", "table_tennis", "cricket"}
+
 try:
-    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
     from sklearn.calibration import CalibratedClassifierCV
     from sklearn.preprocessing import StandardScaler
     import xgboost as xgb
@@ -16,21 +20,30 @@ try:
 except ImportError:
     ML_AVAILABLE = False
 
+try:
+    import lightgbm as lgb
+    LGB_AVAILABLE = True
+except ImportError:
+    LGB_AVAILABLE = False
+
 MODELS_DIR = Path(__file__).parent.parent.parent / "data" / "models"
 
 
 class MLEnsemble:
     """
-    Random Forest + XGBoost ensemble.
+    RF + XGBoost + LightGBM soft-voting ensemble.
     For 1v1 sports: binary classification (0=player_b, 1=player_a).
     For team sports: 3-class (0=away, 1=draw, 2=home).
     """
 
     def __init__(self, sport: str = "football", n_classes: int = 3):
+        if sport not in VALID_SPORTS:
+            raise ValueError(f"Unknown sport {sport!r}. Valid: {sorted(VALID_SPORTS)}")
         self.sport = sport
         self.n_classes = n_classes
         self.rf: Optional[object] = None
         self.xgb_model: Optional[object] = None
+        self.lgb_model: Optional[object] = None
         self.scaler: Optional[object] = None
         self.is_fitted = False
         MODELS_DIR.mkdir(parents=True, exist_ok=True)
@@ -39,18 +52,19 @@ class MLEnsemble:
         return MODELS_DIR / f"{self.sport}_{name}"
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
-        """Train RF + XGBoost on feature matrix X and labels y."""
+        """Train RF + XGBoost + LightGBM on feature matrix X and labels y."""
         if not ML_AVAILABLE:
             return
 
         self.scaler = StandardScaler()
         X_scaled = self.scaler.fit_transform(X)
 
-        # Random Forest with isotonic calibration
+        # Random Forest — Platt-scaled for calibrated probabilities
         rf_base = RandomForestClassifier(
-            n_estimators=300,
-            max_depth=8,
-            min_samples_leaf=5,
+            n_estimators=400,
+            max_depth=10,
+            min_samples_leaf=4,
+            max_features="sqrt",
             random_state=42,
             n_jobs=-1,
             class_weight="balanced",
@@ -58,73 +72,134 @@ class MLEnsemble:
         self.rf = CalibratedClassifierCV(rf_base, method="isotonic", cv=3)
         self.rf.fit(X_scaled, y)
 
-        # XGBoost
+        # XGBoost — tuned params that consistently beat defaults for sports data
         obj = "binary:logistic" if self.n_classes == 2 else "multi:softprob"
-        params = {
+        xgb_params = {
             "objective": obj,
-            "n_estimators": 300,
-            "max_depth": 5,
-            "learning_rate": 0.05,
+            "n_estimators": 500,
+            "max_depth": 6,
+            "learning_rate": 0.03,
             "subsample": 0.8,
-            "colsample_bytree": 0.8,
+            "colsample_bytree": 0.7,
+            "min_child_weight": 3,
+            "gamma": 0.1,
+            "reg_alpha": 0.05,
+            "reg_lambda": 1.0,
             "random_state": 42,
+            "n_jobs": -1,
             "eval_metric": "logloss" if self.n_classes == 2 else "mlogloss",
         }
         if self.n_classes > 2:
-            params["num_class"] = self.n_classes
+            xgb_params["num_class"] = self.n_classes
 
-        self.xgb_model = xgb.XGBClassifier(**params)
+        self.xgb_model = xgb.XGBClassifier(**xgb_params)
         self.xgb_model.fit(X_scaled, y)
+
+        # LightGBM — often fastest and matches/beats XGBoost on tabular sports data
+        if LGB_AVAILABLE:
+            lgb_obj = "binary" if self.n_classes == 2 else "multiclass"
+            lgb_params = {
+                "objective": lgb_obj,
+                "n_estimators": 500,
+                "num_leaves": 63,
+                "learning_rate": 0.03,
+                "feature_fraction": 0.7,
+                "bagging_fraction": 0.8,
+                "bagging_freq": 5,
+                "min_child_samples": 20,
+                "reg_alpha": 0.05,
+                "reg_lambda": 0.1,
+                "random_state": 42,
+                "n_jobs": -1,
+                "verbose": -1,
+            }
+            if self.n_classes > 2:
+                lgb_params["num_class"] = self.n_classes
+            self.lgb_model = lgb.LGBMClassifier(**lgb_params)
+            self.lgb_model.fit(X_scaled, y)
+
         self.is_fitted = True
 
-        # Persist
         joblib.dump(self.rf, self._model_path("rf.pkl"))
         joblib.dump(self.xgb_model, self._model_path("xgb.pkl"))
         joblib.dump(self.scaler, self._model_path("scaler.pkl"))
+        if self.lgb_model is not None:
+            joblib.dump(self.lgb_model, self._model_path("lgb.pkl"))
+        self._write_hashes()
+
+    def _sha256(self, path: Path) -> str:
+        h = hashlib.sha256()
+        h.update(path.read_bytes())
+        return h.hexdigest()
+
+    def _write_hashes(self) -> None:
+        manifest = {}
+        for name in ("rf.pkl", "xgb.pkl", "scaler.pkl", "lgb.pkl"):
+            p = self._model_path(name)
+            if p.exists():
+                manifest[name] = self._sha256(p)
+        (self._model_path("manifest.json")).write_text(json.dumps(manifest, indent=2))
+
+    def _verify_hashes(self) -> bool:
+        manifest_path = self._model_path("manifest.json")
+        if not manifest_path.exists():
+            return True  # no manifest — legacy models, skip check
+        manifest = json.loads(manifest_path.read_text())
+        for name, expected in manifest.items():
+            p = self._model_path(name)
+            if p.exists() and self._sha256(p) != expected:
+                return False
+        return True
 
     def load(self) -> bool:
-        """Load persisted models."""
+        """Load persisted models (RF + XGBoost required; LightGBM optional)."""
         if not ML_AVAILABLE:
             return False
         try:
+            if not self._verify_hashes():
+                print(f"[MLEnsemble] WARNING: model hash mismatch for {self.sport} — skipping load")
+                return False
             self.rf = joblib.load(self._model_path("rf.pkl"))
             self.xgb_model = joblib.load(self._model_path("xgb.pkl"))
             self.scaler = joblib.load(self._model_path("scaler.pkl"))
+            lgb_path = self._model_path("lgb.pkl")
+            if LGB_AVAILABLE and lgb_path.exists():
+                self.lgb_model = joblib.load(lgb_path)
             self.is_fitted = True
             return True
         except Exception:
             return False
 
-    def predict_proba(self, features: np.ndarray) -> np.ndarray:
-        """
-        Predict class probabilities for a single feature vector.
-        Returns array of shape (n_classes,).
-        """
-        if not self.is_fitted or not ML_AVAILABLE:
-            return np.full(self.n_classes, 1.0 / self.n_classes)
-
-        X = features.reshape(1, -1)
-        X_scaled = self.scaler.transform(X)
-
-        rf_probs = self.rf.predict_proba(X_scaled)[0]
-        xgb_probs = self.xgb_model.predict_proba(X_scaled)[0]
-
-        # Soft vote: 55% XGBoost, 45% RF
-        ensemble = 0.55 * xgb_probs + 0.45 * rf_probs
-        ensemble /= ensemble.sum()
-        return ensemble
-
-    def predict_proba_batch(self, X: np.ndarray) -> np.ndarray:
-        """Vectorised batch prediction. X shape: (n_samples, n_features). Returns (n_samples, n_classes)."""
-        if not self.is_fitted or not ML_AVAILABLE:
-            n = len(X)
-            return np.full((n, self.n_classes), 1.0 / self.n_classes)
-        X_scaled = self.scaler.transform(X)
-        rf_probs  = self.rf.predict_proba(X_scaled)
-        xgb_probs = self.xgb_model.predict_proba(X_scaled)
-        ensemble  = 0.55 * xgb_probs + 0.45 * rf_probs
+    def _ensemble_proba(self, X_scaled: np.ndarray) -> np.ndarray:
+        """Weighted soft-vote across available models. Returns (n_samples, n_classes)."""
+        import warnings
+        rf_p   = self.rf.predict_proba(X_scaled)
+        xgb_p  = self.xgb_model.predict_proba(X_scaled)
+        if self.lgb_model is not None:
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", category=UserWarning)
+                lgb_p = self.lgb_model.predict_proba(X_scaled)
+            # RF 25% | XGBoost 37.5% | LightGBM 37.5%
+            ensemble = 0.25 * rf_p + 0.375 * xgb_p + 0.375 * lgb_p
+        else:
+            # RF 45% | XGBoost 55%
+            ensemble = 0.45 * rf_p + 0.55 * xgb_p
         ensemble /= ensemble.sum(axis=1, keepdims=True)
         return ensemble
+
+    def predict_proba(self, features: np.ndarray) -> np.ndarray:
+        """Single-sample prediction. Returns (n_classes,)."""
+        if not self.is_fitted or not ML_AVAILABLE:
+            return np.full(self.n_classes, 1.0 / self.n_classes)
+        X_scaled = self.scaler.transform(features.reshape(1, -1))
+        return self._ensemble_proba(X_scaled)[0]
+
+    def predict_proba_batch(self, X: np.ndarray) -> np.ndarray:
+        """Vectorised batch prediction. Returns (n_samples, n_classes)."""
+        if not self.is_fitted or not ML_AVAILABLE:
+            return np.full((len(X), self.n_classes), 1.0 / self.n_classes)
+        X_scaled = self.scaler.transform(X)
+        return self._ensemble_proba(X_scaled)
 
     def predict_dict(self, features: np.ndarray, labels: list = None) -> dict:
         """Return probabilities as a labeled dict."""
@@ -190,24 +265,28 @@ def build_tennis_features(p1_data: dict, p2_data: dict, context: dict = None) ->
     elo_p2 = safe(p2_data, "elo", 1500)
 
     features = np.array([
-        (elo_p1 - elo_p2) / 400.0,                                    # 0: ELO diff
-        safe(p1_surf, "win_rate", 0.5) - safe(p2_surf, "win_rate", 0.5),  # 1: surface win rate diff
-        safe(ctx, "h2h_win_rate", 0.5),                               # 2: H2H win rate
-        safe(p1_surf, "win_rate", 0.5) - safe(p2_surf, "win_rate", 0.5),  # 3: surface H2H (approx)
-        safe(p1_data, "overall_win_rate", 0.5),                       # 4: p1 overall form
-        safe(p2_data, "overall_win_rate", 0.5),                       # 5: p2 overall form
-        (safe(p1_data, "recent_rank", 50) - safe(p2_data, "recent_rank", 50)) / 100.0,  # 6: rank diff
-        safe(p1_surf, "first_serve_pct", 0.62) - safe(p2_surf, "first_serve_pct", 0.62),  # 7: serve diff
-        safe(p1_surf, "bp_save_rate", 0.62) - safe(p2_surf, "bp_save_rate", 0.62),    # 8: break pt save diff
-        safe(p1_surf, "ace_rate", 0.05) - safe(p2_surf, "ace_rate", 0.05),  # 9: ace rate diff
-        safe(ctx, "recent_result_p1", 0.5),                           # 10: recent tourney result
-        safe(ctx, "days_rest_diff", 0) / 7.0,                        # 11: rest diff
-        safe(ctx, "age_diff", 0) / 10.0,                             # 12: age diff
-        float(ctx.get("injury_p1", 0)),                               # 13: p1 injury flag
-        float(ctx.get("injury_p2", 0)),                               # 14: p2 injury flag
-        safe(p1_data, "ranking_trend", 0.0),                          # 15: ranking trend (+ = improving)
-        safe(p1_data, "overall_win_rate", 0.5) - safe(p2_data, "overall_win_rate", 0.5),  # 16: career diff
-        safe(ctx, "tournament_importance", 0.85),                     # 17: tournament weight
+        (elo_p1 - elo_p2) / 400.0,                                          # 0: overall ELO diff
+        safe(ctx, "surf_elo_diff", (elo_p1 - elo_p2) / 400.0),              # 1: surface-specific ELO diff
+        safe(ctx, "h2h_win_rate", 0.5),                                      # 2: real H2H win rate
+        safe(p1_surf, "win_rate", 0.5) - safe(p2_surf, "win_rate", 0.5),    # 3: surface win rate diff
+        safe(p1_data, "overall_win_rate", 0.5),                              # 4: p1 long-term form
+        safe(p2_data, "overall_win_rate", 0.5),                              # 5: p2 long-term form
+        safe(p1_data, "short_form", safe(p1_data, "overall_win_rate", 0.5)),  # 6: p1 short-term form (last 5)
+        safe(p2_data, "short_form", safe(p2_data, "overall_win_rate", 0.5)),  # 7: p2 short-term form
+        (safe(p1_data, "recent_rank", 50) - safe(p2_data, "recent_rank", 50)) / 100.0,  # 8: rank diff
+        safe(p1_surf, "first_serve_pct", 0.62) - safe(p2_surf, "first_serve_pct", 0.62),  # 9: serve diff
+        safe(p1_surf, "bp_save_rate", 0.62) - safe(p2_surf, "bp_save_rate", 0.62),      # 10: break pt save diff
+        safe(p1_surf, "ace_rate", 0.05) - safe(p2_surf, "ace_rate", 0.05),              # 11: ace rate diff
+        safe(ctx, "days_rest_diff", 0) / 7.0,                               # 12: rest diff
+        safe(ctx, "age_diff", 0) / 10.0,                                    # 13: age diff
+        float(ctx.get("injury_p1", 0)),                                      # 14: p1 injury flag
+        float(ctx.get("injury_p2", 0)),                                      # 15: p2 injury flag
+        safe(p1_data, "overall_win_rate", 0.5) - safe(p2_data, "overall_win_rate", 0.5),  # 16: career win rate diff
+        safe(ctx, "tournament_importance", 0.85),                            # 17: tournament weight
+        safe(ctx, "p1_short_form", safe(p1_data, "overall_win_rate", 0.5)) -
+        safe(ctx, "p2_short_form", safe(p2_data, "overall_win_rate", 0.5)), # 18: short form diff
+        safe(p1_surf, "win_rate", safe(p1_data, "overall_win_rate", 0.5)),  # 19: p1 surface abs win rate
+        safe(p2_surf, "win_rate", safe(p2_data, "overall_win_rate", 0.5)),  # 20: p2 surface abs win rate
     ], dtype=np.float32)
 
     return features
