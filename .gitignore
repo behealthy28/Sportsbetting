@@ -32,3 +32,8 @@ build/
 .coverage
 htmlcov/
 __pycache__/
+
+# Downloaded raw training datasets (regenerated via python main.py train)
+data/raw/
+data/models/*.pkl
+data/backtest/
