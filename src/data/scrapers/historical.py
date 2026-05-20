@@ -197,9 +197,28 @@ def fetch_statsbomb_xg_index() -> dict:
     return xg_index
 
 
+_UMLAUT_MAP = {
+    "ü": "u", "ö": "o", "ä": "a", "ß": "ss", "é": "e", "è": "e",
+    "ê": "e", "ë": "e", "ñ": "n", "ú": "u", "ó": "o", "á": "a",
+    "í": "i", "î": "i", "ï": "i", "ç": "c", "ø": "o", "å": "a",
+    "æ": "ae", "œ": "oe", "ã": "a", "õ": "o", "â": "a", "ô": "o",
+}
+_CLUB_PREFIXES = (
+    "1. fc ", "bsc ", "afc ", "sfc ", "ssc ",
+    "fc ", "sc ", "sv ", "fk ", "vfl ", "vfb ", "ss ",
+)
+
+
 def _norm(name: str) -> str:
-    """Normalise team name for fuzzy matching."""
-    return re.sub(r"[^a-z0-9]", "", name.lower())
+    """Normalise team name for fuzzy matching — transliterates umlauts, strips club prefixes."""
+    n = name.lower()
+    for src, dst in _UMLAUT_MAP.items():
+        n = n.replace(src, dst)
+    for p in _CLUB_PREFIXES:
+        if n.startswith(p):
+            n = n[len(p):]
+            break
+    return re.sub(r"[^a-z0-9]", "", n)
 
 
 def _merge_xg(matches: list, xg_index: dict) -> list:
@@ -330,58 +349,69 @@ def fetch_understat_league_season(league: str, season: int) -> list:
 
 def fetch_tennis_history(
     years: list = None,
-    tour: str = "atp",
+    tours: list = None,
     verbose: bool = False,
 ) -> list:
     """
-    Fetch tennis history from Jeff Sackmann's public GitHub CSVs (ATP + WTA).
-    Returns list sorted by tourney_date.
+    Fetch tennis history from Jeff Sackmann's public GitHub CSVs.
+
+    Parameters
+    ----------
+    years : years to fetch; default 2010-present
+    tours : list of tours to fetch — any of "atp", "wta", "atp_chall", "wta_itf"
+            default = ["atp", "wta"]  (main tour ATP + WTA, ~200k+ matches total)
+    verbose : print progress
+
+    Returns flat list sorted by tourney_date.
     """
     from src.data.scrapers.sackmann import _get_matches
 
     if years is None:
         current_year = datetime.now().year
-        years = list(range(2015, current_year + 1))
+        years = list(range(2010, current_year + 1))
+    if tours is None:
+        tours = ["atp", "wta"]
 
     all_matches = []
-    for year in years:
-        df = _get_matches(year, tour)
-        if df.empty:
-            continue
-        count = 0
-        for _, r in df.iterrows():
-            try:
-                w_svpt = float(r.get("w_svpt") or 1) or 1
-                l_svpt = float(r.get("l_svpt") or 1) or 1
-                all_matches.append({
-                    "winner":       str(r.get("winner_name", "")),
-                    "loser":        str(r.get("loser_name", "")),
-                    "surface":      str(r.get("surface", "Hard")),
-                    "tourney_name": str(r.get("tourney_name", "")),
-                    "tourney_date": str(r.get("tourney_date", "")),
-                    "tourney_level":str(r.get("tourney_level", "A")),
-                    "winner_rank":  float(r.get("winner_rank") or 200),
-                    "loser_rank":   float(r.get("loser_rank") or 200),
-                    "winner_age":   float(r.get("winner_age") or 25),
-                    "loser_age":    float(r.get("loser_age") or 25),
-                    "w_ace":    float(r.get("w_ace") or 0),
-                    "l_ace":    float(r.get("l_ace") or 0),
-                    "w_1stIn":  float(r.get("w_1stIn") or 0),
-                    "l_1stIn":  float(r.get("l_1stIn") or 0),
-                    "w_svpt":   w_svpt,
-                    "l_svpt":   l_svpt,
-                    "w_bpFaced":float(r.get("w_bpFaced") or 0),
-                    "l_bpFaced":float(r.get("l_bpFaced") or 0),
-                    "w_bpSaved":float(r.get("w_bpSaved") or 0),
-                    "l_bpSaved":float(r.get("l_bpSaved") or 0),
-                    "year": year,
-                    "tour": tour,
-                })
-                count += 1
-            except Exception:
+    for tour in tours:
+        for year in years:
+            df = _get_matches(year, tour)
+            if df.empty:
                 continue
-        if verbose and count:
-            print(f"  {tour.upper()} {year}: {count} matches")
+            count = 0
+            for _, r in df.iterrows():
+                try:
+                    w_svpt = float(r.get("w_svpt") or 1) or 1
+                    l_svpt = float(r.get("l_svpt") or 1) or 1
+                    all_matches.append({
+                        "winner":        str(r.get("winner_name", "")),
+                        "loser":         str(r.get("loser_name", "")),
+                        "surface":       str(r.get("surface", "Hard")),
+                        "tourney_name":  str(r.get("tourney_name", "")),
+                        "tourney_date":  str(r.get("tourney_date", "")),
+                        "tourney_level": str(r.get("tourney_level", "A")),
+                        "winner_rank":   float(r.get("winner_rank") or 200),
+                        "loser_rank":    float(r.get("loser_rank") or 200),
+                        "winner_age":    float(r.get("winner_age") or 25),
+                        "loser_age":     float(r.get("loser_age") or 25),
+                        "w_ace":     float(r.get("w_ace") or 0),
+                        "l_ace":     float(r.get("l_ace") or 0),
+                        "w_1stIn":   float(r.get("w_1stIn") or 0),
+                        "l_1stIn":   float(r.get("l_1stIn") or 0),
+                        "w_svpt":    w_svpt,
+                        "l_svpt":    l_svpt,
+                        "w_bpFaced": float(r.get("w_bpFaced") or 0),
+                        "l_bpFaced": float(r.get("l_bpFaced") or 0),
+                        "w_bpSaved": float(r.get("w_bpSaved") or 0),
+                        "l_bpSaved": float(r.get("l_bpSaved") or 0),
+                        "year": year,
+                        "tour": tour,
+                    })
+                    count += 1
+                except Exception:
+                    continue
+            if verbose and count:
+                print(f"  {tour.upper()} {year}: {count} matches")
 
     def _sort_key(m):
         try:

@@ -372,23 +372,30 @@ def train_football(verbose: bool = True) -> dict:
 
 def train_tennis(verbose: bool = True) -> dict:
     """
-    Fetch Sackmann ATP CSVs (2015-present), build per-match rolling stats,
+    Fetch Sackmann ATP + WTA CSVs (2010-present), build per-match rolling stats,
     train binary RF+XGBoost ensemble, evaluate on held-out 20%.
+
+    Data: ~400k+ matches (ATP main + WTA main, 15+ years).
+    Challengers can be included by passing tours=["atp","wta","atp_chall"] to
+    fetch_tennis_history but they lack many serve stat columns.
     """
     from src.data.scrapers.historical import fetch_tennis_history
     from src.models.ml_ensemble import MLEnsemble, build_tennis_features
     from src.models.elo import EloPredictor, update_elo
 
     if verbose:
-        print("\n[train:tennis] Downloading Jeff Sackmann ATP CSVs (2015-present)…")
+        print("\n[train:tennis] Downloading Jeff Sackmann ATP + WTA CSVs (2010-present)…")
 
-    matches = fetch_tennis_history(verbose=verbose)
+    matches = fetch_tennis_history(tours=["atp", "wta"], verbose=verbose)
     if not matches:
         print("[train:tennis] ERROR: No data fetched.")
         return {}
 
     if verbose:
-        print(f"[train:tennis] {len(matches):,} ATP matches loaded.")
+        atp_count = sum(1 for m in matches if m.get("tour") == "atp")
+        wta_count = sum(1 for m in matches if m.get("tour") == "wta")
+        print(f"[train:tennis] {len(matches):,} total matches loaded  |  "
+              f"ATP={atp_count:,}  WTA={wta_count:,}")
 
     split_idx = int(len(matches) * 0.8)
 
@@ -521,6 +528,326 @@ def train_tennis(verbose: bool = True) -> dict:
     return metrics
 
 
+# ── Boxing training (ELO-seed simulation) ────────────────────────────────────
+
+def train_boxing(verbose: bool = True) -> dict:
+    """
+    Train boxing ML ensemble using synthetic fights generated from BOXING_ELO seeds.
+    Creates ~8k simulated fights by pairing seed fighters with noise-injected outcomes.
+    When real fight data becomes available the same pipeline applies directly.
+    """
+    from src.sports.boxing import BOXING_ELO
+    from src.models.ml_ensemble import MLEnsemble
+    from src.models.elo import win_probability
+
+    if verbose:
+        print("\n[train:boxing] Building synthetic fight dataset from seeded ELO ratings…")
+
+    fighters = list(BOXING_ELO.items())
+    rng = np.random.default_rng(7)
+
+    X, y = [], []
+    fighter_names = [f for f, elo in fighters if elo >= 1700]
+
+    for _ in range(8000):
+        i, j = rng.choice(len(fighter_names), size=2, replace=False)
+        f1_name, f1_elo = fighter_names[i], BOXING_ELO[fighter_names[i]]
+        f2_name, f2_elo = fighter_names[j], BOXING_ELO[fighter_names[j]]
+
+        # True win probability from ELO
+        true_p1 = win_probability(float(f1_elo), float(f2_elo))
+
+        # Sample a noisy label from this probability
+        label = 1 if rng.random() < true_p1 else 0
+
+        # Features: elo diff, elo ratio, age proxy (add noise), style random
+        elo_diff = (float(f1_elo) - float(f2_elo)) / 400.0
+        elo_ratio = float(f1_elo) / float(f2_elo)
+        age_diff = rng.normal(0, 4)          # synthetic: unknown, add noise
+        reach_diff = rng.normal(0, 6)        # synthetic reach difference in cm
+        # Experience proxy: higher elo = more experienced on average
+        exp_diff = (float(f1_elo) - 1700) / 200.0 - (float(f2_elo) - 1700) / 200.0
+
+        feat = [elo_diff, elo_ratio, age_diff / 10.0, reach_diff / 20.0, exp_diff, true_p1]
+        X.append(feat)
+        y.append(label)
+
+    if len(X) < 100:
+        if verbose:
+            print("[train:boxing] Insufficient samples.")
+        return {}
+
+    X_arr = np.array(X, dtype=np.float32)
+    y_arr = np.array(y, dtype=np.int32)
+    split = int(len(X) * 0.8)
+
+    ml = MLEnsemble(sport="boxing", n_classes=2)
+    ml.fit(X_arr[:split], y_arr[:split])
+
+    metrics = {
+        "sport": "boxing",
+        "n_train": split,
+        "n_test": len(X) - split,
+        "data_sources": ["Synthetic from BOXING_ELO seeds"],
+        "generated_at": datetime.now().isoformat(),
+    }
+
+    if len(X) > split:
+        te_probs = np.array([ml.predict_proba(x) for x in X_arr[split:]])
+        te_preds = np.argmax(te_probs, axis=1)
+        acc = float((te_preds == y_arr[split:]).mean())
+        oh = np.zeros((len(X) - split, 2))
+        for j, lbl in enumerate(y_arr[split:]):
+            oh[j, lbl] = 1.0
+        brier = float(np.mean(np.sum((te_probs - oh) ** 2, axis=1)))
+        metrics.update({
+            "ml_accuracy": round(acc, 4),
+            "ml_brier":    round(brier, 4),
+            "naive_brier": 0.5,
+        })
+        if verbose:
+            bss = round(1 - brier / 0.5, 4)
+            print(f"[train:boxing] accuracy={acc:.1%}  Brier={brier:.4f}  Skill={bss:+.3f}")
+
+    (BACKTEST_DIR / "boxing_results.json").write_text(json.dumps(metrics, indent=2))
+    if metrics.get("ml_accuracy", 0) <= 0.52:
+        # Synthetic-only model doesn't beat chance — don't deploy it
+        for ext in ("_rf.pkl", "_xgb.pkl", "_scaler.pkl"):
+            p = MODELS_DIR / f"boxing{ext}"
+            if p.exists():
+                p.unlink()
+        if verbose:
+            print("[train:boxing] Synthetic accuracy at chance — ML layer disabled. "
+                  "Provide real fight data (Kaggle) for meaningful ML predictions.")
+    return metrics
+
+
+# ── Darts / Badminton / Table Tennis training (ELO-seed simulation) ───────────
+
+def train_darts(verbose: bool = True) -> dict:
+    """Train darts ML ensemble from synthetic matches based on PDC ELO seeds."""
+    from src.sports.darts import DARTS_ELO
+    from src.models.ml_ensemble import MLEnsemble
+    from src.models.elo import win_probability
+
+    if verbose:
+        print("\n[train:darts] Building synthetic darts dataset from PDC ELO seeds…")
+
+    players = [(n, e) for n, e in DARTS_ELO.items() if e >= 1700]
+    # deduplicate by ELO value (nicknames share the same ELO)
+    seen_elos = set()
+    unique_players = []
+    for name, elo in players:
+        if elo not in seen_elos:
+            seen_elos.add(elo)
+            unique_players.append((name, elo))
+
+    rng = np.random.default_rng(11)
+    X, y = [], []
+
+    for _ in range(5000):
+        i, j = rng.choice(len(unique_players), size=2, replace=False)
+        _, elo1 = unique_players[i]
+        _, elo2 = unique_players[j]
+        true_p1 = win_probability(float(elo1), float(elo2))
+        label = 1 if rng.random() < true_p1 else 0
+        elo_diff = (float(elo1) - float(elo2)) / 400.0
+        feat = [elo_diff, float(elo1) / float(elo2), true_p1,
+                rng.normal(0, 0.05), rng.normal(0, 0.03)]
+        X.append(feat)
+        y.append(label)
+
+    X_arr = np.array(X, dtype=np.float32)
+    y_arr = np.array(y, dtype=np.int32)
+    split = int(len(X) * 0.8)
+
+    ml = MLEnsemble(sport="darts", n_classes=2)
+    ml.fit(X_arr[:split], y_arr[:split])
+
+    metrics = {
+        "sport": "darts",
+        "n_train": split,
+        "n_test": len(X) - split,
+        "data_sources": ["Synthetic from PDC ELO seeds"],
+        "generated_at": datetime.now().isoformat(),
+    }
+    if len(X) > split:
+        probs = np.array([ml.predict_proba(x) for x in X_arr[split:]])
+        acc = float((np.argmax(probs, 1) == y_arr[split:]).mean())
+        metrics["ml_accuracy"] = round(acc, 4)
+        if verbose:
+            print(f"[train:darts] accuracy={acc:.1%}")
+
+    (BACKTEST_DIR / "darts_results.json").write_text(json.dumps(metrics, indent=2))
+    if metrics.get("ml_accuracy", 0) <= 0.52:
+        for ext in ("_rf.pkl", "_xgb.pkl", "_scaler.pkl"):
+            p = MODELS_DIR / f"darts{ext}"
+            if p.exists():
+                p.unlink()
+        if verbose:
+            print("[train:darts] Synthetic accuracy at chance — ML layer disabled.")
+    return metrics
+
+
+def train_badminton(verbose: bool = True) -> dict:
+    """Train badminton ML ensemble from synthetic matches based on BWF ELO seeds."""
+    from src.sports.darts import BADMINTON_ELO
+    from src.models.ml_ensemble import MLEnsemble
+    from src.models.elo import win_probability
+
+    if verbose:
+        print("\n[train:badminton] Building synthetic badminton dataset from BWF ELO seeds…")
+
+    players = [(n, e) for n, e in BADMINTON_ELO.items() if e >= 1700]
+    seen_elos, unique_players = set(), []
+    for name, elo in players:
+        if elo not in seen_elos:
+            seen_elos.add(elo)
+            unique_players.append((name, elo))
+
+    rng = np.random.default_rng(13)
+    X, y = [], []
+
+    for _ in range(5000):
+        i, j = rng.choice(len(unique_players), size=2, replace=False)
+        _, elo1 = unique_players[i]
+        _, elo2 = unique_players[j]
+        true_p1 = win_probability(float(elo1), float(elo2))
+        label = 1 if rng.random() < true_p1 else 0
+        elo_diff = (float(elo1) - float(elo2)) / 400.0
+        feat = [elo_diff, float(elo1) / float(elo2), true_p1,
+                rng.normal(0, 0.05), rng.normal(0, 0.03)]
+        X.append(feat)
+        y.append(label)
+
+    X_arr = np.array(X, dtype=np.float32)
+    y_arr = np.array(y, dtype=np.int32)
+    split = int(len(X) * 0.8)
+
+    ml = MLEnsemble(sport="badminton", n_classes=2)
+    ml.fit(X_arr[:split], y_arr[:split])
+
+    metrics = {
+        "sport": "badminton",
+        "n_train": split,
+        "n_test": len(X) - split,
+        "data_sources": ["Synthetic from BWF ELO seeds"],
+        "generated_at": datetime.now().isoformat(),
+    }
+    if len(X) > split:
+        probs = np.array([ml.predict_proba(x) for x in X_arr[split:]])
+        acc = float((np.argmax(probs, 1) == y_arr[split:]).mean())
+        metrics["ml_accuracy"] = round(acc, 4)
+        if verbose:
+            print(f"[train:badminton] accuracy={acc:.1%}")
+
+    (BACKTEST_DIR / "badminton_results.json").write_text(json.dumps(metrics, indent=2))
+    if metrics.get("ml_accuracy", 0) <= 0.52:
+        for ext in ("_rf.pkl", "_xgb.pkl", "_scaler.pkl"):
+            p = MODELS_DIR / f"badminton{ext}"
+            if p.exists():
+                p.unlink()
+        if verbose:
+            print("[train:badminton] Synthetic accuracy at chance — ML layer disabled.")
+    return metrics
+
+
+# ── Cricket training (seed-based simulation) ─────────────────────────────────
+
+def train_cricket(verbose: bool = True) -> dict:
+    """
+    Train cricket ML ensemble from synthetic matches based on TEAM_SEEDS.
+    Simulates Test / ODI / T20 results using seeded win rates + ELO.
+    """
+    from src.data.scrapers.cricsheet import TEAM_SEEDS
+    from src.models.ml_ensemble import MLEnsemble
+    from src.models.elo import win_probability
+
+    if verbose:
+        print("\n[train:cricket] Building synthetic cricket dataset from TEAM_SEEDS…")
+
+    teams = list(TEAM_SEEDS.items())
+    rng = np.random.default_rng(17)
+    X, y = [], []
+    formats = ["odi", "t20", "test"]
+
+    for _ in range(8000):
+        i, j = rng.choice(len(teams), size=2, replace=False)
+        t1_name, t1_data = teams[i]
+        t2_name, t2_data = teams[j]
+        fmt = formats[rng.integers(0, 3)]
+
+        elo1 = float(t1_data.get("elo", 1700))
+        elo2 = float(t2_data.get("elo", 1700))
+        wr1  = float(t1_data.get(f"{fmt}_win_rate", 0.5))
+        wr2  = float(t2_data.get(f"{fmt}_win_rate", 0.5))
+
+        elo_p1   = win_probability(elo1, elo2)
+        form_p1  = wr1 / (wr1 + wr2 + 1e-9)
+        # Blend ELO 60% + format win rate 40%
+        true_p1  = 0.6 * elo_p1 + 0.4 * form_p1
+        # Home advantage: 5% bump for team1 (randomly assigned as home)
+        if rng.random() < 0.5:
+            true_p1 = min(0.95, true_p1 + 0.05)
+
+        label = 1 if rng.random() < true_p1 else 0
+
+        fmt_enc = [int(fmt == "odi"), int(fmt == "t20"), int(fmt == "test")]
+        feat = [
+            (elo1 - elo2) / 400.0,
+            elo1 / (elo2 + 1e-9),
+            wr1 - wr2,
+            float(t1_data.get("batting_avg", 28)) - float(t2_data.get("batting_avg", 28)),
+            float(t2_data.get("bowling_avg", 29)) - float(t1_data.get("bowling_avg", 29)),
+            float(t1_data.get("run_rate", 5)) - float(t2_data.get("run_rate", 5)),
+            *fmt_enc,
+            true_p1,
+        ]
+        X.append(feat)
+        y.append(label)
+
+    X_arr = np.array(X, dtype=np.float32)
+    y_arr = np.array(y, dtype=np.int32)
+    split = int(len(X) * 0.8)
+
+    ml = MLEnsemble(sport="cricket", n_classes=2)
+    ml.fit(X_arr[:split], y_arr[:split])
+
+    metrics = {
+        "sport": "cricket",
+        "n_train": split,
+        "n_test": len(X) - split,
+        "data_sources": ["Synthetic from TEAM_SEEDS"],
+        "generated_at": datetime.now().isoformat(),
+    }
+    if len(X) > split:
+        probs = np.array([ml.predict_proba(x) for x in X_arr[split:]])
+        acc = float((np.argmax(probs, 1) == y_arr[split:]).mean())
+        oh = np.zeros((len(X) - split, 2))
+        for j, lbl in enumerate(y_arr[split:]):
+            oh[j, lbl] = 1.0
+        brier = float(np.mean(np.sum((probs - oh) ** 2, axis=1)))
+        metrics.update({
+            "ml_accuracy": round(acc, 4),
+            "ml_brier":    round(brier, 4),
+            "naive_brier": 0.5,
+        })
+        if verbose:
+            bss = round(1 - brier / 0.5, 4)
+            print(f"[train:cricket] accuracy={acc:.1%}  Brier={brier:.4f}  Skill={bss:+.3f}")
+
+    (BACKTEST_DIR / "cricket_results.json").write_text(json.dumps(metrics, indent=2))
+    if metrics.get("ml_accuracy", 0) <= 0.52:
+        for ext in ("_rf.pkl", "_xgb.pkl", "_scaler.pkl"):
+            p = MODELS_DIR / f"cricket{ext}"
+            if p.exists():
+                p.unlink()
+        if verbose:
+            print("[train:cricket] Synthetic accuracy at chance — ML layer disabled. "
+                  "Provide Cricsheet ball-by-ball data for meaningful ML predictions.")
+    return metrics
+
+
 # ── UFC training (Kaggle only) ────────────────────────────────────────────────
 
 def train_ufc(verbose: bool = True) -> dict:
@@ -608,7 +935,8 @@ def train_ufc(verbose: bool = True) -> dict:
 # ── CLI ───────────────────────────────────────────────────────────────────────
 
 def main(sports: list = None) -> dict:
-    target = [s.lower() for s in (sports or ["football", "tennis", "ufc"])]
+    default_sports = ["football", "tennis", "ufc", "boxing", "cricket", "darts", "badminton"]
+    target = [s.lower() for s in (sports or default_sports)]
     results = {}
 
     for sport in target:
@@ -616,8 +944,16 @@ def main(sports: list = None) -> dict:
             results["football"] = train_football(verbose=True)
         elif sport == "tennis":
             results["tennis"] = train_tennis(verbose=True)
-        elif sport == "ufc":
+        elif sport == "ufc" or sport == "mma":
             results["ufc"] = train_ufc(verbose=True)
+        elif sport == "boxing":
+            results["boxing"] = train_boxing(verbose=True)
+        elif sport == "cricket":
+            results["cricket"] = train_cricket(verbose=True)
+        elif sport == "darts":
+            results["darts"] = train_darts(verbose=True)
+        elif sport == "badminton":
+            results["badminton"] = train_badminton(verbose=True)
         else:
             print(f"[train] Unknown sport: {sport}")
 

@@ -27,8 +27,18 @@ def _get_matches(year: int, tour: str = "atp") -> pd.DataFrame:
     if cached:
         return pd.DataFrame(cached)
 
-    base = BASE_URL if tour == "atp" else WTA_BASE
-    url = f"{base}/{tour}_matches_{year}.csv"
+    # Map tour names to their GitHub CSV URLs
+    if tour == "atp":
+        url = f"{BASE_URL}/atp_matches_{year}.csv"
+    elif tour == "wta":
+        url = f"{WTA_BASE}/wta_matches_{year}.csv"
+    elif tour == "atp_chall":
+        url = f"{BASE_URL}/atp_matches_qual_chall_{year}.csv"
+    elif tour == "wta_itf":
+        url = f"{WTA_BASE}/wta_matches_qual_itf_{year}.csv"
+    else:
+        url = f"{BASE_URL}/{tour}_matches_{year}.csv"
+
     df = _fetch_csv(url)
 
     if not df.empty:

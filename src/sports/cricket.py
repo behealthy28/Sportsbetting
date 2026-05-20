@@ -1,10 +1,11 @@
 """Cricket prediction handler."""
+import math
+import numpy as np
 from src.sports.base import AbstractSport, PredictionResult
 from src.data.scrapers import cricsheet
 from src.data import news, market
-from src.models import elo as elo_module, calibrator
+from src.models import elo as elo_module, calibrator, ml_ensemble
 from src.market import edge as edge_mod, kelly as kelly_mod, odds as odds_mod
-import math
 
 
 FORMAT_KEYWORDS = {
@@ -69,7 +70,28 @@ class CricketPredictor(AbstractSport):
 
         base_p1 = max(0.05, min(0.95, base_p1))
 
-        # 6. Draw probability (Test only)
+        # 6. ML ensemble (if trained)
+        ml_model = ml_ensemble.MLEnsemble(sport="cricket", n_classes=2)
+        if ml_model.load():
+            elo1 = t1_stats.get("elo", 1700)
+            elo2 = t2_stats.get("elo", 1700)
+            fmt_enc = [int(fmt == "odi"), int(fmt == "t20"), int(fmt == "test")]
+            ml_feat = np.array([
+                (elo1 - elo2) / 400.0,
+                elo1 / (elo2 + 1e-9),
+                t1_stats.get("win_rate", 0.5) - t2_stats.get("win_rate", 0.5),
+                t1_stats.get("batting_avg", 28) - t2_stats.get("batting_avg", 28),
+                t2_stats.get("bowling_avg", 29) - t1_stats.get("bowling_avg", 29),
+                t1_stats.get("run_rate", 5) - t2_stats.get("run_rate", 5),
+                *fmt_enc,
+                base_p1,
+            ], dtype=np.float32)
+            ml_dict = ml_model.predict_dict(ml_feat, ["p2_win", "p1_win"])
+            base_p1 = 0.70 * base_p1 + 0.30 * ml_dict["p1_win"]
+            base_p1 = max(0.05, min(0.95, base_p1))
+            sources.append("ML Ensemble (cricket)")
+
+        # 7. Draw probability (Test only)
         if fmt == "test":
             draw_prob = 0.22 * (1 - abs(base_p1 - 0.5) * 2)  # more draws for close matches
             draw_prob = max(0.10, min(0.30, draw_prob))
@@ -83,7 +105,7 @@ class CricketPredictor(AbstractSport):
         else:
             probs = {"p1_win": round(base_p1, 4), "p2_win": round(1 - base_p1, 4)}
 
-        # 7. News
+        # 8. News
         t1_news = news.get_sentiment(entity1 + " cricket")
         t2_news = news.get_sentiment(entity2 + " cricket")
         all_flags = t1_news.get("flags", []) + t2_news.get("flags", [])
@@ -96,14 +118,14 @@ class CricketPredictor(AbstractSport):
 
         probs = calibrator.normalize(probs)
 
-        # 8. Market
+        # 9. Market
         mkt = market.get_market_odds(entity1, entity2, "cricket")
         market_mapped = None
         if mkt:
             keys = list(probs.keys())
             market_mapped = {k: mkt.get("home_win" if i == 0 else "away_win") for i, k in enumerate(keys)}
 
-        # 9. Edge + Kelly
+        # 10. Edge + Kelly
         edges = edge_mod.calculate_edge(probs, market_mapped or {})
         best_outcome, best_info = edge_mod.best_bet(edges)
         best_edge = best_info["edge_pct"] if best_info else 0.0
