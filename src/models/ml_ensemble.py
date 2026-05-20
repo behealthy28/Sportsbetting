@@ -114,6 +114,18 @@ class MLEnsemble:
         ensemble /= ensemble.sum()
         return ensemble
 
+    def predict_proba_batch(self, X: np.ndarray) -> np.ndarray:
+        """Vectorised batch prediction. X shape: (n_samples, n_features). Returns (n_samples, n_classes)."""
+        if not self.is_fitted or not ML_AVAILABLE:
+            n = len(X)
+            return np.full((n, self.n_classes), 1.0 / self.n_classes)
+        X_scaled = self.scaler.transform(X)
+        rf_probs  = self.rf.predict_proba(X_scaled)
+        xgb_probs = self.xgb_model.predict_proba(X_scaled)
+        ensemble  = 0.55 * xgb_probs + 0.45 * rf_probs
+        ensemble /= ensemble.sum(axis=1, keepdims=True)
+        return ensemble
+
     def predict_dict(self, features: np.ndarray, labels: list = None) -> dict:
         """Return probabilities as a labeled dict."""
         probs = self.predict_proba(features)

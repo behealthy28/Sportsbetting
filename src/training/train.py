@@ -320,8 +320,8 @@ def train_football(verbose: bool = True) -> dict:
         y_te = np.array(y_test, dtype=np.int32)
         n_te = len(X_te)
 
-        # ML predictions
-        probs_arr = np.array([ml_model.predict_proba(x) for x in X_te])
+        # ML predictions (vectorised batch)
+        probs_arr = ml_model.predict_proba_batch(X_te)
         predicted = np.argmax(probs_arr, axis=1)
         accuracy  = float((predicted == y_te).mean())
         one_hot   = np.zeros((n_te, 3))
@@ -502,7 +502,7 @@ def train_tennis(verbose: bool = True) -> dict:
         X_te  = np.array(X_test, dtype=np.float32)
         y_te  = np.array(y_test, dtype=np.int32)
         n_te  = len(X_te)
-        probs = np.array([ml_model.predict_proba(x) for x in X_te])
+        probs = ml_model.predict_proba_batch(X_te)
         preds = np.argmax(probs, axis=1)
         acc   = float((preds == y_te).mean())
         oh    = np.zeros((n_te, 2))
@@ -593,7 +593,7 @@ def train_boxing(verbose: bool = True) -> dict:
     }
 
     if len(X) > split:
-        te_probs = np.array([ml.predict_proba(x) for x in X_arr[split:]])
+        te_probs = ml.predict_proba_batch(X_arr[split:])
         te_preds = np.argmax(te_probs, axis=1)
         acc = float((te_preds == y_arr[split:]).mean())
         oh = np.zeros((len(X) - split, 2))
@@ -672,7 +672,7 @@ def train_darts(verbose: bool = True) -> dict:
         "generated_at": datetime.now().isoformat(),
     }
     if len(X) > split:
-        probs = np.array([ml.predict_proba(x) for x in X_arr[split:]])
+        probs = ml.predict_proba_batch(X_arr[split:])
         acc = float((np.argmax(probs, 1) == y_arr[split:]).mean())
         metrics["ml_accuracy"] = round(acc, 4)
         if verbose:
@@ -735,7 +735,7 @@ def train_badminton(verbose: bool = True) -> dict:
         "generated_at": datetime.now().isoformat(),
     }
     if len(X) > split:
-        probs = np.array([ml.predict_proba(x) for x in X_arr[split:]])
+        probs = ml.predict_proba_batch(X_arr[split:])
         acc = float((np.argmax(probs, 1) == y_arr[split:]).mean())
         metrics["ml_accuracy"] = round(acc, 4)
         if verbose:
@@ -821,7 +821,7 @@ def train_cricket(verbose: bool = True) -> dict:
         "generated_at": datetime.now().isoformat(),
     }
     if len(X) > split:
-        probs = np.array([ml.predict_proba(x) for x in X_arr[split:]])
+        probs = ml.predict_proba_batch(X_arr[split:])
         acc = float((np.argmax(probs, 1) == y_arr[split:]).mean())
         oh = np.zeros((len(X) - split, 2))
         for j, lbl in enumerate(y_arr[split:]):
@@ -921,7 +921,7 @@ def train_ufc(verbose: bool = True) -> dict:
                "generated_at": datetime.now().isoformat()}
 
     if len(X) > split:
-        te_probs = np.array([ml.predict_proba(x) for x in X_arr[split:]])
+        te_probs = ml.predict_proba_batch(X_arr[split:])
         te_preds = np.argmax(te_probs, axis=1)
         acc = float((te_preds == y_arr[split:]).mean())
         metrics["ml_accuracy"] = round(acc, 4)
