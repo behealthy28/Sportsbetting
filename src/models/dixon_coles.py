@@ -117,7 +117,8 @@ class DixonColesModel:
 
         ha = self.HOME_ADVANTAGE
 
-        def neg_log_likelihood(params: np.ndarray) -> float:
+        def neg_ll_and_grad(params: np.ndarray):
+            """Return (negative log-likelihood, gradient) jointly — avoids finite-diff overhead."""
             att = params[:n]
             def_ = params[n:2 * n]
             rho  = params[2 * n]
@@ -127,33 +128,67 @@ class DixonColesModel:
             lam_h = np.maximum(lam_h, 0.01)
             lam_a = np.maximum(lam_a, 0.01)
 
-            # Dixon-Coles τ correction — vectorised
-            tau = np.ones(len(matches))
+            # τ correction and its partial derivatives w.r.t. λ_h, λ_a, ρ
+            tau  = np.ones(len(matches))
+            dtdlh = np.zeros(len(matches))  # ∂τ/∂λ_h
+            dtdla = np.zeros(len(matches))  # ∂τ/∂λ_a
+            dtdrho = np.zeros(len(matches)) # ∂τ/∂ρ
             m00 = (home_goals == 0) & (away_goals == 0)
             m10 = (home_goals == 1) & (away_goals == 0)
             m01 = (home_goals == 0) & (away_goals == 1)
             m11 = (home_goals == 1) & (away_goals == 1)
-            tau[m00] = 1 - lam_h[m00] * lam_a[m00] * rho
-            tau[m10] = 1 + lam_a[m10] * rho
-            tau[m01] = 1 + lam_h[m01] * rho
-            tau[m11] = 1 - rho
+
+            tau[m00]    = 1 - lam_h[m00] * lam_a[m00] * rho
+            dtdlh[m00]  = -lam_a[m00] * rho
+            dtdla[m00]  = -lam_h[m00] * rho
+            dtdrho[m00] = -lam_h[m00] * lam_a[m00]
+
+            tau[m10]    = 1 + lam_a[m10] * rho
+            dtdla[m10]  = rho
+            dtdrho[m10] = lam_a[m10]
+
+            tau[m01]    = 1 + lam_h[m01] * rho
+            dtdlh[m01]  = rho
+            dtdrho[m01] = lam_h[m01]
+
+            tau[m11]    = 1 - rho
+            dtdrho[m11] = -1.0
+
             tau = np.maximum(tau, 1e-8)
 
+            # Log-likelihood per match
             ll = weights * (
                 np.log(tau)
                 + home_goals * np.log(lam_h) - lam_h - lf_h
                 + away_goals * np.log(lam_a) - lam_a - lf_a
             )
-            return -ll.sum()
+            nll = -ll.sum()
+
+            # ∂NLL/∂λ_h and ∂NLL/∂λ_a per match
+            w_dlh = weights * (dtdlh / tau + home_goals / lam_h - 1)
+            w_dla = weights * (dtdla / tau + away_goals / lam_a - 1)
+
+            # Accumulate gradients for attack[k] and defense[k]
+            # att[k]: appears as lam_h for home matches (∂lam_h/∂att[k] = lam_h)
+            #                and as lam_a for away matches (∂lam_a/∂att[k] = lam_a)
+            grad = np.zeros(2 * n + 1)
+            np.add.at(grad,       home_idx, -(w_dlh * lam_h))  # ∂att from home
+            np.add.at(grad,       away_idx, -(w_dla * lam_a))  # ∂att from away
+            np.add.at(grad, n +   away_idx, -(w_dlh * lam_h))  # ∂def from away when home
+            np.add.at(grad, n +   home_idx, -(w_dla * lam_a))  # ∂def from home when away
+            grad[2 * n] = -np.sum(weights * dtdrho / tau)
+
+            return nll, grad
 
         x0 = np.zeros(2 * n + 1)
         x0[-1] = -0.13  # rho initial
 
         try:
             result = minimize(
-                neg_log_likelihood,
+                neg_ll_and_grad,
                 x0,
                 method="L-BFGS-B",
+                jac=True,  # function returns (f, grad) jointly — no finite differences
                 bounds=[(None, None)] * (2 * n) + [(-0.5, 0.5)],
                 options={"maxiter": 300, "ftol": 1e-7},
             )
