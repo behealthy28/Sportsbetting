@@ -45,6 +45,8 @@ def _banner():
             ("    sim <id>       ", "white"), ("— dry-run: simulate Polymarket execution (no real money)\n", "dim"),
             ("    trades         ", "white"), ("— view your bet history & P&L\n", "dim"),
             ("    settle <id>    ", "white"), ("— mark a trade won/lost (e.g. settle a3f9)\n", "dim"),
+            ("    train          ", "white"), ("— train ML models + fit Dixon-Coles on real match history\n", "dim"),
+            ("    backtest       ", "white"), ("— show accuracy / Brier score / calibration from held-out test set\n", "dim"),
             ("    sports         ", "white"), ("— list all supported sports\n", "dim"),
             ("    exit           ", "white"), ("— quit\n", "dim"),
         ),
@@ -199,6 +201,36 @@ def _show_fixtures(days_ahead: int = 3):
     console.print(f"[dim]  {len(fixtures)} fixtures found  ·  type a match name to predict it[/dim]\n")
 
 
+def _run_train(sports: list = None):
+    """Train ML models and fit Dixon-Coles on real historical data."""
+    from src.training.train import main as train_main
+    console.print(
+        Panel(
+            Text.assemble(
+                ("  Training ML ensembles and Dixon-Coles model on real match history.\n\n", "dim"),
+                ("  Football: scraping Understat (EPL/La Liga/Bundesliga/Serie A/Ligue 1, 2014–present)\n", "dim"),
+                ("  Tennis  : downloading Jeff Sackmann ATP CSVs (2015–present)\n\n", "dim"),
+                ("  First run may take 10–20 minutes due to Understat rate limits.\n", "yellow"),
+                ("  Results cached — reruns are much faster.", "dim"),
+            ),
+            title="[bold white]  Train Models[/bold white]",
+            border_style="bright_blue",
+            padding=(0, 1),
+        )
+    )
+    console.print()
+    train_main(sports)
+
+
+def _run_backtest(sport: str = None):
+    """Display backtest accuracy, Brier score, and calibration charts."""
+    from src.backtest import run_backtest, run_all_backtests
+    if sport:
+        run_backtest(sport.lower(), console)
+    else:
+        run_all_backtests(console)
+
+
 def _run_autotrade():
     """One-shot autotrade scan: fetch fixtures, predict, auto-log qualifying dry-run bets."""
     from src.data.scrapers.fixtures import get_todays_fixtures
@@ -339,6 +371,18 @@ def _dispatch(line: str) -> bool:
         _run_autotrade()
         return True
 
+    if low.startswith("train"):
+        parts = cmd.split()
+        sports = parts[1:] if len(parts) > 1 else None
+        _run_train(sports)
+        return True
+
+    if low.startswith("backtest"):
+        parts = cmd.split()
+        sport = parts[1] if len(parts) > 1 else None
+        _run_backtest(sport)
+        return True
+
     if low.startswith("ask "):
         query = cmd.split(" ", 1)[1].strip()
         if query:
@@ -439,6 +483,14 @@ def main():
         elif low.startswith("data ") or low.startswith("inspect "):
             name = query.split(" ", 1)[1].strip()
             _inspect(name)
+        elif low.startswith("train"):
+            parts = query.split()
+            sports = parts[1:] if len(parts) > 1 else None
+            _run_train(sports)
+        elif low.startswith("backtest"):
+            parts = query.split()
+            sport = parts[1] if len(parts) > 1 else None
+            _run_backtest(sport)
         else:
             from src.predictor import predict_query
             predict_query(query)

@@ -4,7 +4,32 @@ from src.data.scrapers import fbref
 from src.data import news, market
 from src.models import dixon_coles, elo as elo_module, calibrator, ml_ensemble
 from src.market import edge as edge_mod, kelly as kelly_mod, odds as odds_mod
+import json
 import numpy as np
+from pathlib import Path
+
+_DC_MODEL_PATH = Path(__file__).parent.parent.parent / "data" / "models" / "football_dc.json"
+_fitted_dc: "dixon_coles.DixonColesModel | None" = None
+
+
+def _load_fitted_dc() -> "dixon_coles.DixonColesModel | None":
+    """Load the MLE-fitted Dixon-Coles model from disk (cached in module scope)."""
+    global _fitted_dc
+    if _fitted_dc is not None:
+        return _fitted_dc
+    if not _DC_MODEL_PATH.exists():
+        return None
+    try:
+        params = json.loads(_DC_MODEL_PATH.read_text())
+        m = dixon_coles.DixonColesModel()
+        m.attack = params["attack"]
+        m.defense = params["defense"]
+        m.rho = float(params["rho"])
+        m.is_fitted = True
+        _fitted_dc = m
+        return _fitted_dc
+    except Exception:
+        return None
 
 
 COMPETITION_WEIGHTS = {
@@ -73,16 +98,27 @@ class FootballPredictor(AbstractSport):
         away_concede_rate = away_data.get("avg_xga") or away_data.get("avg_conceded", 1.20)
         using_xg = bool(home_data.get("avg_xg") or away_data.get("avg_xg"))
 
-        dc_result = dixon_coles.quick_predict(
-            home_goals_avg=home_attack_rate,
-            away_goals_avg=away_attack_rate,
-            home_conceded_avg=home_concede_rate,
-            away_conceded_avg=away_concede_rate,
-            league_avg_goals=1.35,
-            neutral=is_neutral,
-            injury_adj_home=injury_adj_home,
-            injury_adj_away=injury_adj_away,
-        )
+        fitted_dc = _load_fitted_dc()
+        if fitted_dc is not None and fitted_dc.attack.get(entity1.lower()) and fitted_dc.attack.get(entity2.lower()):
+            # MLE-fitted model knows this team pair — use their learned strengths
+            dc_result = fitted_dc.predict(entity1.lower(), entity2.lower(), neutral=is_neutral)
+            # Apply injury adjustments as a post-hoc scaling on λ via probability redistribution
+            if injury_adj_home != 1.0 or injury_adj_away != 1.0:
+                dc_result = calibrator.apply_injury_adjustment(
+                    dc_result, injury_adj_home, injury_adj_away
+                )
+        else:
+            # Fall back to approximation for teams not in the fitted model (e.g. national teams)
+            dc_result = dixon_coles.quick_predict(
+                home_goals_avg=home_attack_rate,
+                away_goals_avg=away_attack_rate,
+                home_conceded_avg=home_concede_rate,
+                away_conceded_avg=away_concede_rate,
+                league_avg_goals=1.35,
+                neutral=is_neutral,
+                injury_adj_home=injury_adj_home,
+                injury_adj_away=injury_adj_away,
+            )
 
         # 5. ML ensemble (only used when pre-trained models exist in data/models/)
         ctx_dict = {
@@ -145,7 +181,9 @@ class FootballPredictor(AbstractSport):
         # 11. Key factors
         factors = _build_factors(home_data, away_data, h2h, entity1, entity2, competition)
 
-        dc_label = "Dixon-Coles (xG)" if using_xg else "Dixon-Coles"
+        fitted_dc = _load_fitted_dc()
+        dc_mode_label = "MLE-fitted" if (fitted_dc and fitted_dc.attack.get(entity1.lower())) else "approx"
+        dc_label = f"Dixon-Coles ({', '.join(filter(None, [('xG' if using_xg else None), dc_mode_label]))})"
         breakdown = {dc_label: dc_result, "ELO (ClubElo/eloratings)": elo_result}
         if ml_result:
             breakdown["ML Ensemble"] = ml_result
