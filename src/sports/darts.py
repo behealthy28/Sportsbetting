@@ -136,6 +136,27 @@ class DartsPredictor(AbstractSport):
             p1_win = max(0.05, min(0.95, p1_win))
 
         probs = {"p1_win": round(p1_win, 4), "p2_win": round(1 - p1_win, 4)}
+
+        # Agent debate — optional swarm-intelligence layer (requires ANTHROPIC_API_KEY)
+        debate_result = None
+        try:
+            from src.models.agent_debate import run_debate, blend_with_ml
+            debate_ctx = {
+                "date": date,
+                "competition": context.get("competition", "Darts"),
+                "ml_probability_a": probs["p1_win"],
+                "elo_a": f1_elo,
+                "elo_b": f2_elo,
+                "form_a": probs["p1_win"],
+                "news_flags": all_flags[:4],
+            }
+            debate_result = run_debate(entity1, entity2, "darts", debate_ctx)
+            if debate_result:
+                p1_new = blend_with_ml(probs["p1_win"], debate_result, ml_weight=0.72)
+                probs = {"p1_win": round(p1_new, 4), "p2_win": round(max(0.05, 1 - p1_new), 4)}
+        except Exception:
+            pass
+
         mkt = market.get_market_odds(entity1, entity2, "darts")
         market_mapped = None
         if mkt:
@@ -203,6 +224,27 @@ class BadmintonPredictor(AbstractSport):
             p1_win = max(0.05, min(0.95, p1_win))
 
         probs = {"p1_win": round(p1_win, 4), "p2_win": round(1 - p1_win, 4)}
+
+        # Agent debate — optional swarm-intelligence layer (requires ANTHROPIC_API_KEY)
+        debate_result = None
+        try:
+            from src.models.agent_debate import run_debate, blend_with_ml
+            debate_ctx = {
+                "date": date,
+                "competition": context.get("competition", sport_label),
+                "ml_probability_a": probs["p1_win"],
+                "elo_a": f1_elo,
+                "elo_b": f2_elo,
+                "form_a": probs["p1_win"],
+                "news_flags": all_flags[:4],
+            }
+            debate_result = run_debate(entity1, entity2, sport_label.lower(), debate_ctx)
+            if debate_result:
+                p1_new = blend_with_ml(probs["p1_win"], debate_result, ml_weight=0.72)
+                probs = {"p1_win": round(p1_new, 4), "p2_win": round(max(0.05, 1 - p1_new), 4)}
+        except Exception:
+            pass
+
         mkt = market.get_market_odds(entity1, entity2, sport_label.lower())
         market_mapped = None
         if mkt:

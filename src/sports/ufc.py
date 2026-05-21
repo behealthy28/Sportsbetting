@@ -78,6 +78,35 @@ class UFCPredictor(AbstractSport):
 
         probs = {"p1_win": round(blended_p1, 4), "p2_win": round(1 - blended_p1, 4)}
 
+        # 6b. Agent debate — optional swarm-intelligence layer (requires ANTHROPIC_API_KEY)
+        debate_result = None
+        try:
+            from src.models.agent_debate import run_debate, blend_with_ml
+            debate_ctx = {
+                "date": date,
+                "competition": context.get("competition", "UFC"),
+                "ml_probability_a": probs.get("p1_win", 0.5),
+                "elo_a": f1_elo,
+                "elo_b": f2_elo,
+                "form_a": f1_stats.get("win_rate", 0.5),
+                "form_b": f2_stats.get("win_rate", 0.5),
+                "avg_goals_a": f1_stats.get("slpm", 3.5),
+                "avg_goals_b": f2_stats.get("slpm", 3.5),
+                "avg_conceded_a": f1_stats.get("sapm", 3.0),
+                "avg_conceded_b": f2_stats.get("sapm", 3.0),
+                "news_flags": all_flags[:4],
+                "key_factors": factors,
+            }
+            debate_result = run_debate(entity1, entity2, "mma", debate_ctx)
+            if debate_result:
+                blended_p1_new = blend_with_ml(probs["p1_win"], debate_result, ml_weight=0.72)
+                probs = {
+                    "p1_win": round(blended_p1_new, 4),
+                    "p2_win": round(max(0.05, 1 - blended_p1_new), 4),
+                }
+        except Exception:
+            pass
+
         # 7. Market
         mkt = market.get_market_odds(entity1, entity2, "ufc")
         market_mapped = None
@@ -110,7 +139,18 @@ class UFCPredictor(AbstractSport):
             key_factors=factors,
             news_flags=all_flags[:5],
             data_sources=sources or ["Seeded fighter stats"],
-            model_breakdown={"ELO": {"p1_win": elo_p1}, "Statistical": {"p1_win": stat_p1}},
+            model_breakdown={
+                "ELO": {"p1_win": elo_p1},
+                "Statistical": {"p1_win": stat_p1},
+                **({
+                    "Agent Debate": {
+                        "p1_win": round(debate_result.consensus_probability, 4),
+                        "summary": debate_result.summary,
+                        "agents": {e.agent: {"p": e.probability, "conf": e.confidence, "reason": e.reasoning}
+                                   for e in debate_result.agent_estimates},
+                    }
+                } if debate_result else {}),
+            },
             competition=context.get("competition", "UFC"),
         )
 

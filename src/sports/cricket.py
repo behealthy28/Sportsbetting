@@ -118,6 +118,42 @@ class CricketPredictor(AbstractSport):
 
         probs = calibrator.normalize(probs)
 
+        # 8b. Agent debate — optional swarm-intelligence layer (requires ANTHROPIC_API_KEY)
+        debate_result = None
+        try:
+            from src.models.agent_debate import run_debate, blend_with_ml
+            debate_ctx = {
+                "date": date,
+                "competition": context.get("competition", f"{fmt.upper()} Match"),
+                "surface": fmt,
+                "ml_probability_a": probs.get("p1_win", 0.5),
+                "elo_a": t1_stats.get("elo", 1700),
+                "elo_b": t2_stats.get("elo", 1700),
+                "form_a": t1_stats.get("win_rate", 0.5),
+                "form_b": t2_stats.get("win_rate", 0.5),
+                "avg_goals_a": t1_stats.get("batting_avg", 28),
+                "avg_goals_b": t2_stats.get("batting_avg", 28),
+                "avg_conceded_a": t1_stats.get("bowling_avg", 29),
+                "avg_conceded_b": t2_stats.get("bowling_avg", 29),
+                "home_advantage": entity1 if not is_neutral else "neutral",
+                "news_flags": all_flags[:4],
+                "key_factors": factors,
+            }
+            debate_result = run_debate(entity1, entity2, "cricket", debate_ctx)
+            if debate_result:
+                blended_p1_new = blend_with_ml(probs["p1_win"], debate_result, ml_weight=0.72)
+                shift = blended_p1_new - probs["p1_win"]
+                probs["p1_win"] = round(blended_p1_new, 4)
+                if "draw" in probs:
+                    p2_draw_total = probs["p2_win"] + probs["draw"]
+                    if p2_draw_total > 0:
+                        probs["p2_win"] = round(max(0.01, probs["p2_win"] - shift * probs["p2_win"] / p2_draw_total), 4)
+                        probs["draw"] = round(max(0.01, 1 - probs["p1_win"] - probs["p2_win"]), 4)
+                else:
+                    probs["p2_win"] = round(max(0.05, 1 - blended_p1_new), 4)
+        except Exception:
+            pass
+
         # 9. Market
         mkt = market.get_market_odds(entity1, entity2, "cricket")
         market_mapped = None
@@ -158,7 +194,18 @@ class CricketPredictor(AbstractSport):
             key_factors=factors,
             news_flags=all_flags[:5],
             data_sources=sources,
-            model_breakdown={"ELO": {"p1_win": elo_probs["a_win"]}, "Batting/Bowling": {"p1_win": stat_p1}},
+            model_breakdown={
+                "ELO": {"p1_win": elo_probs["a_win"]},
+                "Batting/Bowling": {"p1_win": stat_p1},
+                **({
+                    "Agent Debate": {
+                        "p1_win": round(debate_result.consensus_probability, 4),
+                        "summary": debate_result.summary,
+                        "agents": {e.agent: {"p": e.probability, "conf": e.confidence, "reason": e.reasoning}
+                                   for e in debate_result.agent_estimates},
+                    }
+                } if debate_result else {}),
+            },
             competition=context.get("competition", f"{fmt.upper()} Match"),
             is_neutral=is_neutral,
         )

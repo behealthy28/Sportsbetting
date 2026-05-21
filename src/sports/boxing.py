@@ -140,6 +140,37 @@ class BoxingPredictor(AbstractSport):
         blended_p1 = max(0.05, min(0.95, blended_p1))
         probs = {"p1_win": round(blended_p1, 4), "p2_win": round(1 - blended_p1, 4)}
 
+        # 4b. Agent debate — optional swarm-intelligence layer (requires ANTHROPIC_API_KEY)
+        debate_result = None
+        try:
+            from src.models.agent_debate import run_debate, blend_with_ml
+            p1_profile = BOXER_PROFILES.get(entity1.lower(), {})
+            p2_profile = BOXER_PROFILES.get(entity2.lower(), {})
+            debate_ctx = {
+                "date": date,
+                "competition": context.get("competition", "Boxing"),
+                "ml_probability_a": probs.get("p1_win", 0.5),
+                "elo_a": f1_elo,
+                "elo_b": f2_elo,
+                "form_a": p1_profile.get("ko_rate", 0.5),
+                "form_b": p2_profile.get("ko_rate", 0.5),
+                "avg_goals_a": p1_profile.get("punch_output", 55),
+                "avg_goals_b": p2_profile.get("punch_output", 55),
+                "avg_conceded_a": 1 - p1_profile.get("defence", 0.6),
+                "avg_conceded_b": 1 - p2_profile.get("defence", 0.6),
+                "news_flags": all_flags[:4],
+                "key_factors": factors,
+            }
+            debate_result = run_debate(entity1, entity2, "boxing", debate_ctx)
+            if debate_result:
+                blended_p1_new = blend_with_ml(probs["p1_win"], debate_result, ml_weight=0.72)
+                probs = {
+                    "p1_win": round(blended_p1_new, 4),
+                    "p2_win": round(max(0.05, 1 - blended_p1_new), 4),
+                }
+        except Exception:
+            pass
+
         # 5. Market
         mkt = market.get_market_odds(entity1, entity2, "boxing")
         market_mapped = None
@@ -175,6 +206,16 @@ class BoxingPredictor(AbstractSport):
             key_factors=factors,
             news_flags=all_flags[:5],
             data_sources=sources,
-            model_breakdown={"ELO": {"p1_win": elo_p1}},
+            model_breakdown={
+                "ELO": {"p1_win": elo_p1},
+                **({
+                    "Agent Debate": {
+                        "p1_win": round(debate_result.consensus_probability, 4),
+                        "summary": debate_result.summary,
+                        "agents": {e.agent: {"p": e.probability, "conf": e.confidence, "reason": e.reasoning}
+                                   for e in debate_result.agent_estimates},
+                    }
+                } if debate_result else {}),
+            },
             competition=context.get("competition", "Boxing"),
         )

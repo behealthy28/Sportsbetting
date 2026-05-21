@@ -155,6 +155,40 @@ class FootballPredictor(AbstractSport):
         blended = calibrator.apply_news_sentiment(blended, home_news, "home_win")
         blended = calibrator.apply_news_sentiment(blended, away_news, "away_win")
 
+        # 7b. Agent debate — optional swarm-intelligence layer (requires ANTHROPIC_API_KEY)
+        debate_result = None
+        try:
+            from src.models.agent_debate import run_debate, blend_with_ml
+            debate_ctx = {
+                "date": date,
+                "competition": competition,
+                "ml_probability_a": blended.get("home_win", 0.4),
+                "elo_a": home_data.get("elo", 1500),
+                "elo_b": away_data.get("elo", 1500),
+                "form_a": home_data.get("form", 0.5),
+                "form_b": away_data.get("form", 0.5),
+                "avg_goals_a": home_data.get("avg_goals", 1.4),
+                "avg_goals_b": away_data.get("avg_goals", 1.4),
+                "avg_conceded_a": home_data.get("avg_conceded", 1.2),
+                "avg_conceded_b": away_data.get("avg_conceded", 1.2),
+                "home_advantage": entity1 if not is_neutral else "neutral",
+                "news_flags": all_flags[:4],
+                "key_factors": factors if "factors" in dir() else [],
+            }
+            debate_result = run_debate(entity1, entity2, "football", debate_ctx)
+            if debate_result:
+                from src.models.agent_debate import blend_with_ml
+                blended_home = blend_with_ml(blended["home_win"], debate_result, ml_weight=0.72)
+                shift = blended_home - blended["home_win"]
+                # Distribute shift proportionally to away/draw
+                away_draw_total = blended["away_win"] + blended["draw"]
+                if away_draw_total > 0:
+                    blended["home_win"] = blended_home
+                    blended["away_win"] = round(blended["away_win"] - shift * blended["away_win"] / away_draw_total, 4)
+                    blended["draw"]     = round(max(0.01, 1 - blended["home_win"] - blended["away_win"]), 4)
+        except Exception:
+            pass
+
         # 8. Market odds
         mkt = market.get_market_odds(entity1, entity2, "football")
         if mkt:
@@ -187,6 +221,13 @@ class FootballPredictor(AbstractSport):
         breakdown = {dc_label: dc_result, "ELO (ClubElo/eloratings)": elo_result}
         if ml_result:
             breakdown["ML Ensemble"] = ml_result
+        if debate_result:
+            breakdown["Agent Debate"] = {
+                "home_win": round(debate_result.consensus_probability, 4),
+                "summary": debate_result.summary,
+                "agents": {e.agent: {"p": e.probability, "conf": e.confidence, "reason": e.reasoning}
+                           for e in debate_result.agent_estimates},
+            }
 
         return PredictionResult(
             sport="Football",

@@ -151,6 +151,36 @@ class TennisPredictor(AbstractSport):
                 ["p1_win", "p2_win"],
             )
 
+        # 6b. Agent debate — optional swarm-intelligence layer (requires ANTHROPIC_API_KEY)
+        debate_result = None
+        try:
+            from src.models.agent_debate import run_debate, blend_with_ml
+            debate_ctx = {
+                "date": date,
+                "competition": context.get("competition", ""),
+                "surface": surface,
+                "ml_probability_a": probs.get("p1_win", 0.5),
+                "elo_a": elo_p1,
+                "elo_b": elo_p2,
+                "form_a": p1_stats.get("overall_win_rate", 0.5),
+                "form_b": p2_stats.get("overall_win_rate", 0.5),
+                "h2h_wins_a": h2h.get("p1_wins", 0),
+                "h2h_wins_b": h2h.get("p2_wins", 0),
+                "avg_goals_a": p1_stats.get("ace_rate", 0.0),
+                "avg_goals_b": p2_stats.get("ace_rate", 0.0),
+                "news_flags": all_flags[:4],
+                "key_factors": factors,
+            }
+            debate_result = run_debate(entity1, entity2, "tennis", debate_ctx)
+            if debate_result:
+                blended_p1_new = blend_with_ml(probs["p1_win"], debate_result, ml_weight=0.72)
+                probs = {
+                    "p1_win": round(blended_p1_new, 4),
+                    "p2_win": round(max(0.05, 1 - blended_p1_new), 4),
+                }
+        except Exception:
+            pass
+
         # 7. Market
         mkt = market.get_market_odds(entity1, entity2, "tennis")
         market_mapped = None
@@ -191,7 +221,18 @@ class TennisPredictor(AbstractSport):
             key_factors=factors,
             news_flags=all_flags[:5],
             data_sources=sources or ["ELO seeded ratings"],
-            model_breakdown={"ELO + Surface": elo_result, "H2H Adjusted": probs},
+            model_breakdown={
+                "ELO + Surface": elo_result,
+                "H2H Adjusted": probs,
+                **({
+                    "Agent Debate": {
+                        "p1_win": round(debate_result.consensus_probability, 4),
+                        "summary": debate_result.summary,
+                        "agents": {e.agent: {"p": e.probability, "conf": e.confidence, "reason": e.reasoning}
+                                   for e in debate_result.agent_estimates},
+                    }
+                } if debate_result else {}),
+            },
             venue=context.get("venue", ""),
             competition=context.get("competition", ""),
         )
