@@ -163,6 +163,7 @@ class FootballPredictor(AbstractSport):
                 "date": date,
                 "competition": competition,
                 "ml_probability_a": blended.get("home_win", 0.4),
+                "market_prob_a": market_mapped.get("home_win") if market_mapped else None,
                 "elo_a": home_data.get("elo", 1500),
                 "elo_b": away_data.get("elo", 1500),
                 "form_a": home_data.get("form", 0.5),
@@ -172,6 +173,9 @@ class FootballPredictor(AbstractSport):
                 "avg_conceded_a": home_data.get("avg_conceded", 1.2),
                 "avg_conceded_b": away_data.get("avg_conceded", 1.2),
                 "home_advantage": entity1 if not is_neutral else "neutral",
+                "venue": context.get("venue", ""),
+                "injuries": context.get("injuries", []),
+                "weather": context.get("weather", {}),
                 "news_flags": all_flags[:4],
                 "key_factors": factors if "factors" in dir() else [],
             }

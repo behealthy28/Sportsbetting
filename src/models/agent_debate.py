@@ -1,7 +1,7 @@
 """
 Multi-agent debate layer — MiroFish-inspired swarm reasoning.
 
-Four specialist agents with distinct viewpoints each produce a probability
+Nine specialist agents with distinct viewpoints each produce a probability
 estimate for a match outcome. Their consensus is blended with the statistical
 ML model to capture intangibles (motivation, momentum, injuries, narratives)
 that historical stats alone cannot encode.
@@ -12,8 +12,13 @@ Agents
 2. TacticsScout       — reads style matchups, surface/venue fit, fighting style
 3. NewsIntelligence   — weighs injuries, suspensions, travel, motivation
 4. Contrarian         — argues the non-obvious case, stress-tests the favourite
+5. InjurySpecialist   — deep fitness/squad depth analysis
+6. MarketIntelligence — reads line movement and sharp money patterns
+7. WeatherAnalyst     — outdoor conditions: wind, rain, temperature, altitude
+8. PsychologyAnalyst  — pressure situations, rivalry dynamics, must-win games
+9. HomeGroundExpert   — travel fatigue, crowd factor, altitude, surface familiarity
 
-The final probability is a confidence-weighted average of all four.
+The final probability is a confidence-weighted average of all nine.
 Falls back gracefully to None when ANTHROPIC_API_KEY is missing or the
 API is unavailable, so the rest of the prediction pipeline is unaffected.
 """
@@ -82,14 +87,102 @@ _AGENTS = [
             '"reasoning": "<1 sentence>"}'
         ),
     },
+    {
+        "name": "InjurySpecialist",
+        "system": (
+            "You are a sports medicine and roster analyst who specialises in the impact "
+            "of injuries, suspensions, and squad depth on match outcomes. "
+            "Assess: key player absences (starter vs squad player), positional gaps "
+            "created by injuries, the quality of replacements, cumulative fatigue from "
+            "fixture congestion, and undisclosed niggles suggested by training reports. "
+            "A single star player injury can swing probability 10-20% — quantify this. "
+            "If injury information is absent, default conservatively toward 0.5. "
+            "Output a single JSON object: "
+            '{"probability": <float 0-1 that side_a wins>, "confidence": <float 0-1>, '
+            '"reasoning": "<1 sentence>"}'
+        ),
+    },
+    {
+        "name": "MarketIntelligence",
+        "system": (
+            "You are a betting market analyst who reads sharp money, line movement, "
+            "and market inefficiencies. Consider: where the market probability sits "
+            "relative to the ML model probability (large gaps signal either value or "
+            "informed money), steam moves (sharp bettors moving lines), public betting "
+            "bias (recreational bettors inflating favourites and popular teams), and "
+            "Polymarket/Kalshi prediction market consensus. Sharp money is more "
+            "informative than public money. When market and model disagree significantly, "
+            "investigate WHY rather than blindly following either. "
+            "Output a single JSON object: "
+            '{"probability": <float 0-1 that side_a wins>, "confidence": <float 0-1>, '
+            '"reasoning": "<1 sentence>"}'
+        ),
+    },
+    {
+        "name": "WeatherAnalyst",
+        "system": (
+            "You are an environmental conditions analyst for outdoor sports. "
+            "Assess how weather and venue conditions affect match outcomes: "
+            "strong wind neutralises technical teams and favours direct/physical play; "
+            "heavy rain reduces goal-scoring and benefits defensive sides; "
+            "extreme heat or altitude disadvantages the team that travelled further; "
+            "a slick wet surface affects traction and passing accuracy. "
+            "For indoor sports (boxing, darts, table tennis, badminton, indoor tennis), "
+            "weather is irrelevant — set confidence to 0.1 and probability to 0.5. "
+            "For outdoor sports without weather data, set confidence to 0.2. "
+            "Output a single JSON object: "
+            '{"probability": <float 0-1 that side_a wins>, "confidence": <float 0-1>, '
+            '"reasoning": "<1 sentence>"}'
+        ),
+    },
+    {
+        "name": "PsychologyAnalyst",
+        "system": (
+            "You are a sports psychology and motivation analyst. "
+            "Evaluate mental and psychological edges: rivalry intensity (El Clasico, "
+            "Derby matches inflame emotion and raise upset probability); must-win "
+            "desperation (a team fighting relegation or needing a win to advance); "
+            "complacency risk (a champion with nothing to prove vs a hungry challenger); "
+            "revenge narratives (previous humiliating defeat creates extra motivation); "
+            "mental fragility under pressure (a team or athlete that historically "
+            "collapses at big moments); crowd psychology and home fortress effect. "
+            "Psychological edges are real but subtle — rarely move probability more than 8%. "
+            "Output a single JSON object: "
+            '{"probability": <float 0-1 that side_a wins>, "confidence": <float 0-1>, '
+            '"reasoning": "<1 sentence>"}'
+        ),
+    },
+    {
+        "name": "HomeGroundExpert",
+        "system": (
+            "You are a venue and travel logistics expert. "
+            "Quantify the home advantage factors: crowd noise and referee bias for the "
+            "home team; long-haul travel fatigue (>4 hour flights compress recovery); "
+            "altitude acclimatisation (playing above 2000m without preparation); "
+            "surface familiarity (a team that trains on artificial turf playing on grass); "
+            "pitch dimensions that suit or hinder particular styles; "
+            "time zone disruption for the visiting side. "
+            "For neutral venues, home advantage is zero — state this and adjust confidence. "
+            "For well-documented home fortresses (Anfield, Azteca, Allianz Arena), "
+            "apply a stronger boost. "
+            "Output a single JSON object: "
+            '{"probability": <float 0-1 that side_a wins>, "confidence": <float 0-1>, '
+            '"reasoning": "<1 sentence>"}'
+        ),
+    },
 ]
 
-# Weights for each agent in the final ensemble
+# Weights for each agent in the final ensemble (must sum to 1.0)
 _AGENT_WEIGHTS = {
-    "StatisticsAnalyst": 0.35,
-    "TacticsScout":      0.30,
-    "NewsIntelligence":  0.20,
-    "Contrarian":        0.15,
+    "StatisticsAnalyst": 0.22,
+    "TacticsScout":      0.18,
+    "NewsIntelligence":  0.13,
+    "Contrarian":        0.10,
+    "InjurySpecialist":  0.15,
+    "MarketIntelligence":0.10,
+    "WeatherAnalyst":    0.04,
+    "PsychologyAnalyst": 0.05,
+    "HomeGroundExpert":  0.03,
 }
 
 
@@ -143,18 +236,35 @@ def _build_context_prompt(
     # Statistical context
     stat_keys = [
         ("ml_probability_a", "ML model P(side_a wins)"),
+        ("market_prob_a", "Market/Polymarket P(side_a wins)"),
         ("elo_a", "ELO side_a"), ("elo_b", "ELO side_b"),
         ("form_a", "Recent form side_a (0-1)"), ("form_b", "Recent form side_b"),
         ("avg_goals_a", "Avg goals/pts scored side_a"), ("avg_goals_b", "Avg goals/pts scored side_b"),
         ("avg_conceded_a", "Avg conceded side_a"), ("avg_conceded_b", "Avg conceded side_b"),
         ("h2h_wins_a", "H2H wins side_a in last 10"), ("h2h_wins_b", "H2H wins side_b in last 10"),
-        ("home_advantage", "Home side"),
+        ("home_advantage", "Home side (neutral if no home team)"),
+        ("venue", "Venue/Stadium"),
+        ("altitude_m", "Venue altitude (metres)"),
+        ("travel_km_a", "Travel distance side_a (km)"),
+        ("travel_km_b", "Travel distance side_b (km)"),
     ]
     stats = {label: context[key] for key, label in stat_keys if key in context}
     if stats:
         lines.append("\nStatistics:")
         for label, val in stats.items():
             lines.append(f"  {label}: {val}")
+
+    # Weather
+    weather = context.get("weather", {})
+    if weather:
+        lines.append("\nWeather conditions:")
+        for k, v in weather.items():
+            lines.append(f"  {k}: {v}")
+
+    # Injuries / squad news
+    injuries = context.get("injuries", [])
+    if injuries:
+        lines.append(f"\nInjury/suspension reports: {'; '.join(injuries)}")
 
     # News flags
     news = context.get("news_flags", [])
@@ -178,10 +288,10 @@ def run_debate(
     side_b: str,
     sport: str,
     context: dict,
-    timeout: int = 20,
+    timeout: int = 25,
 ) -> Optional[DebateResult]:
     """
-    Run all four agents in parallel and return the weighted consensus.
+    Run all nine agents sequentially and return the weighted consensus.
     Returns None if Anthropic API is unavailable.
     """
     try:
