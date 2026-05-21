@@ -1,0 +1,10 @@
+requirements.txt
+src/
+data/
+tests/
+app.py
+main.py
+__pycache__/
+*.pkl
+*.pyc
+.env
