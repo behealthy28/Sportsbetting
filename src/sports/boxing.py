@@ -11,106 +11,74 @@ from src.market import edge as edge_mod, kelly as kelly_mod, odds as odds_mod
 PLAYERS_FILE = Path(__file__).parent.parent.parent / "data" / "mappings" / "players.json"
 
 # ELO ratings seeded from recent performance (2024-25 records) — all 17 weight divisions.
-# Scale: 2000=all-time great, 1900=elite champion, 1800=solid top-contender, 1700=journeyman.
-BOXING_ELO = {
-    # ── Heavyweight (200+ lb) ─────────────────────────────────────────────────
-    "oleksandr usyk":    1950,
-    "tyson fury":        1910,
-    "anthony joshua":    1830,
-    "deontay wilder":    1820,
-    "daniel dubois":     1810,
-    "joe joyce":         1760,
-    "zhilei zhang":      1800,
-    "frank sanchez":     1790,
-    "joseph parker":     1800,
-    "otto wallin":       1760,
-    # ── Cruiserweight (200 lb) ────────────────────────────────────────────────
-    "jai opetaia":       1860,
-    "mairis briedis":    1840,
-    "ilunga makabu":     1810,
-    "badou jack":        1790,
-    "yuniel dorticos":   1800,
-    # ── Light Heavyweight (175 lb) ────────────────────────────────────────────
-    "artur beterbiev":   1900,
-    "dmitry bivol":      1890,
-    "joe smith":         1790,
-    "anthony yarde":     1800,
-    "callum smith":      1800,
-    "christian plant":   1790,
-    # ── Super Middleweight (168 lb) ───────────────────────────────────────────
-    "canelo alvarez":    1930,
-    "david benavidez":   1860,
-    "edgar berlanga":    1820,
-    "caleb plant":       1820,
-    "chris eubank jr":   1810,
-    "william scull":     1800,
-    # ── Middleweight (160 lb) ─────────────────────────────────────────────────
-    "jermall charlo":    1820,
-    "carlos adames":     1800,
-    "erislandy lara":    1810,
-    "janibek alimkhanuly": 1850,
-    "michael zerafa":    1780,
-    # ── Super Welterweight (154 lb) ───────────────────────────────────────────
-    "terence crawford":  1900,
-    "errol spence":      1870,
-    "tim tszyu":         1860,
-    "sebastian fundora": 1830,
-    "brian castano":     1810,
-    "tony harrison":     1790,
-    # ── Welterweight (147 lb) ─────────────────────────────────────────────────
-    "jaron ennis":       1880,
-    "keith thurman":     1810,
-    "vergil ortiz":      1820,
-    "eimantas stanionis": 1800,
-    "cody crowley":      1790,
-    # ── Super Lightweight (140 lb) ────────────────────────────────────────────
-    "jose zepeda":       1830,
-    "regis prograis":    1820,
-    "jack catterall":    1800,
-    "subriel matias":    1790,
-    "jose pedraza":      1790,
-    # ── Lightweight (135 lb) ─────────────────────────────────────────────────
-    "vasiliy lomachenko": 1880,
-    "gervonta davis":    1890,
-    "devin haney":       1870,
-    "george kambosos":   1830,
-    "shakur stevenson":  1860,
-    "frank martin":      1820,
-    # ── Super Featherweight (130 lb) ──────────────────────────────────────────
-    "o'shaquie foster":  1840,
-    "robson conceicao":  1820,
-    "lamont roach":      1800,
-    "hector garcia":     1810,
-    # ── Featherweight (126 lb) ────────────────────────────────────────────────
-    "leo santa cruz":    1820,
-    "brandon figueroa":  1810,
-    "isaac dogboe":      1800,
-    "naoya inoue":       1920,
-    "rey vargas":        1820,
-    "mark magsayo":      1800,
-    # ── Super Bantamweight (122 lb) ───────────────────────────────────────────
-    "murodjon akhmadaliev": 1850,
-    "marlon tapales":    1820,
-    "roman gonzalez":    1830,
-    "sor rungvisai":     1810,
-    # ── Bantamweight (118 lb) ─────────────────────────────────────────────────
-    "john riel casimero": 1810,
-    "nonito donaire":    1820,
-    "Emmanuel Rodriguez": 1800,
-    # ── Super Flyweight (115 lb) ─────────────────────────────────────────────
-    "juan francisco estrada": 1860,
-    "srisaket sor rungvisai": 1840,
-    "julio cesar martinez": 1820,
-    "elwin soto":        1800,
-    # ── Flyweight (112 lb) ───────────────────────────────────────────────────
-    "julio cesar martinez flyweight": 1820,
-    "sunny edwards":     1840,
-    "moruti mthalane":   1800,
-    # ── Strawweight (105 lb) ─────────────────────────────────────────────────
-    "wanheng menayothin": 1850,
-    "panya pradabsri":   1820,
-    "knockout cp freshmart": 1800,
+# Full boxer profiles: elo, ko_rate (KO wins / total wins), punch_output (per round),
+# accuracy (landed / thrown), defence (slips + blocks %), style archetype.
+# style: P=pressure/brawler, S=outboxer/slickboxer, B=boxer-puncher, C=counter-puncher
+BOXER_PROFILES = {
+    # ── Heavyweight ──────────────────────────────────────────────────────────
+    "oleksandr usyk":    {"elo":1950,"ko_rate":0.52,"punch_output":56,"accuracy":0.44,"defence":0.68,"style":"S","weight_class":"Heavyweight"},
+    "tyson fury":        {"elo":1910,"ko_rate":0.62,"punch_output":52,"accuracy":0.38,"defence":0.74,"style":"S","weight_class":"Heavyweight"},
+    "anthony joshua":    {"elo":1830,"ko_rate":0.82,"punch_output":55,"accuracy":0.42,"defence":0.54,"style":"B","weight_class":"Heavyweight"},
+    "deontay wilder":    {"elo":1820,"ko_rate":0.96,"punch_output":36,"accuracy":0.40,"defence":0.56,"style":"P","weight_class":"Heavyweight"},
+    "daniel dubois":     {"elo":1810,"ko_rate":0.88,"punch_output":47,"accuracy":0.40,"defence":0.55,"style":"P","weight_class":"Heavyweight"},
+    "zhilei zhang":      {"elo":1800,"ko_rate":0.70,"punch_output":45,"accuracy":0.39,"defence":0.60,"style":"P","weight_class":"Heavyweight"},
+    "joseph parker":     {"elo":1800,"ko_rate":0.52,"punch_output":50,"accuracy":0.37,"defence":0.62,"style":"B","weight_class":"Heavyweight"},
+    "frank sanchez":     {"elo":1790,"ko_rate":0.67,"punch_output":48,"accuracy":0.38,"defence":0.64,"style":"B","weight_class":"Heavyweight"},
+    "joe joyce":         {"elo":1760,"ko_rate":0.67,"punch_output":72,"accuracy":0.41,"defence":0.55,"style":"P","weight_class":"Heavyweight"},
+    "otto wallin":       {"elo":1760,"ko_rate":0.44,"punch_output":48,"accuracy":0.37,"defence":0.63,"style":"S","weight_class":"Heavyweight"},
+    # ── Light Heavyweight ────────────────────────────────────────────────────
+    "artur beterbiev":   {"elo":1900,"ko_rate":1.00,"punch_output":68,"accuracy":0.45,"defence":0.60,"style":"P","weight_class":"Light Heavyweight"},
+    "dmitry bivol":      {"elo":1890,"ko_rate":0.44,"punch_output":78,"accuracy":0.38,"defence":0.72,"style":"S","weight_class":"Light Heavyweight"},
+    "joe smith":         {"elo":1790,"ko_rate":0.65,"punch_output":52,"accuracy":0.37,"defence":0.58,"style":"P","weight_class":"Light Heavyweight"},
+    "anthony yarde":     {"elo":1800,"ko_rate":0.79,"punch_output":58,"accuracy":0.40,"defence":0.57,"style":"P","weight_class":"Light Heavyweight"},
+    "callum smith":      {"elo":1800,"ko_rate":0.63,"punch_output":56,"accuracy":0.39,"defence":0.60,"style":"B","weight_class":"Light Heavyweight"},
+    # ── Super Middleweight ───────────────────────────────────────────────────
+    "canelo alvarez":    {"elo":1930,"ko_rate":0.73,"punch_output":62,"accuracy":0.42,"defence":0.74,"style":"B","weight_class":"Super Middleweight"},
+    "david benavidez":   {"elo":1860,"ko_rate":0.87,"punch_output":82,"accuracy":0.42,"defence":0.60,"style":"P","weight_class":"Super Middleweight"},
+    "edgar berlanga":    {"elo":1820,"ko_rate":0.88,"punch_output":59,"accuracy":0.38,"defence":0.59,"style":"P","weight_class":"Super Middleweight"},
+    "caleb plant":       {"elo":1820,"ko_rate":0.57,"punch_output":70,"accuracy":0.40,"defence":0.70,"style":"S","weight_class":"Super Middleweight"},
+    "chris eubank jr":   {"elo":1810,"ko_rate":0.57,"punch_output":74,"accuracy":0.38,"defence":0.60,"style":"P","weight_class":"Super Middleweight"},
+    # ── Middleweight ─────────────────────────────────────────────────────────
+    "janibek alimkhanuly":{"elo":1850,"ko_rate":0.77,"punch_output":68,"accuracy":0.42,"defence":0.66,"style":"B","weight_class":"Middleweight"},
+    "jermall charlo":    {"elo":1820,"ko_rate":0.65,"punch_output":58,"accuracy":0.40,"defence":0.68,"style":"B","weight_class":"Middleweight"},
+    "erislandy lara":    {"elo":1810,"ko_rate":0.38,"punch_output":60,"accuracy":0.42,"defence":0.76,"style":"C","weight_class":"Middleweight"},
+    "carlos adames":     {"elo":1800,"ko_rate":0.71,"punch_output":70,"accuracy":0.38,"defence":0.59,"style":"P","weight_class":"Middleweight"},
+    # ── Super Welterweight ───────────────────────────────────────────────────
+    "terence crawford":  {"elo":1900,"ko_rate":0.72,"punch_output":58,"accuracy":0.45,"defence":0.72,"style":"B","weight_class":"Super Welterweight"},
+    "errol spence":      {"elo":1870,"ko_rate":0.63,"punch_output":74,"accuracy":0.43,"defence":0.68,"style":"B","weight_class":"Super Welterweight"},
+    "tim tszyu":         {"elo":1860,"ko_rate":0.69,"punch_output":68,"accuracy":0.41,"defence":0.64,"style":"P","weight_class":"Super Welterweight"},
+    "sebastian fundora": {"elo":1830,"ko_rate":0.76,"punch_output":70,"accuracy":0.38,"defence":0.58,"style":"P","weight_class":"Super Welterweight"},
+    "brian castano":     {"elo":1810,"ko_rate":0.56,"punch_output":76,"accuracy":0.39,"defence":0.61,"style":"P","weight_class":"Super Welterweight"},
+    # ── Welterweight ─────────────────────────────────────────────────────────
+    "jaron ennis":       {"elo":1880,"ko_rate":0.85,"punch_output":74,"accuracy":0.45,"defence":0.65,"style":"B","weight_class":"Welterweight"},
+    "vergil ortiz":      {"elo":1820,"ko_rate":0.92,"punch_output":72,"accuracy":0.43,"defence":0.58,"style":"P","weight_class":"Welterweight"},
+    "keith thurman":     {"elo":1810,"ko_rate":0.67,"punch_output":65,"accuracy":0.40,"defence":0.67,"style":"B","weight_class":"Welterweight"},
+    "eimantas stanionis": {"elo":1800,"ko_rate":0.55,"punch_output":66,"accuracy":0.38,"defence":0.63,"style":"P","weight_class":"Welterweight"},
+    # ── Lightweight ──────────────────────────────────────────────────────────
+    "gervonta davis":    {"elo":1890,"ko_rate":0.87,"punch_output":57,"accuracy":0.43,"defence":0.67,"style":"P","weight_class":"Lightweight"},
+    "vasiliy lomachenko":{"elo":1880,"ko_rate":0.52,"punch_output":80,"accuracy":0.50,"defence":0.74,"style":"S","weight_class":"Lightweight"},
+    "shakur stevenson":  {"elo":1860,"ko_rate":0.55,"punch_output":78,"accuracy":0.47,"defence":0.76,"style":"S","weight_class":"Lightweight"},
+    "devin haney":       {"elo":1870,"ko_rate":0.41,"punch_output":72,"accuracy":0.46,"defence":0.74,"style":"S","weight_class":"Lightweight"},
+    "george kambosos":   {"elo":1830,"ko_rate":0.55,"punch_output":62,"accuracy":0.38,"defence":0.62,"style":"P","weight_class":"Lightweight"},
+    "frank martin":      {"elo":1820,"ko_rate":0.68,"punch_output":58,"accuracy":0.40,"defence":0.63,"style":"B","weight_class":"Lightweight"},
+    # ── Super Featherweight ───────────────────────────────────────────────────
+    "o'shaquie foster":  {"elo":1840,"ko_rate":0.57,"punch_output":66,"accuracy":0.40,"defence":0.69,"style":"S","weight_class":"Super Featherweight"},
+    "robson conceicao":  {"elo":1820,"ko_rate":0.44,"punch_output":70,"accuracy":0.39,"defence":0.70,"style":"C","weight_class":"Super Featherweight"},
+    # ── Featherweight ─────────────────────────────────────────────────────────
+    "naoya inoue":       {"elo":1920,"ko_rate":0.80,"punch_output":74,"accuracy":0.46,"defence":0.68,"style":"B","weight_class":"Featherweight"},
+    "rey vargas":        {"elo":1820,"ko_rate":0.50,"punch_output":72,"accuracy":0.42,"defence":0.70,"style":"S","weight_class":"Featherweight"},
+    # ── Super Bantamweight ────────────────────────────────────────────────────
+    "murodjon akhmadaliev":{"elo":1850,"ko_rate":0.72,"punch_output":68,"accuracy":0.41,"defence":0.64,"style":"B","weight_class":"Super Bantamweight"},
+    "marlon tapales":    {"elo":1820,"ko_rate":0.65,"punch_output":62,"accuracy":0.39,"defence":0.61,"style":"P","weight_class":"Super Bantamweight"},
+    # ── Lower weights ────────────────────────────────────────────────────────
+    "juan francisco estrada":{"elo":1860,"ko_rate":0.58,"punch_output":78,"accuracy":0.42,"defence":0.67,"style":"B","weight_class":"Super Flyweight"},
+    "roman gonzalez":    {"elo":1830,"ko_rate":0.62,"punch_output":80,"accuracy":0.44,"defence":0.66,"style":"P","weight_class":"Super Flyweight"},
+    "sunny edwards":     {"elo":1840,"ko_rate":0.35,"punch_output":82,"accuracy":0.45,"defence":0.74,"style":"S","weight_class":"Flyweight"},
+    "wanheng menayothin":{"elo":1850,"ko_rate":0.62,"punch_output":70,"accuracy":0.41,"defence":0.64,"style":"P","weight_class":"Strawweight"},
 }
+
+# Keep flat ELO dict for backwards-compat with EloPredictor
+BOXING_ELO = {name: p["elo"] for name, p in BOXER_PROFILES.items()}
 
 
 def _load_boxing_seeds() -> dict:
