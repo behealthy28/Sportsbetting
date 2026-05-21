@@ -13,39 +13,47 @@ HEADERS = {
 # Seeded fighter stats — covers all 12 UFC weight classes, top 8–10 per division.
 # Stats: slpm=strikes landed/min, str_acc=strike accuracy, sapm=strikes absorbed/min,
 #        str_def=strike defence, td_avg=takedowns/15min, td_acc, td_def, sub_avg=submissions/15min
+# ELO scale: 1950=all-time great, 1900=dominant multi-div champ, 1850=elite champ,
+#            1800=top contender, 1750=top 10, 1700=ranked, 1650=fringe
 FIGHTER_SEEDS = {
     # ── Heavyweight (265 lb) ─────────────────────────────────────────────────
     "jon jones": {
+        "elo": 1920,
         "slpm": 4.29, "str_acc": 0.57, "sapm": 2.22, "str_def": 0.64,
         "td_avg": 1.86, "td_acc": 0.44, "td_def": 0.96, "sub_avg": 0.5,
         "height_cm": 193, "reach_cm": 213, "age": 37, "wins": 27, "losses": 1,
         "ko_wins": 10, "sub_wins": 7, "dec_wins": 10, "weight_class": "Heavyweight",
     },
     "stipe miocic": {
+        "elo": 1770,
         "slpm": 4.67, "str_acc": 0.52, "sapm": 3.25, "str_def": 0.55,
         "td_avg": 1.74, "td_acc": 0.40, "td_def": 0.73, "sub_avg": 0.1,
         "height_cm": 193, "reach_cm": 201, "age": 41, "wins": 20, "losses": 4,
         "ko_wins": 12, "sub_wins": 1, "dec_wins": 7, "weight_class": "Heavyweight",
     },
     "francis ngannou": {
+        "elo": 1790,
         "slpm": 4.43, "str_acc": 0.47, "sapm": 3.60, "str_def": 0.56,
         "td_avg": 1.50, "td_acc": 0.37, "td_def": 0.73, "sub_avg": 0.3,
         "height_cm": 193, "reach_cm": 211, "age": 38, "wins": 17, "losses": 3,
         "ko_wins": 12, "sub_wins": 4, "dec_wins": 1, "weight_class": "Heavyweight",
     },
     "ciryl gane": {
+        "elo": 1800,
         "slpm": 5.00, "str_acc": 0.55, "sapm": 3.10, "str_def": 0.61,
         "td_avg": 0.84, "td_acc": 0.36, "td_def": 0.82, "sub_avg": 0.1,
         "height_cm": 196, "reach_cm": 211, "age": 34, "wins": 12, "losses": 2,
         "ko_wins": 7, "sub_wins": 1, "dec_wins": 4, "weight_class": "Heavyweight",
     },
     "tom aspinall": {
+        "elo": 1855,
         "slpm": 6.29, "str_acc": 0.56, "sapm": 3.32, "str_def": 0.57,
         "td_avg": 1.56, "td_acc": 0.47, "td_def": 0.76, "sub_avg": 0.8,
         "height_cm": 198, "reach_cm": 208, "age": 31, "wins": 15, "losses": 3,
         "ko_wins": 9, "sub_wins": 4, "dec_wins": 2, "weight_class": "Heavyweight",
     },
     "sergei pavlovich": {
+        "elo": 1785,
         "slpm": 6.48, "str_acc": 0.55, "sapm": 4.49, "str_def": 0.55,
         "td_avg": 0.0, "td_acc": 0.0, "td_def": 0.72, "sub_avg": 0.0,
         "height_cm": 193, "reach_cm": 201, "age": 32, "wins": 18, "losses": 2,
@@ -53,24 +61,28 @@ FIGHTER_SEEDS = {
     },
     # ── Light Heavyweight (205 lb) ────────────────────────────────────────────
     "alex pereira": {
+        "elo": 1855,
         "slpm": 5.71, "str_acc": 0.60, "sapm": 3.87, "str_def": 0.53,
         "td_avg": 0.84, "td_acc": 0.29, "td_def": 0.84, "sub_avg": 0.0,
         "height_cm": 193, "reach_cm": 203, "age": 37, "wins": 11, "losses": 2,
         "ko_wins": 8, "sub_wins": 0, "dec_wins": 3, "weight_class": "Light Heavyweight",
     },
     "jiri prochazka": {
+        "elo": 1800,
         "slpm": 5.43, "str_acc": 0.47, "sapm": 4.87, "str_def": 0.44,
         "td_avg": 0.36, "td_acc": 0.33, "td_def": 0.83, "sub_avg": 0.3,
         "height_cm": 193, "reach_cm": 201, "age": 32, "wins": 30, "losses": 4,
         "ko_wins": 25, "sub_wins": 2, "dec_wins": 3, "weight_class": "Light Heavyweight",
     },
     "jamahal hill": {
+        "elo": 1765,
         "slpm": 5.22, "str_acc": 0.57, "sapm": 3.80, "str_def": 0.56,
         "td_avg": 0.40, "td_acc": 0.33, "td_def": 0.70, "sub_avg": 0.0,
         "height_cm": 191, "reach_cm": 201, "age": 33, "wins": 13, "losses": 2,
         "ko_wins": 10, "sub_wins": 1, "dec_wins": 2, "weight_class": "Light Heavyweight",
     },
     "jan blachowicz": {
+        "elo": 1750,
         "slpm": 3.15, "str_acc": 0.47, "sapm": 3.34, "str_def": 0.52,
         "td_avg": 1.87, "td_acc": 0.41, "td_def": 0.74, "sub_avg": 0.4,
         "height_cm": 188, "reach_cm": 196, "age": 41, "wins": 29, "losses": 10,
@@ -78,30 +90,35 @@ FIGHTER_SEEDS = {
     },
     # ── Middleweight (185 lb) ─────────────────────────────────────────────────
     "israel adesanya": {
+        "elo": 1790,
         "slpm": 4.29, "str_acc": 0.53, "sapm": 2.41, "str_def": 0.60,
         "td_avg": 0.56, "td_acc": 0.38, "td_def": 0.90, "sub_avg": 0.0,
         "height_cm": 193, "reach_cm": 203, "age": 35, "wins": 24, "losses": 4,
         "ko_wins": 16, "sub_wins": 1, "dec_wins": 7, "weight_class": "Middleweight",
     },
     "dricus du plessis": {
+        "elo": 1800,
         "slpm": 4.45, "str_acc": 0.54, "sapm": 3.98, "str_def": 0.55,
         "td_avg": 1.30, "td_acc": 0.47, "td_def": 0.70, "sub_avg": 0.3,
         "height_cm": 185, "reach_cm": 193, "age": 31, "wins": 22, "losses": 2,
         "ko_wins": 9, "sub_wins": 9, "dec_wins": 4, "weight_class": "Middleweight",
     },
     "sean strickland": {
+        "elo": 1770,
         "slpm": 7.15, "str_acc": 0.47, "sapm": 5.85, "str_def": 0.55,
         "td_avg": 1.30, "td_acc": 0.41, "td_def": 0.81, "sub_avg": 0.0,
         "height_cm": 185, "reach_cm": 193, "age": 33, "wins": 29, "losses": 6,
         "ko_wins": 10, "sub_wins": 2, "dec_wins": 17, "weight_class": "Middleweight",
     },
     "robert whittaker": {
+        "elo": 1775,
         "slpm": 4.81, "str_acc": 0.53, "sapm": 3.69, "str_def": 0.55,
         "td_avg": 1.38, "td_acc": 0.45, "td_def": 0.82, "sub_avg": 0.1,
         "height_cm": 185, "reach_cm": 183, "age": 33, "wins": 25, "losses": 7,
         "ko_wins": 10, "sub_wins": 3, "dec_wins": 12, "weight_class": "Middleweight",
     },
     "khamzat chimaev": {
+        "elo": 1800,
         "slpm": 5.06, "str_acc": 0.58, "sapm": 2.73, "str_def": 0.59,
         "td_avg": 6.34, "td_acc": 0.76, "td_def": 0.90, "sub_avg": 1.2,
         "height_cm": 186, "reach_cm": 188, "age": 30, "wins": 13, "losses": 0,
@@ -109,24 +126,28 @@ FIGHTER_SEEDS = {
     },
     # ── Welterweight (170 lb) ─────────────────────────────────────────────────
     "leon edwards": {
+        "elo": 1810,
         "slpm": 4.38, "str_acc": 0.52, "sapm": 2.48, "str_def": 0.60,
         "td_avg": 1.63, "td_acc": 0.52, "td_def": 0.77, "sub_avg": 0.1,
         "height_cm": 183, "reach_cm": 188, "age": 32, "wins": 22, "losses": 3,
         "ko_wins": 10, "sub_wins": 2, "dec_wins": 10, "weight_class": "Welterweight",
     },
     "colby covington": {
+        "elo": 1760,
         "slpm": 5.27, "str_acc": 0.44, "sapm": 3.99, "str_def": 0.54,
         "td_avg": 7.39, "td_acc": 0.52, "td_def": 0.64, "sub_avg": 0.0,
         "height_cm": 178, "reach_cm": 178, "age": 36, "wins": 17, "losses": 4,
         "ko_wins": 5, "sub_wins": 0, "dec_wins": 12, "weight_class": "Welterweight",
     },
     "belal muhammad": {
+        "elo": 1810,
         "slpm": 3.49, "str_acc": 0.48, "sapm": 2.61, "str_def": 0.59,
         "td_avg": 3.82, "td_acc": 0.55, "td_def": 0.78, "sub_avg": 0.3,
         "height_cm": 178, "reach_cm": 183, "age": 36, "wins": 24, "losses": 3,
         "ko_wins": 5, "sub_wins": 7, "dec_wins": 12, "weight_class": "Welterweight",
     },
     "shavkat rakhmonov": {
+        "elo": 1805,
         "slpm": 5.20, "str_acc": 0.57, "sapm": 2.83, "str_def": 0.60,
         "td_avg": 3.56, "td_acc": 0.57, "td_def": 0.85, "sub_avg": 1.5,
         "height_cm": 185, "reach_cm": 196, "age": 30, "wins": 18, "losses": 0,
@@ -134,36 +155,42 @@ FIGHTER_SEEDS = {
     },
     # ── Lightweight (155 lb) ──────────────────────────────────────────────────
     "islam makhachev": {
+        "elo": 1870,
         "slpm": 3.64, "str_acc": 0.55, "sapm": 1.45, "str_def": 0.65,
         "td_avg": 4.43, "td_acc": 0.51, "td_def": 0.81, "sub_avg": 1.2,
         "height_cm": 175, "reach_cm": 178, "age": 33, "wins": 26, "losses": 1,
         "ko_wins": 4, "sub_wins": 9, "dec_wins": 13, "weight_class": "Lightweight",
     },
     "charles oliveira": {
+        "elo": 1800,
         "slpm": 3.29, "str_acc": 0.54, "sapm": 2.76, "str_def": 0.52,
         "td_avg": 2.62, "td_acc": 0.45, "td_def": 0.72, "sub_avg": 3.0,
         "height_cm": 178, "reach_cm": 188, "age": 34, "wins": 33, "losses": 9,
         "ko_wins": 9, "sub_wins": 21, "dec_wins": 3, "weight_class": "Lightweight",
     },
     "dustin poirier": {
+        "elo": 1770,
         "slpm": 5.89, "str_acc": 0.48, "sapm": 4.09, "str_def": 0.50,
         "td_avg": 2.19, "td_acc": 0.53, "td_def": 0.68, "sub_avg": 0.9,
         "height_cm": 175, "reach_cm": 183, "age": 35, "wins": 30, "losses": 8,
         "ko_wins": 12, "sub_wins": 6, "dec_wins": 12, "weight_class": "Lightweight",
     },
     "conor mcgregor": {
+        "elo": 1680,
         "slpm": 5.32, "str_acc": 0.49, "sapm": 3.77, "str_def": 0.57,
         "td_avg": 0.67, "td_acc": 0.53, "td_def": 0.66, "sub_avg": 0.0,
         "height_cm": 175, "reach_cm": 188, "age": 36, "wins": 22, "losses": 6,
         "ko_wins": 19, "sub_wins": 1, "dec_wins": 2, "weight_class": "Lightweight",
     },
     "justin gaethje": {
+        "elo": 1780,
         "slpm": 7.01, "str_acc": 0.47, "sapm": 5.79, "str_def": 0.47,
         "td_avg": 3.11, "td_acc": 0.37, "td_def": 0.55, "sub_avg": 0.4,
         "height_cm": 178, "reach_cm": 178, "age": 35, "wins": 26, "losses": 5,
         "ko_wins": 15, "sub_wins": 3, "dec_wins": 8, "weight_class": "Lightweight",
     },
     "beneil dariush": {
+        "elo": 1755,
         "slpm": 3.59, "str_acc": 0.55, "sapm": 2.71, "str_def": 0.58,
         "td_avg": 2.91, "td_acc": 0.47, "td_def": 0.79, "sub_avg": 1.2,
         "height_cm": 180, "reach_cm": 185, "age": 34, "wins": 22, "losses": 5,
@@ -171,24 +198,28 @@ FIGHTER_SEEDS = {
     },
     # ── Featherweight (145 lb) ────────────────────────────────────────────────
     "alexander volkanovski": {
+        "elo": 1820,
         "slpm": 6.01, "str_acc": 0.57, "sapm": 2.62, "str_def": 0.59,
         "td_avg": 1.64, "td_acc": 0.48, "td_def": 0.73, "sub_avg": 0.2,
         "height_cm": 168, "reach_cm": 182, "age": 36, "wins": 26, "losses": 3,
         "ko_wins": 12, "sub_wins": 1, "dec_wins": 13, "weight_class": "Featherweight",
     },
     "max holloway": {
+        "elo": 1790,
         "slpm": 7.49, "str_acc": 0.44, "sapm": 4.79, "str_def": 0.52,
         "td_avg": 0.57, "td_acc": 0.34, "td_def": 0.59, "sub_avg": 0.1,
         "height_cm": 180, "reach_cm": 170, "age": 32, "wins": 26, "losses": 8,
         "ko_wins": 12, "sub_wins": 4, "dec_wins": 10, "weight_class": "Featherweight",
     },
     "ilia topuria": {
+        "elo": 1845,
         "slpm": 5.87, "str_acc": 0.58, "sapm": 2.87, "str_def": 0.63,
         "td_avg": 2.41, "td_acc": 0.47, "td_def": 0.82, "sub_avg": 0.8,
         "height_cm": 170, "reach_cm": 175, "age": 27, "wins": 15, "losses": 0,
         "ko_wins": 9, "sub_wins": 4, "dec_wins": 2, "weight_class": "Featherweight",
     },
     "brian ortega": {
+        "elo": 1755,
         "slpm": 3.96, "str_acc": 0.51, "sapm": 3.38, "str_def": 0.55,
         "td_avg": 1.73, "td_acc": 0.41, "td_def": 0.70, "sub_avg": 2.4,
         "height_cm": 175, "reach_cm": 178, "age": 33, "wins": 16, "losses": 3,
@@ -196,24 +227,28 @@ FIGHTER_SEEDS = {
     },
     # ── Bantamweight (135 lb) ─────────────────────────────────────────────────
     "sean o'malley": {
+        "elo": 1800,
         "slpm": 7.30, "str_acc": 0.60, "sapm": 4.05, "str_def": 0.61,
         "td_avg": 0.26, "td_acc": 0.30, "td_def": 0.70, "sub_avg": 0.0,
         "height_cm": 183, "reach_cm": 193, "age": 30, "wins": 18, "losses": 1,
         "ko_wins": 12, "sub_wins": 1, "dec_wins": 5, "weight_class": "Bantamweight",
     },
     "merab dvalishvili": {
+        "elo": 1810,
         "slpm": 5.31, "str_acc": 0.51, "sapm": 3.68, "str_def": 0.55,
         "td_avg": 9.38, "td_acc": 0.54, "td_def": 0.76, "sub_avg": 0.7,
         "height_cm": 175, "reach_cm": 178, "age": 33, "wins": 16, "losses": 4,
         "ko_wins": 6, "sub_wins": 3, "dec_wins": 7, "weight_class": "Bantamweight",
     },
     "aljamain sterling": {
+        "elo": 1790,
         "slpm": 3.99, "str_acc": 0.56, "sapm": 2.86, "str_def": 0.60,
         "td_avg": 4.43, "td_acc": 0.52, "td_def": 0.89, "sub_avg": 1.8,
         "height_cm": 170, "reach_cm": 183, "age": 34, "wins": 24, "losses": 4,
         "ko_wins": 7, "sub_wins": 12, "dec_wins": 5, "weight_class": "Bantamweight",
     },
     "petr yan": {
+        "elo": 1775,
         "slpm": 5.34, "str_acc": 0.57, "sapm": 3.77, "str_def": 0.55,
         "td_avg": 2.59, "td_acc": 0.48, "td_def": 0.76, "sub_avg": 0.2,
         "height_cm": 170, "reach_cm": 175, "age": 31, "wins": 17, "losses": 4,
@@ -221,18 +256,21 @@ FIGHTER_SEEDS = {
     },
     # ── Flyweight (125 lb) ────────────────────────────────────────────────────
     "alexandre pantoja": {
+        "elo": 1810,
         "slpm": 5.10, "str_acc": 0.53, "sapm": 4.52, "str_def": 0.54,
         "td_avg": 5.22, "td_acc": 0.51, "td_def": 0.73, "sub_avg": 1.8,
         "height_cm": 163, "reach_cm": 170, "age": 34, "wins": 27, "losses": 5,
         "ko_wins": 8, "sub_wins": 9, "dec_wins": 10, "weight_class": "Flyweight",
     },
     "brandon moreno": {
+        "elo": 1785,
         "slpm": 5.41, "str_acc": 0.52, "sapm": 4.32, "str_def": 0.51,
         "td_avg": 4.57, "td_acc": 0.41, "td_def": 0.76, "sub_avg": 2.0,
         "height_cm": 170, "reach_cm": 178, "age": 31, "wins": 21, "losses": 6,
         "ko_wins": 6, "sub_wins": 8, "dec_wins": 7, "weight_class": "Flyweight",
     },
     "amir albazi": {
+        "elo": 1780,
         "slpm": 4.65, "str_acc": 0.51, "sapm": 3.41, "str_def": 0.55,
         "td_avg": 3.19, "td_acc": 0.47, "td_def": 0.77, "sub_avg": 1.3,
         "height_cm": 163, "reach_cm": 168, "age": 31, "wins": 16, "losses": 1,
@@ -240,18 +278,21 @@ FIGHTER_SEEDS = {
     },
     # ── Women's Strawweight (115 lb) ──────────────────────────────────────────
     "weili zhang": {
+        "elo": 1820,
         "slpm": 5.05, "str_acc": 0.54, "sapm": 3.67, "str_def": 0.56,
         "td_avg": 2.58, "td_acc": 0.48, "td_def": 0.76, "sub_avg": 0.5,
         "height_cm": 163, "reach_cm": 163, "age": 35, "wins": 24, "losses": 3,
         "ko_wins": 10, "sub_wins": 9, "dec_wins": 5, "weight_class": "Women Strawweight",
     },
     "yan xiaonan": {
+        "elo": 1770,
         "slpm": 5.40, "str_acc": 0.54, "sapm": 3.81, "str_def": 0.53,
         "td_avg": 1.44, "td_acc": 0.43, "td_def": 0.72, "sub_avg": 0.1,
         "height_cm": 165, "reach_cm": 165, "age": 33, "wins": 17, "losses": 3,
         "ko_wins": 7, "sub_wins": 1, "dec_wins": 9, "weight_class": "Women Strawweight",
     },
     "rose namajunas": {
+        "elo": 1775,
         "slpm": 4.74, "str_acc": 0.52, "sapm": 3.90, "str_def": 0.54,
         "td_avg": 1.79, "td_acc": 0.47, "td_def": 0.74, "sub_avg": 0.7,
         "height_cm": 165, "reach_cm": 165, "age": 32, "wins": 13, "losses": 7,
@@ -259,12 +300,14 @@ FIGHTER_SEEDS = {
     },
     # ── Women's Flyweight (125 lb) ────────────────────────────────────────────
     "valentina shevchenko": {
+        "elo": 1840,
         "slpm": 3.68, "str_acc": 0.56, "sapm": 1.89, "str_def": 0.66,
         "td_avg": 2.68, "td_acc": 0.54, "td_def": 0.88, "sub_avg": 0.5,
         "height_cm": 165, "reach_cm": 168, "age": 36, "wins": 24, "losses": 4,
         "ko_wins": 9, "sub_wins": 7, "dec_wins": 8, "weight_class": "Women Flyweight",
     },
     "alexa grasso": {
+        "elo": 1800,
         "slpm": 4.40, "str_acc": 0.57, "sapm": 3.76, "str_def": 0.56,
         "td_avg": 1.41, "td_acc": 0.47, "td_def": 0.73, "sub_avg": 1.1,
         "height_cm": 163, "reach_cm": 163, "age": 31, "wins": 16, "losses": 3,
@@ -272,12 +315,14 @@ FIGHTER_SEEDS = {
     },
     # ── Women's Bantamweight (135 lb) ─────────────────────────────────────────
     "raquel pennington": {
+        "elo": 1775,
         "slpm": 4.65, "str_acc": 0.48, "sapm": 3.92, "str_def": 0.52,
         "td_avg": 2.27, "td_acc": 0.44, "td_def": 0.63, "sub_avg": 0.0,
         "height_cm": 168, "reach_cm": 170, "age": 33, "wins": 16, "losses": 9,
         "ko_wins": 4, "sub_wins": 1, "dec_wins": 11, "weight_class": "Women Bantamweight",
     },
     "julianna pena": {
+        "elo": 1780,
         "slpm": 4.77, "str_acc": 0.47, "sapm": 4.26, "str_def": 0.52,
         "td_avg": 1.92, "td_acc": 0.49, "td_def": 0.66, "sub_avg": 1.3,
         "height_cm": 165, "reach_cm": 165, "age": 35, "wins": 13, "losses": 6,

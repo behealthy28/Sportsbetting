@@ -37,8 +37,13 @@ class UFCPredictor(AbstractSport):
         if f1_stats.get("slpm") or f2_stats.get("slpm"):
             sources.append("UFCStats.com")
 
-        # 2. ELO
+        # 2. ELO — load from FIGHTER_SEEDS first (has real ELOs for all 43 fighters),
+        # then overlay players.json for any manual overrides
         elo_predictor = elo_module.EloPredictor(default_elo=1550)
+        from src.data.scrapers.ufcstats import FIGHTER_SEEDS as _FS
+        for name, info in _FS.items():
+            if "elo" in info:
+                elo_predictor.set(name, info["elo"])
         seeds = _load_ufc_seeds()
         for name, info in seeds.items():
             if "elo" in info:
