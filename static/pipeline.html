@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EdgeFinder — Prediction Pipeline</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Inter:wght@300;400;600;700;900&display=swap');
+
+  :root {
+    --bg: #060810;
+    --surface: #0d1117;
+    --card: #111827;
+    --border: #1f2937;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --accent4: #f59e0b;
+    --accent5: #ef4444;
+    --text: #f1f5f9;
+    --muted: #64748b;
+    --glow: rgba(0,212,255,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ── Animated starfield bg ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(124,58,237,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(0,212,255,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.04) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Grid overlay ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* ── Hero ── */
+  .hero {
+    text-align: center;
+    padding: 80px 0 60px;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .hero-badge .dot {
+    width: 6px; height: 6px;
+    background: var(--accent3);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 auto 36px;
+    line-height: 1.6;
+  }
+
+  .hero-github {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, rgba(0,212,255,0.12), rgba(124,58,237,0.12));
+    border: 1px solid rgba(0,212,255,0.25);
+    border-radius: 12px;
+    padding: 14px 28px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-github::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(124,58,237,0.1));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .hero-github:hover::before { opacity: 1; }
+  .hero-github:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,212,255,0.2); }
+
+  .hero-github svg { width: 20px; height: 20px; fill: currentColor; }
+
+  /* ── Section labels ── */
+  .section-label {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 32px;
+    margin-top: 64px;
+  }
+
+  .section-label .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    border: 1px solid rgba(0,212,255,0.3);
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+
+  .section-label h2 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .section-label .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* ── Pipeline flow ── */
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .pipeline-step {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 0 24px;
+    position: relative;
+  }
+
+  .step-spine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .step-number {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 15px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s;
+  }
+
+  .pipeline-step:hover .step-number { transform: scale(1.1); }
+
+  .step-line {
+    width: 2px;
+    flex: 1;
+    min-height: 32px;
+    background: linear-gradient(180deg, var(--border) 0%, transparent 100%);
+    margin: 4px 0;
+  }
+
+  .step-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .step-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .pipeline-step:hover .step-card {
+    transform: translateX(4px);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+  }
+
+  .pipeline-step:hover .step-card::before { opacity: 1; }
+
+  /* Step color themes */
+  .step-parse .step-number { background: rgba(0,212,255,0.12); color: var(--accent); border: 1px solid rgba(0,212,255,0.3); }
+  .step-parse .step-card::before { background: var(--accent); }
+  .step-parse:hover .step-card { border-color: rgba(0,212,255,0.3); }
+
+  .step-elo .step-number { background: rgba(124,58,237,0.12); color: var(--accent2); border: 1px solid rgba(124,58,237,0.3); }
+  .step-elo .step-card::before { background: var(--accent2); }
+  .step-elo:hover .step-card { border-color: rgba(124,58,237,0.3); }
+
+  .step-dc .step-number { background: rgba(245,158,11,0.12); color: var(--accent4); border: 1px solid rgba(245,158,11,0.3); }
+  .step-dc .step-card::before { background: var(--accent4); }
+  .step-dc:hover .step-card { border-color: rgba(245,158,11,0.3); }
+
+  .step-ml .step-number { background: rgba(16,185,129,0.12); color: var(--accent3); border: 1px solid rgba(16,185,129,0.3); }
+  .step-ml .step-card::before { background: var(--accent3); }
+  .step-ml:hover .step-card { border-color: rgba(16,185,129,0.3); }
+
+  .step-blend .step-number { background: rgba(239,68,68,0.12); color: var(--accent5); border: 1px solid rgba(239,68,68,0.3); }
+  .step-blend .step-card::before { background: var(--accent5); }
+  .step-blend:hover .step-card { border-color: rgba(239,68,68,0.3); }
+
+  .step-debate .step-number { background: rgba(249,115,22,0.12); color: #f97316; border: 1px solid rgba(249,115,22,0.3); }
+  .step-debate .step-card::before { background: #f97316; }
+  .step-debate:hover .step-card { border-color: rgba(249,115,22,0.3); }
+
+  .step-edge .step-number { background: rgba(16,185,129,0.12); color: var(--accent3); border: 1px solid rgba(16,185,129,0.3); }
+  .step-edge .step-card::before { background: var(--accent3); }
+  .step-edge:hover .step-card { border-color: rgba(16,185,129,0.3); }
+
+  .step-title {
+    font-size: 17px; font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .step-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .step-desc {
+    font-size: 14px;
+    color: #94a3b8;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  /* ── Tag chips ── */
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .tag-cyan { background: rgba(0,212,255,0.08); color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
+  .tag-purple { background: rgba(124,58,237,0.08); color: #a78bfa; border: 1px solid rgba(124,58,237,0.2); }
+  .tag-green { background: rgba(16,185,129,0.08); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+  .tag-amber { background: rgba(245,158,11,0.08); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+  .tag-red { background: rgba(239,68,68,0.08); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+  .tag-orange { background: rgba(249,115,22,0.08); color: #fb923c; border: 1px solid rgba(249,115,22,0.2); }
+
+  /* ── Mini chart: ELO probability curve ── */
+  .chart-container {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-top: 14px;
+  }
+
+  .chart-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+
+  /* ── ELO prob bar chart ── */
+  .elo-bars { display: flex; flex-direction: column; gap: 10px; }
+
+  .elo-row { display: grid; grid-template-columns: 110px 1fr 52px; align-items: center; gap: 12px; }
+
+  .elo-label { font-size: 12px; color: #94a3b8; font-family: 'JetBrains Mono', monospace; }
+
+  .elo-bar-track { height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
+
+  .elo-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    animation: grow 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  @keyframes grow {
+    from { width: 0 !important; }
+  }
+
+  .elo-value { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; text-align: right; }
+
+  /* ── Dixon-Coles heatmap style ── */
+  .goal-matrix {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 3px;
+    margin-top: 4px;
+  }
+
+  .goal-cell {
+    aspect-ratio: 1;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    transition: transform 0.2s;
+  }
+
+  .goal-cell:hover { transform: scale(1.15); z-index: 1; }
+
+  .goal-header {
+    font-size: 9px;
+    color: var(--muted);
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 2px;
+  }
+
+  /* ── ML ensemble donut ── */
+  .donut-row { display: flex; align-items: center; gap: 24px; }
+
+  .donut-wrap { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
+
+  .donut-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+
+  .donut-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .donut-label .d-num { font-size: 18px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--accent3); }
+  .donut-label .d-text { font-size: 9px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
+
+  .model-list { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+
+  .model-row { display: grid; grid-template-columns: 1fr 120px 40px; align-items: center; gap: 10px; }
+
+  .model-name { font-size: 13px; color: #cbd5e1; }
+
+  .model-bar-track { height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+
+  .model-bar-fill { height: 100%; border-radius: 3px; animation: grow 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+  .model-pct { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); text-align: right; }
+
+  /* ── Agent debate grid ── */
+  .agents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .agent-card {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    transition: all 0.25s;
+  }
+
+  .agent-card:hover {
+    border-color: rgba(249,115,22,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(249,115,22,0.1);
+  }
+
+  .agent-name { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+
+  .agent-weight {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .agent-domain { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+  .agent-bar { height: 3px; border-radius: 2px; margin-top: 10px; }
+
+  /* ── Blend formula ── */
+  .formula {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .formula-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    flex-wrap: wrap;
+  }
+
+  .formula-line:last-child { margin-bottom: 0; }
+
+  .f-label { color: var(--muted); font-size: 11px; min-width: 80px; }
+
+  .f-eq { color: var(--accent); }
+
+  .f-part { padding: 4px 10px; border-radius: 6px; font-size: 12px; }
+
+  .f-plus { color: var(--muted); }
+
+  /* ── Edge table ── */
+  .edge-table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+
+  .edge-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    padding: 8px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .edge-table td {
+    padding: 10px 14px;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(31,41,55,0.5);
+  }
+
+  .edge-table tr:last-child td { border-bottom: none; }
+
+  .edge-table .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .badge-strong { background: rgba(16,185,129,0.15); color: #34d399; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .badge-moderate { background: rgba(245,158,11,0.15); color: #fbbf24; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .badge-weak { background: rgba(100,116,139,0.15); color: var(--muted); padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .badge-neg { background: rgba(239,68,68,0.15); color: #f87171; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+
+  /* ── Live example output card ── */
+  .example-card {
+    background: #080e1a;
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 16px;
+    padding: 28px;
+    margin-top: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .example-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+  }
+
+  .example-header {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .example-header .dot { width: 8px; height: 8px; background: var(--accent3); border-radius: 50%; animation: pulse 2s infinite; }
+
+  .prob-bar-row {
+    display: grid;
+    grid-template-columns: 160px 1fr 70px 80px 80px;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+
+  .prob-outcome { font-size: 14px; font-weight: 600; }
+
+  .prob-track { height: 10px; background: rgba(255,255,255,0.05); border-radius: 5px; overflow: hidden; }
+
+  .prob-fill {
+    height: 100%;
+    border-radius: 5px;
+    animation: grow 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  .prob-pct { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; }
+
+  .prob-mkt { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); }
+
+  .prob-edge { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 48px 0 24px;
+    border-top: 1px solid var(--border);
+    margin-top: 64px;
+  }
+
+  .footer-logo {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+
+  .footer p { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+
+  .footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(0,212,255,0.3);
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+
+  .footer a:hover { border-color: var(--accent); }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .pipeline-step { grid-template-columns: 44px 1fr; gap: 0 16px; }
+    .step-number { width: 40px; height: 40px; font-size: 13px; }
+    .prob-bar-row { grid-template-columns: 120px 1fr 55px; }
+    .prob-mkt, .prob-edge { display: none; }
+    .agents-grid { grid-template-columns: 1fr 1fr; }
+    .donut-row { flex-direction: column; }
+  }
+
+  /* ── Scroll animations ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero reveal">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      EdgeFinder · Sports Intelligence Engine
+    </div>
+    <h1>How Every Prediction<br>Gets Built</h1>
+    <p>A 7-stage pipeline combining Dixon-Coles xG modelling, live ELO ratings, ML ensemble, and 9 specialist AI agents — all blended against devigged market odds to surface real edges.</p>
+    <a href="https://github.com/govindgoel2001/Sportsbetting" class="hero-github" target="_blank">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      github.com/govindgoel2001/Sportsbetting
+    </a>
+  </div>
+
+  <!-- PIPELINE -->
+  <div class="section-label reveal">
+    <span class="num">01</span>
+    <h2>The Pipeline</h2>
+    <div class="line"></div>
+  </div>
+
+  <div class="pipeline">
+
+    <!-- STEP 1: PARSE -->
+    <div class="pipeline-step step-parse reveal">
+      <div class="step-spine">
+        <div class="step-number">01</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-title">Query Parser</div>
+        <div class="step-subtitle">src/parser.py</div>
+        <div class="step-desc">
+          Natural language query is parsed into structured data — entities, sport, date, competition, and whether the venue is neutral (finals, World Cups auto-detected).
+        </div>
+        <div class="chart-container">
+          <div class="chart-title">Example parse → "Arsenal vs PSG Champions League Final"</div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:10px; font-family:'JetBrains Mono',monospace; font-size:12px;">
+            <div style="background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.15);border-radius:8px;padding:10px 14px;">
+              <div style="color:var(--muted);font-size:10px;margin-bottom:4px;">entity_1</div>
+              <div style="color:var(--accent);">Arsenal</div>
+            </div>
+            <div style="background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.15);border-radius:8px;padding:10px 14px;">
+              <div style="color:var(--muted);font-size:10px;margin-bottom:4px;">entity_2</div>
+              <div style="color:var(--accent);">Paris Saint-Germain</div>
+            </div>
+            <div style="background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.15);border-radius:8px;padding:10px 14px;">
+              <div style="color:var(--muted);font-size:10px;margin-bottom:4px;">sport</div>
+              <div style="color:var(--accent);">football</div>
+            </div>
+            <div style="background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.15);border-radius:8px;padding:10px 14px;">
+              <div style="color:var(--muted);font-size:10px;margin-bottom:4px;">competition</div>
+              <div style="color:var(--accent);">Champions League</div>
+            </div>
+            <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:10px 14px;">
+              <div style="color:var(--muted);font-size:10px;margin-bottom:4px;">is_neutral</div>
+              <div style="color:var(--accent3);">True ✓</div>
+            </div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag tag-cyan">keyword matching</span>
+          <span class="tag tag-cyan">date extraction</span>
+          <span class="tag tag-cyan">neutral venue detection</span>
+          <span class="tag tag-cyan">8 sports supported</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: ELO -->
+    <div class="pipeline-step step-elo reveal">
+      <div class="step-spine">
+        <div class="step-number">02</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-title">ELO Ratings</div>
+        <div class="step-subtitle">src/data/scrapers/elo_db.py · src/models/elo.py</div>
+        <div class="step-desc">
+          Live ClubElo API for clubs, eloratings.net seeds for all 48 World Cup 2026 nations. Offline fallback: 80+ club seeds + all national teams hardcoded. Home advantage = +65 ELO points (zeroed for neutral venues). Win probability via logistic function.
+        </div>
+        <div class="chart-container">
+          <div class="chart-title">Win probability · ELO gap → P(win)</div>
+          <div class="elo-bars">
+            <div class="elo-row">
+              <div class="elo-label">Argentina 2091</div>
+              <div class="elo-bar-track"><div class="elo-bar-fill" style="width:76%;background:linear-gradient(90deg,#7c3aed,#a78bfa);"></div></div>
+              <div class="elo-value" style="color:#a78bfa;">76%</div>
+            </div>
+            <div class="elo-row">
+              <div class="elo-label">Real Madrid 1971</div>
+              <div class="elo-bar-track"><div class="elo-bar-fill" style="width:68%;background:linear-gradient(90deg,#7c3aed,#a78bfa);"></div></div>
+              <div class="elo-value" style="color:#a78bfa;">68%</div>
+            </div>
+            <div class="elo-row">
+              <div class="elo-label">Arsenal 1938</div>
+              <div class="elo-bar-track"><div class="elo-bar-fill" style="width:57%;background:linear-gradient(90deg,#7c3aed,#a78bfa);"></div></div>
+              <div class="elo-value" style="color:#a78bfa;">57%</div>
+            </div>
+            <div class="elo-row">
+              <div class="elo-label">PSG 1902</div>
+              <div class="elo-bar-track"><div class="elo-bar-fill" style="width:43%;background:linear-gradient(90deg,#4c1d95,#7c3aed);opacity:0.7;"></div></div>
+              <div class="elo-value" style="color:#7c3aed;">43%</div>
+            </div>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:12px;">
+            P(win) = 1 / (1 + 10<sup style="font-size:8px;">−ΔElo/400</sup>) · home_adv=+65 ELo · neutral=0
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag tag-purple">ClubElo live API</span>
+          <span class="tag tag-purple">80+ club seeds</span>
+          <span class="tag tag-purple">48 WC 2026 nations</span>
+          <span class="tag tag-purple">surface-adjusted (tennis)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: DIXON-COLES -->
+    <div class="pipeline-step step-dc reveal">
+      <div class="step-spine">
+        <div class="step-number">03</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-title">Dixon-Coles xG Model</div>
+        <div class="step-subtitle">src/models/dixon_coles.py · Understat xG scraper</div>
+        <div class="step-desc">
+          MLE-fitted Poisson goal model. Uses expected goals (xG) over actual goals — removes finishing luck. Scores a probability matrix over all (home goals × away goals) scorelines, sums to home/draw/away. Low-score correction (Dixon-Coles ρ) adjusts the 0-0, 1-0, 0-1, 1-1 cells.
+        </div>
+        <div class="chart-container">
+          <div class="chart-title">Scoreline probability matrix (Arsenal vs PSG, neutral)</div>
+          <div style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:6px;display:flex;gap:0;">
+            <div style="width:32px;"></div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(5,1fr);text-align:center;">
+              <div>PSG 0</div><div>PSG 1</div><div>PSG 2</div><div>PSG 3</div><div>PSG 4</div>
+            </div>
+          </div>
+          <div id="goalMatrix" style="display:flex;gap:4px;">
+            <div style="display:flex;flex-direction:column;gap:3px;justify-content:space-around;font-size:9px;color:var(--muted);font-family:'JetBrains Mono',monospace;padding-top:2px;">
+              <div style="height:28px;display:flex;align-items:center;">ARs 0</div>
+              <div style="height:28px;display:flex;align-items:center;">ARs 1</div>
+              <div style="height:28px;display:flex;align-items:center;">ARs 2</div>
+              <div style="height:28px;display:flex;align-items:center;">ARs 3</div>
+              <div style="height:28px;display:flex;align-items:center;">ARs 4</div>
+            </div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,28px);gap:3px;" id="matrixGrid">
+            </div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag tag-amber">Poisson MLE</span>
+          <span class="tag tag-amber">xG over actual goals</span>
+          <span class="tag tag-amber">Dixon-Coles ρ correction</span>
+          <span class="tag tag-amber">injury adjustments</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: ML ENSEMBLE -->
+    <div class="pipeline-step step-ml reveal">
+      <div class="step-spine">
+        <div class="step-number">04</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-title">ML Ensemble</div>
+        <div class="step-subtitle">src/models/ml_ensemble.py</div>
+        <div class="step-desc">
+          Three calibrated models soft-voted with sport-optimised weights. Trained on 100k+ ATP/WTA matches (Sackmann), 30k physics-simulated UFC bouts, and CricSheet ball-by-ball data. Skipped gracefully when no trained model exists on disk.
+        </div>
+        <div class="chart-container">
+          <div class="donut-row">
+            <div class="donut-wrap">
+              <svg viewBox="0 0 36 36">
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
+                <!-- LightGBM 37.5% -->
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#10b981" stroke-width="3"
+                  stroke-dasharray="23.6 76.4" stroke-dashoffset="0"/>
+                <!-- XGBoost 37.5% -->
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#7c3aed" stroke-width="3"
+                  stroke-dasharray="23.6 76.4" stroke-dashoffset="-23.6"/>
+                <!-- RF 25% -->
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#00d4ff" stroke-width="3"
+                  stroke-dasharray="15.7 84.3" stroke-dashoffset="-47.2"/>
+              </svg>
+              <div class="donut-label">
+                <div class="d-num">3</div>
+                <div class="d-text">models</div>
+              </div>
+            </div>
+            <div class="model-list">
+              <div class="chart-title" style="margin-bottom:8px;">Ensemble weights by sport</div>
+              <div class="model-row">
+                <div class="model-name">LightGBM</div>
+                <div class="model-bar-track"><div class="model-bar-fill" style="width:37.5%;background:#10b981;"></div></div>
+                <div class="model-pct">37.5%</div>
+              </div>
+              <div class="model-row">
+                <div class="model-name">XGBoost</div>
+                <div class="model-bar-track"><div class="model-bar-fill" style="width:37.5%;background:#7c3aed;"></div></div>
+                <div class="model-pct">37.5%</div>
+              </div>
+              <div class="model-row">
+                <div class="model-name">Random Forest</div>
+                <div class="model-bar-track"><div class="model-bar-fill" style="width:25%;background:#00d4ff;"></div></div>
+                <div class="model-pct">25.0%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag tag-green">100k+ ATP/WTA matches</span>
+          <span class="tag tag-green">30k UFC simulations</span>
+          <span class="tag tag-green">CricSheet ball-by-ball</span>
+          <span class="tag tag-green">isotonic calibration</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5: BLEND -->
+    <div class="pipeline-step step-blend reveal">
+      <div class="step-spine">
+        <div class="step-number">05</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-title">Statistical Blend</div>
+        <div class="step-subtitle">src/models/calibrator.py</div>
+        <div class="step-desc">
+          ELO, Dixon-Coles, and H2H are mixed first. The ML ensemble then overlays with a 70/30 split. News sentiment (Google News RSS) applies a ±10% final nudge for injuries, suspensions, and motivation signals.
+        </div>
+        <div class="formula">
+          <div class="formula-line">
+            <span class="f-label">base</span>
+            <span class="f-eq">=</span>
+            <span class="f-part" style="background:rgba(124,58,237,0.1);color:#a78bfa;">40% ELO</span>
+            <span class="f-plus">+</span>
+            <span class="f-part" style="background:rgba(245,158,11,0.1);color:#fbbf24;">40% Dixon-Coles</span>
+            <span class="f-plus">+</span>
+            <span class="f-part" style="background:rgba(0,212,255,0.1);color:#67e8f9;">20% H2H</span>
+          </div>
+          <div class="formula-line">
+            <span class="f-label">stat</span>
+            <span class="f-eq">=</span>
+            <span class="f-part" style="background:rgba(239,68,68,0.1);color:#fca5a5;">70% base</span>
+            <span class="f-plus">+</span>
+            <span class="f-part" style="background:rgba(16,185,129,0.1);color:#6ee7b7;">30% ML</span>
+          </div>
+          <div class="formula-line">
+            <span class="f-label">final</span>
+            <span class="f-eq">=</span>
+            <span class="f-part" style="background:rgba(239,68,68,0.1);color:#fca5a5;">stat</span>
+            <span class="f-plus">±</span>
+            <span class="f-part" style="background:rgba(100,116,139,0.1);color:#94a3b8;">news sentiment (max ±10%)</span>
+          </div>
+        </div>
+        <div class="tags">
+          <span class="tag tag-red">weighted average</span>
+          <span class="tag tag-red">H2H scaling</span>
+          <span class="tag tag-red">Google News RSS</span>
+          <span class="tag tag-red">injury flags</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6: AGENT DEBATE -->
+    <div class="pipeline-step step-debate reveal">
+      <div class="step-spine">
+        <div class="step-number">06</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-title">9-Agent AI Debate Layer</div>
+        <div class="step-subtitle">src/models/agent_debate.py · requires ANTHROPIC_API_KEY</div>
+        <div class="step-desc">
+          Nine specialist Claude Haiku agents independently analyse the matchup. Each returns a probability + confidence score. Results are confidence-weighted into a consensus, then blended 72% statistical / 28% debate. Falls back gracefully when no API key is set.
+        </div>
+        <div class="agents-grid">
+          <div class="agent-card">
+            <div class="agent-name" style="color:#fb923c;">StatisticsAnalyst</div>
+            <div class="agent-weight" style="color:#fb923c;">22%</div>
+            <div class="agent-domain">Form, H2H, ELO, scoring averages</div>
+            <div class="agent-bar" style="background:linear-gradient(90deg,#f97316,transparent);width:22%;"></div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-name" style="color:#a78bfa;">TacticsScout</div>
+            <div class="agent-weight" style="color:#a78bfa;">18%</div>
+            <div class="agent-domain">Style matchups, surface fit, fight style</div>
+            <div class="agent-bar" style="background:linear-gradient(90deg,#7c3aed,transparent);width:18%;"></div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-name" style="color:#f87171;">InjurySpecialist</div>
+            <div class="agent-weight" style="color:#f87171;">15%</div>
+            <div class="agent-domain">Absences, squad depth, positional gaps</div>
+            <div class="agent-bar" style="background:linear-gradient(90deg,#ef4444,transparent);width:15%;"></div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-name" style="color:#67e8f9;">NewsIntelligence</div>
+            <div class="agent-weight" style="color:#67e8f9;">13%</div>
+            <div class="agent-domain">Motivation, morale, managerial signals</div>
+            <div class="agent-bar" style="background:linear-gradient(90deg,#00d4ff,transparent);width:13%;"></div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-name" style="color:#fbbf24;">Contrarian</div>
+            <div class="agent-weight" style="color:#fbbf24;">10%</div>
+            <div class="agent-domain">Stress-tests the favourite, upset patterns</div>
+            <div class="agent-bar" style="background:linear-gradient(90deg,#f59e0b,transparent);width:10%;"></div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-name" style="color:#34d399;">MarketIntelligence</div>
+            <div class="agent-weight" style="color:#34d399;">10%</div>
+            <div class="agent-domain">Sharp money, line movement, public bias</div>
+            <div class="agent-bar" style="background:linear-gradient(90deg,#10b981,transparent);width:10%;"></div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-name" style="color:#c084fc;">PsychologyAnalyst</div>
+            <div class="agent-weight" style="color:#c084fc;">5%</div>
+            <div class="agent-domain">Rivalry, desperation, complacency</div>
+            <div class="agent-bar" style="background:linear-gradient(90deg,#a855f7,transparent);width:5%;"></div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-name" style="color:#7dd3fc;">WeatherAnalyst</div>
+            <div class="agent-weight" style="color:#7dd3fc;">4%</div>
+            <div class="agent-domain">Wind, rain, altitude (outdoor sports)</div>
+            <div class="agent-bar" style="background:linear-gradient(90deg,#38bdf8,transparent);width:4%;"></div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-name" style="color:#86efac;">HomeGroundExpert</div>
+            <div class="agent-weight" style="color:#86efac;">3%</div>
+            <div class="agent-domain">Travel fatigue, crowd, time zones</div>
+            <div class="agent-bar" style="background:linear-gradient(90deg,#4ade80,transparent);width:3%;"></div>
+          </div>
+        </div>
+        <div class="formula" style="margin-top:14px;">
+          <div class="formula-line">
+            <span class="f-label">final</span>
+            <span class="f-eq">=</span>
+            <span class="f-part" style="background:rgba(239,68,68,0.1);color:#fca5a5;">72% statistical</span>
+            <span class="f-plus">+</span>
+            <span class="f-part" style="background:rgba(249,115,22,0.1);color:#fb923c;">28% debate consensus</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 7: EDGE -->
+    <div class="pipeline-step step-edge reveal">
+      <div class="step-spine">
+        <div class="step-number">07</div>
+        <div class="step-line" style="opacity:0;"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-title">Edge Calculation + Kelly Sizing</div>
+        <div class="step-subtitle">src/market/edge.py · src/market/kelly.py</div>
+        <div class="step-desc">
+          Polymarket CLOB + Kalshi APIs polled for live market odds. Bookmaker margin devigged. Model probability minus devigged market probability = edge. Quarter-Kelly for conservative bankroll management.
+        </div>
+        <table class="edge-table">
+          <thead>
+            <tr>
+              <th>Edge %</th>
+              <th>Signal</th>
+              <th>Action</th>
+              <th>Kelly Stake</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono" style="color:#34d399;">+10.2%</td>
+              <td><span class="badge-strong">STRONG</span></td>
+              <td style="color:#94a3b8;">Bet confidently</td>
+              <td class="mono" style="color:#34d399;">~2.6% bankroll</td>
+            </tr>
+            <tr>
+              <td class="mono" style="color:#fbbf24;">+3.5%</td>
+              <td><span class="badge-moderate">MODERATE</span></td>
+              <td style="color:#94a3b8;">Consider bet</td>
+              <td class="mono" style="color:#fbbf24;">~0.9% bankroll</td>
+            </tr>
+            <tr>
+              <td class="mono" style="color:#64748b;">+1.2%</td>
+              <td><span class="badge-weak">WEAK</span></td>
+              <td style="color:#94a3b8;">Skip</td>
+              <td class="mono" style="color:#64748b;">—</td>
+            </tr>
+            <tr>
+              <td class="mono" style="color:#f87171;">−4.8%</td>
+              <td><span class="badge-neg">NEGATIVE</span></td>
+              <td style="color:#94a3b8;">Avoid — market knows more</td>
+              <td class="mono" style="color:#f87171;">—</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="formula" style="margin-top:14px;">
+          <div class="formula-line">
+            <span class="f-label">edge</span>
+            <span class="f-eq">=</span>
+            <span class="f-part" style="background:rgba(16,185,129,0.1);color:#6ee7b7;">P(model)</span>
+            <span class="f-plus">−</span>
+            <span class="f-part" style="background:rgba(100,116,139,0.1);color:#94a3b8;">P(devigged market)</span>
+          </div>
+          <div class="formula-line">
+            <span class="f-label">stake</span>
+            <span class="f-eq">=</span>
+            <span class="f-part" style="background:rgba(16,185,129,0.1);color:#6ee7b7;">¼ Kelly</span>
+            <span class="f-plus">=</span>
+            <span class="f-part" style="background:rgba(100,116,139,0.1);color:#94a3b8;">(P·b − q) / b / 4</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end pipeline -->
+
+  <!-- LIVE EXAMPLE OUTPUT -->
+  <div class="section-label reveal" style="margin-top:64px;">
+    <span class="num">02</span>
+    <h2>Live Example</h2>
+    <div class="line"></div>
+  </div>
+
+  <div class="example-card reveal">
+    <div class="example-header">
+      <span class="dot"></span>
+      ⚽ Arsenal vs PSG — UCL Final 2026 · Neutral venue · vs Polymarket
+    </div>
+
+    <div class="prob-bar-row" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:8px;">
+      <div></div><div></div>
+      <div>Model</div>
+      <div>Market</div>
+      <div>Edge</div>
+    </div>
+
+    <div class="prob-bar-row">
+      <div class="prob-outcome" style="color:#34d399;">★ Arsenal Win</div>
+      <div class="prob-track"><div class="prob-fill" style="width:40.2%;background:linear-gradient(90deg,#10b981,#34d399);"></div></div>
+      <div class="prob-pct" style="color:#34d399;">40.2%</div>
+      <div class="prob-mkt">30.0%</div>
+      <div class="prob-edge" style="color:#34d399;">+10.2%</div>
+    </div>
+    <div class="prob-bar-row">
+      <div class="prob-outcome" style="color:#94a3b8;">Draw</div>
+      <div class="prob-track"><div class="prob-fill" style="width:25.1%;background:linear-gradient(90deg,#475569,#64748b);"></div></div>
+      <div class="prob-pct" style="color:#94a3b8;">25.1%</div>
+      <div class="prob-mkt">28.0%</div>
+      <div class="prob-edge" style="color:#f87171;">−2.9%</div>
+    </div>
+    <div class="prob-bar-row">
+      <div class="prob-outcome" style="color:#94a3b8;">PSG Win</div>
+      <div class="prob-track"><div class="prob-fill" style="width:34.7%;background:linear-gradient(90deg,#374151,#4b5563);"></div></div>
+      <div class="prob-pct" style="color:#94a3b8;">34.7%</div>
+      <div class="prob-mkt">42.0%</div>
+      <div class="prob-edge" style="color:#f87171;">−7.3%</div>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:24px;padding-top:24px;border-top:1px solid var(--border);">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:4px;">BEST BET</div>
+        <div style="font-size:16px;font-weight:700;color:#34d399;">Arsenal to Win</div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:4px;">EDGE</div>
+        <div style="font-size:16px;font-weight:700;color:#34d399;">+10.2% STRONG</div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:4px;">KELLY STAKE</div>
+        <div style="font-size:16px;font-weight:700;color:#34d399;">2.6% of bankroll</div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:4px;">DECIMAL ODDS</div>
+        <div style="font-size:16px;font-weight:700;color:#f1f5f9;">3.33×</div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:4px;">ELO (Arsenal)</div>
+        <div style="font-size:16px;font-weight:700;color:#a78bfa;">1938</div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:4px;">ELO (PSG)</div>
+        <div style="font-size:16px;font-weight:700;color:#a78bfa;">1902</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPORTS SUPPORTED -->
+  <div class="section-label reveal" style="margin-top:64px;">
+    <span class="num">03</span>
+    <h2>Sports Supported</h2>
+    <div class="line"></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;" class="reveal">
+    <div class="step-card" style="margin-bottom:0;">
+      <div style="font-size:24px;margin-bottom:8px;">⚽</div>
+      <div style="font-weight:700;margin-bottom:4px;">Football / Soccer</div>
+      <div style="font-size:12px;color:var(--muted);">Dixon-Coles xG + ELO + ML</div>
+      <div class="tags" style="margin-top:10px;"><span class="tag tag-cyan">ClubElo</span><span class="tag tag-cyan">Understat xG</span></div>
+    </div>
+    <div class="step-card" style="margin-bottom:0;">
+      <div style="font-size:24px;margin-bottom:8px;">🎾</div>
+      <div style="font-weight:700;margin-bottom:4px;">Tennis</div>
+      <div style="font-size:12px;color:var(--muted);">Surface ELO + H2H + ML</div>
+      <div class="tags" style="margin-top:10px;"><span class="tag tag-purple">Sackmann ATP/WTA</span></div>
+    </div>
+    <div class="step-card" style="margin-bottom:0;">
+      <div style="font-size:24px;margin-bottom:8px;">🥊</div>
+      <div style="font-weight:700;margin-bottom:4px;">UFC / MMA</div>
+      <div style="font-size:12px;color:var(--muted);">Striking/grappling stats + ELO</div>
+      <div class="tags" style="margin-top:10px;"><span class="tag tag-red">UFCStats.com</span></div>
+    </div>
+    <div class="step-card" style="margin-bottom:0;">
+      <div style="font-size:24px;margin-bottom:8px;">🥊</div>
+      <div style="font-weight:700;margin-bottom:4px;">Boxing</div>
+      <div style="font-size:12px;color:var(--muted);">Style matchup sim + ELO</div>
+      <div class="tags" style="margin-top:10px;"><span class="tag tag-orange">52 fighter profiles</span></div>
+    </div>
+    <div class="step-card" style="margin-bottom:0;">
+      <div style="font-size:24px;margin-bottom:8px;">🏏</div>
+      <div style="font-weight:700;margin-bottom:4px;">Cricket</div>
+      <div style="font-size:12px;color:var(--muted);">ELO + batting/bowling + ML</div>
+      <div class="tags" style="margin-top:10px;"><span class="tag tag-green">CricSheet</span></div>
+    </div>
+    <div class="step-card" style="margin-bottom:0;">
+      <div style="font-size:24px;margin-bottom:8px;">🎯</div>
+      <div style="font-weight:700;margin-bottom:4px;">Darts</div>
+      <div style="font-size:12px;color:var(--muted);">ELO seeded from PDC rankings</div>
+      <div class="tags" style="margin-top:10px;"><span class="tag tag-amber">PDC rankings</span></div>
+    </div>
+    <div class="step-card" style="margin-bottom:0;">
+      <div style="font-size:24px;margin-bottom:8px;">🏸</div>
+      <div style="font-weight:700;margin-bottom:4px;">Badminton</div>
+      <div style="font-size:12px;color:var(--muted);">ELO seeded from BWF rankings</div>
+      <div class="tags" style="margin-top:10px;"><span class="tag tag-cyan">BWF rankings</span></div>
+    </div>
+    <div class="step-card" style="margin-bottom:0;">
+      <div style="font-size:24px;margin-bottom:8px;">🏓</div>
+      <div style="font-weight:700;margin-bottom:4px;">Table Tennis</div>
+      <div style="font-size:12px;color:var(--muted);">ELO seeded from ITTF rankings</div>
+      <div class="tags" style="margin-top:10px;"><span class="tag tag-purple">ITTF rankings</span></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer reveal">
+    <div class="footer-logo">EdgeFinder</div>
+    <p>Open source sports prediction engine. Zero API keys required for predictions.</p>
+    <a href="https://github.com/govindgoel2001/Sportsbetting" target="_blank">
+      github.com/govindgoel2001/Sportsbetting
+    </a>
+    <p style="margin-top:16px;font-size:11px;">For educational and research purposes only. Bet responsibly.</p>
+  </div>
+
+</div><!-- end container -->
+
+<script>
+  // ── Scoreline matrix generator ──
+  function poisson(lambda, k) {
+    let logP = -lambda + k * Math.log(lambda);
+    for (let i = 1; i <= k; i++) logP -= Math.log(i);
+    return Math.exp(logP);
+  }
+
+  function buildMatrix() {
+    const grid = document.getElementById('matrixGrid');
+    if (!grid) return;
+
+    // Arsenal xG 1.8, PSG xG 1.6 (neutral, similar calibre)
+    const lambdaH = 1.8, lambdaA = 1.6;
+    const probs = [];
+    let maxP = 0;
+
+    for (let h = 0; h < 5; h++) {
+      for (let a = 0; a < 5; a++) {
+        let p = poisson(lambdaH, h) * poisson(lambdaA, a);
+        // Dixon-Coles correction for low scores
+        if (h === 0 && a === 0) p *= 1 - lambdaH * lambdaA * 0.1;
+        if (h === 1 && a === 0) p *= 1 + lambdaA * 0.1;
+        if (h === 0 && a === 1) p *= 1 + lambdaH * 0.1;
+        if (h === 1 && a === 1) p *= 1 - 0.1;
+        probs.push({ h, a, p });
+        if (p > maxP) maxP = p;
+      }
+    }
+
+    probs.forEach(({ h, a, p }) => {
+      const cell = document.createElement('div');
+      cell.className = 'goal-cell';
+      const intensity = p / maxP;
+
+      let bg, color;
+      if (h > a) {
+        // Arsenal win — green
+        const alpha = 0.15 + intensity * 0.65;
+        bg = `rgba(16,185,129,${alpha})`;
+        color = intensity > 0.4 ? '#fff' : '#6ee7b7';
+      } else if (h < a) {
+        // PSG win — purple
+        const alpha = 0.15 + intensity * 0.65;
+        bg = `rgba(124,58,237,${alpha})`;
+        color = intensity > 0.4 ? '#fff' : '#c4b5fd';
+      } else {
+        // Draw — amber
+        const alpha = 0.15 + intensity * 0.65;
+        bg = `rgba(245,158,11,${alpha})`;
+        color = intensity > 0.4 ? '#000' : '#fcd34d';
+      }
+
+      cell.style.background = bg;
+      cell.style.color = color;
+      cell.textContent = (p * 100).toFixed(1);
+      cell.title = `${h}-${a}: ${(p*100).toFixed(2)}%`;
+      grid.appendChild(cell);
+    });
+  }
+
+  buildMatrix();
+
+  // ── Scroll reveal ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── Stagger pipeline steps ──
+  document.querySelectorAll('.pipeline-step').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.08}s`;
+    el.classList.add('reveal');
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
