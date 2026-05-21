@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EdgeFinder — Live Prediction Pipeline</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Inter:wght@300;400;600;700;900&display=swap');
+
+  :root {
+    --bg: #060810;
+    --card: #0e1422;
+    --border: #1f2937;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --accent4: #f59e0b;
+    --accent5: #ef4444;
+    --orange: #f97316;
+    --text: #f1f5f9;
+    --muted: #64748b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse at 20% 15%, rgba(124,58,237,0.10) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 85%, rgba(0,212,255,0.08) 0%, transparent 50%);
+  }
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .container { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* HERO */
+  .hero { text-align: center; padding: 80px 0 56px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 100px; padding: 6px 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 26px;
+  }
+  .hero-badge .dot { width: 6px; height: 6px; background: var(--accent3); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.4;transform:scale(.7);} }
+
+  .hero h1 {
+    font-size: clamp(34px, 6vw, 68px); font-weight: 900;
+    letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 18px;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 55%, var(--accent2) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero p { font-size: 17px; color: var(--muted); max-width: 560px; margin: 0 auto 32px; line-height: 1.6; }
+  .hero-github {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, rgba(0,212,255,0.12), rgba(124,58,237,0.12));
+    border: 1px solid rgba(0,212,255,0.25); border-radius: 12px;
+    padding: 13px 26px; color: var(--text); text-decoration: none;
+    font-weight: 600; font-size: 14px; transition: all .3s;
+  }
+  .hero-github:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,212,255,0.2); }
+  .hero-github svg { width: 19px; height: 19px; fill: currentColor; }
+
+  /* SECTION LABEL */
+  .section-label { display: flex; align-items: center; gap: 12px; margin: 60px 0 28px; }
+  .section-label .num {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent);
+    border: 1px solid rgba(0,212,255,0.3); padding: 3px 10px; border-radius: 4px;
+  }
+  .section-label h2 { font-size: 21px; font-weight: 700; letter-spacing: -0.02em; }
+  .section-label .line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+  /* PIPELINE */
+  .pipeline-step { display: grid; grid-template-columns: 56px 1fr; gap: 0 22px; }
+  .step-spine { display: flex; flex-direction: column; align-items: center; }
+  .step-number {
+    width: 46px; height: 46px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 14px;
+    flex-shrink: 0; z-index: 1;
+  }
+  .step-line { width: 2px; flex: 1; min-height: 24px; background: linear-gradient(180deg, var(--border), transparent); margin: 4px 0; }
+
+  .step-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 22px 26px; margin-bottom: 16px;
+    position: relative; overflow: hidden;
+  }
+  .step-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+
+  .s1 .step-number{background:rgba(0,212,255,.12);color:var(--accent);border:1px solid rgba(0,212,255,.3);}
+  .s1 .step-card::before{background:var(--accent);}
+  .s2 .step-number{background:rgba(124,58,237,.12);color:#a78bfa;border:1px solid rgba(124,58,237,.3);}
+  .s2 .step-card::before{background:var(--accent2);}
+  .s3 .step-number{background:rgba(245,158,11,.12);color:var(--accent4);border:1px solid rgba(245,158,11,.3);}
+  .s3 .step-card::before{background:var(--accent4);}
+  .s4 .step-number{background:rgba(16,185,129,.12);color:var(--accent3);border:1px solid rgba(16,185,129,.3);}
+  .s4 .step-card::before{background:var(--accent3);}
+  .s5 .step-number{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.3);}
+  .s5 .step-card::before{background:var(--accent5);}
+  .s6 .step-number{background:rgba(249,115,22,.12);color:#fb923c;border:1px solid rgba(249,115,22,.3);}
+  .s6 .step-card::before{background:var(--orange);}
+  .s7 .step-number{background:rgba(16,185,129,.12);color:var(--accent3);border:1px solid rgba(16,185,129,.3);}
+  .s7 .step-card::before{background:var(--accent3);}
+
+  .step-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.01em; }
+  .step-sub { font-size: 12px; color: var(--muted); margin-bottom: 14px; font-family: 'JetBrains Mono', monospace; }
+  .step-desc { font-size: 13.5px; color: #94a3b8; line-height: 1.6; margin-bottom: 14px; }
+
+  /* LIVE ARTIFACT */
+  .artifact {
+    background: #070b14; border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px; margin-top: 12px;
+  }
+  .artifact-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .artifact-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .live-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: var(--accent3); text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .live-tag .dot { width: 5px; height: 5px; background: var(--accent3); border-radius: 50%; animation: pulse 1.4s infinite; }
+  .artifact canvas { display: block; width: 100%; }
+  .artifact-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px){ .artifact-split { grid-template-columns: 1fr; } }
+
+  .readout {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: #94a3b8; margin-top: 8px; line-height: 1.7;
+  }
+  .readout b { color: var(--text); }
+  .readout .hl { color: var(--accent); }
+
+  /* tags */
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+  .tag { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; padding: 4px 9px; border-radius: 6px; }
+  .t-cyan{background:rgba(0,212,255,.08);color:var(--accent);border:1px solid rgba(0,212,255,.2);}
+  .t-purple{background:rgba(124,58,237,.08);color:#a78bfa;border:1px solid rgba(124,58,237,.2);}
+  .t-amber{background:rgba(245,158,11,.08);color:#fbbf24;border:1px solid rgba(245,158,11,.2);}
+  .t-green{background:rgba(16,185,129,.08);color:#34d399;border:1px solid rgba(16,185,129,.2);}
+  .t-red{background:rgba(239,68,68,.08);color:#f87171;border:1px solid rgba(239,68,68,.2);}
+  .t-orange{background:rgba(249,115,22,.08);color:#fb923c;border:1px solid rgba(249,115,22,.2);}
+
+  /* FOOTER */
+  .footer { text-align: center; padding: 48px 0 24px; border-top: 1px solid var(--border); margin-top: 56px; }
+  .footer-logo {
+    font-size: 24px; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .footer p { color: var(--muted); font-size: 13px; margin-bottom: 18px; }
+  .footer a {
+    color: var(--accent); text-decoration: none; font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; border-bottom: 1px solid rgba(0,212,255,0.3); padding-bottom: 2px;
+  }
+
+  @media (max-width:600px){ .pipeline-step{grid-template-columns:40px 1fr;gap:0 14px;} .step-number{width:38px;height:38px;font-size:12px;} }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge"><span class="dot"></span>EdgeFinder · Sports Intelligence Engine</div>
+    <h1>The Prediction Pipeline,<br>Running Live</h1>
+    <p>Seven stages. Every chart below is a live simulation — the math is computed frame-by-frame so you can watch each model actually move.</p>
+    <a class="hero-github" href="https://www.myhermes.cloud" target="_blank">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      Get this for free on MyHermes
+    </a>
+  </div>
+
+  <div class="section-label"><span class="num">01</span><h2>The Pipeline — Live</h2><div class="line"></div></div>
+
+  <!-- STEP 1 -->
+  <div class="pipeline-step s1">
+    <div class="step-spine"><div class="step-number">01</div><div class="step-line"></div></div>
+    <div class="step-card">
+      <div class="step-title">Query Parser</div>
+      <div class="step-sub">src/parser.py</div>
+      <div class="step-desc">A scan head sweeps the raw query left-to-right. Each token is matched against keyword tables and lands in its structured slot — the <b>Final</b> keyword flips <code>is_neutral</code> to true.</div>
+      <div class="artifact">
+        <div class="artifact-head">
+          <span class="artifact-title">Tokeniser — live scan</span>
+          <span class="live-tag"><span class="dot"></span>live</span>
+        </div>
+        <canvas id="cv-parser" height="170"></canvas>
+      </div>
+      <div class="tags">
+        <span class="tag t-cyan">keyword matching</span>
+        <span class="tag t-cyan">neutral-venue detection</span>
+        <span class="tag t-cyan">8 sports</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="pipeline-step s2">
+    <div class="step-spine"><div class="step-number">02</div><div class="step-line"></div></div>
+    <div class="step-card">
+      <div class="step-title">ELO Ratings</div>
+      <div class="step-sub">src/models/elo.py · elo_db.py</div>
+      <div class="step-desc">Win probability is a logistic function of the ELO gap. Watch the marker ride the curve as the opponent's rating sweeps — the steep middle is where small rating gaps swing the most probability.</div>
+      <div class="artifact">
+        <div class="artifact-head">
+          <span class="artifact-title">P(win) = 1 / (1 + 10<sup>−ΔElo/400</sup>)</span>
+          <span class="live-tag"><span class="dot"></span>live</span>
+        </div>
+        <canvas id="cv-elo" height="240"></canvas>
+        <div class="readout" id="ro-elo"></div>
+      </div>
+      <div class="tags">
+        <span class="tag t-purple">ClubElo live API</span>
+        <span class="tag t-purple">80+ club seeds</span>
+        <span class="tag t-purple">48 WC nations</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="pipeline-step s3">
+    <div class="step-spine"><div class="step-number">03</div><div class="step-line"></div></div>
+    <div class="step-card">
+      <div class="step-title">Dixon-Coles xG Model</div>
+      <div class="step-sub">src/models/dixon_coles.py</div>
+      <div class="step-desc">Each team's xG drives a Poisson goal distribution. Their outer product builds a full scoreline matrix — every cell recomputes each frame as the λ values breathe. Cells sum into Home / Draw / Away.</div>
+      <div class="artifact">
+        <div class="artifact-head">
+          <span class="artifact-title">Poisson goals → scoreline matrix</span>
+          <span class="live-tag"><span class="dot"></span>live</span>
+        </div>
+        <div class="artifact-split">
+          <canvas id="cv-dc-pois" height="240"></canvas>
+          <canvas id="cv-dc-grid" height="240"></canvas>
+        </div>
+        <canvas id="cv-dc-bar" height="56" style="margin-top:10px;"></canvas>
+        <div class="readout" id="ro-dc"></div>
+      </div>
+      <div class="tags">
+        <span class="tag t-amber">Poisson MLE</span>
+        <span class="tag t-amber">xG over actual goals</span>
+        <span class="tag t-amber">Dixon-Coles ρ correction</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="pipeline-step s4">
+    <div class="step-spine"><div class="step-number">04</div><div class="step-line"></div></div>
+    <div class="step-card">
+      <div class="step-title">ML Ensemble</div>
+      <div class="step-sub">src/models/ml_ensemble.py</div>
+      <div class="step-desc">Three calibrated models each emit a probability that wanders with inference noise. A soft-vote with sport-tuned weights (25 / 37.5 / 37.5) collapses them into one stable ensemble output.</div>
+      <div class="artifact">
+        <div class="artifact-head">
+          <span class="artifact-title">RF + XGBoost + LightGBM → soft-vote</span>
+          <span class="live-tag"><span class="dot"></span>live</span>
+        </div>
+        <canvas id="cv-ml" height="230"></canvas>
+        <div class="readout" id="ro-ml"></div>
+      </div>
+      <div class="tags">
+        <span class="tag t-green">100k+ ATP/WTA matches</span>
+        <span class="tag t-green">30k UFC sims</span>
+        <span class="tag t-green">isotonic calibration</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="pipeline-step s5">
+    <div class="step-spine"><div class="step-number">05</div><div class="step-line"></div></div>
+    <div class="step-card">
+      <div class="step-title">Statistical Blend</div>
+      <div class="step-sub">src/models/calibrator.py</div>
+      <div class="step-desc">ELO, Dixon-Coles and H2H merge into a base estimate; the ML ensemble overlays 70/30; news sentiment applies a final ±10% nudge. Every weighted contribution flows visibly into the result.</div>
+      <div class="artifact">
+        <div class="artifact-head">
+          <span class="artifact-title">Weighted blend — signal flow</span>
+          <span class="live-tag"><span class="dot"></span>live</span>
+        </div>
+        <canvas id="cv-blend" height="250"></canvas>
+        <div class="readout" id="ro-blend"></div>
+      </div>
+      <div class="tags">
+        <span class="tag t-red">weighted average</span>
+        <span class="tag t-red">Google News RSS</span>
+        <span class="tag t-red">injury flags</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="pipeline-step s6">
+    <div class="step-spine"><div class="step-number">06</div><div class="step-line"></div></div>
+    <div class="step-card">
+      <div class="step-title">9-Agent AI Debate</div>
+      <div class="step-sub">src/models/agent_debate.py · requires ANTHROPIC_API_KEY</div>
+      <div class="step-desc">Nine specialist Claude agents each plant a probability estimate on the axis. Marker size = agent weight, glow = confidence. The consensus marker is their confidence-weighted mean, sliding as they debate.</div>
+      <div class="artifact">
+        <div class="artifact-head">
+          <span class="artifact-title">9 agents → confidence-weighted consensus</span>
+          <span class="live-tag"><span class="dot"></span>live</span>
+        </div>
+        <canvas id="cv-agents" height="270"></canvas>
+        <div class="readout" id="ro-agents"></div>
+      </div>
+      <div class="tags">
+        <span class="tag t-orange">confidence-weighted</span>
+        <span class="tag t-orange">72% stat / 28% debate</span>
+        <span class="tag t-orange">graceful fallback</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 7 -->
+  <div class="pipeline-step s7">
+    <div class="step-spine"><div class="step-number">07</div><div class="step-line" style="opacity:0;"></div></div>
+    <div class="step-card">
+      <div class="step-title">Edge Calculation + Kelly Sizing</div>
+      <div class="step-sub">src/market/edge.py · kelly.py</div>
+      <div class="step-desc">Model probability minus the devigged market probability is the edge. As the gap moves it crosses the STRONG / MODERATE / WEAK / NEGATIVE thresholds live, and quarter-Kelly resizes the stake.</div>
+      <div class="artifact">
+        <div class="artifact-head">
+          <span class="artifact-title">edge = P(model) − P(market) → Kelly stake</span>
+          <span class="live-tag"><span class="dot"></span>live</span>
+        </div>
+        <canvas id="cv-edge" height="240"></canvas>
+        <div class="readout" id="ro-edge"></div>
+      </div>
+      <div class="tags">
+        <span class="tag t-green">Polymarket + Kalshi</span>
+        <span class="tag t-green">vig removal</span>
+        <span class="tag t-green">quarter-Kelly</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-logo">EdgeFinder</div>
+    <p>Open-source sports prediction engine. Zero API keys required for predictions.</p>
+    <a href="https://www.myhermes.cloud" target="_blank">Get this for free on MyHermes → myhermes.cloud</a>
+    <p style="margin-top:16px;font-size:11px;">For educational and research purposes only. Bet responsibly.</p>
+  </div>
+
+</div>
+
+<script>
+// ───────────────────────── shared helpers ─────────────────────────
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+const TAU = Math.PI * 2;
+
+function fit(cv, cssH) {
+  const w = cv.clientWidth || cv.parentElement.clientWidth;
+  cv.width = w * DPR;
+  cv.height = cssH * DPR;
+  cv.style.height = cssH + 'px';
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  return { ctx, w, h: cssH };
+}
+function fact(k){ let f=1; for(let i=2;i<=k;i++) f*=i; return f; }
+function poisson(lam, k){ return Math.exp(-lam) * Math.pow(lam, k) / fact(k); }
+function lerp(a,b,t){ return a + (b-a)*t; }
+function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+function ease(t){ return t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; }
+
+const modules = [];
+let T0 = performance.now();
+function loop(now){
+  const t = (now - T0) / 1000;
+  for (const m of modules) { try { m(t); } catch(e){} }
+  requestAnimationFrame(loop);
+}
+
+// ───────────────────────── 1 · PARSER ─────────────────────────
+(function(){
+  const cv = document.getElementById('cv-parser');
+  let geom = null;
+  const segs = [
+    { text:'Arsenal',          slot:'entity_1',  col:'#00d4ff' },
+    { text:'vs',               slot:null,        col:'#475569' },
+    { text:'PSG',              slot:'entity_2',  col:'#00d4ff' },
+    { text:'Champions League', slot:'competition',col:'#a78bfa' },
+    { text:'Final',            slot:'is_neutral = true', col:'#34d399' },
+  ];
+  function measure(ctx){
+    ctx.font = '600 17px JetBrains Mono, monospace';
+    let x = 18; const gap = 20;
+    for (const s of segs){ s.w = ctx.measureText(s.text).width; s.x = x; x += s.w + gap; }
+    return x;
+  }
+  modules.push(function(t){
+    const { ctx, w, h } = fit(cv, 170);
+    if (!geom) geom = measure(ctx);
+    ctx.clearRect(0,0,w,h);
+
+    const cycle = 7.0;
+    const p = (t % cycle) / cycle;
+    const scanP = clamp(p / 0.62, 0, 1);          // sweep phase
+    const scanX = 14 + ease(scanP) * (Math.min(geom, w-14) - 14);
+
+    const textY = 44;
+    ctx.font = '600 17px JetBrains Mono, monospace';
+    ctx.textBaseline = 'middle';
+
+    // tokens
+    for (const s of segs){
+      const revealed = scanX > s.x + s.w - 2;
+      if (revealed && s.slot){
+        ctx.fillStyle = s.col + '22';
+        ctx.strokeStyle = s.col;
+        ctx.lineWidth = 1;
+        roundRect(ctx, s.x-7, textY-16, s.w+14, 32, 7);
+        ctx.fill(); ctx.stroke();
+      }
+      ctx.fillStyle = revealed ? (s.slot ? s.col : '#64748b') : '#334155';
+      ctx.fillText(s.text, s.x, textY);
+    }
+
+    // scan beam
+    if (scanP < 1){
+      const g = ctx.createLinearGradient(scanX-22,0,scanX+4,0);
+      g.addColorStop(0,'rgba(0,212,255,0)'); g.addColorStop(1,'rgba(0,212,255,0.55)');
+      ctx.fillStyle = g; ctx.fillRect(scanX-22, textY-26, 22, 52);
+      ctx.strokeStyle = '#00d4ff'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(scanX, textY-28); ctx.lineTo(scanX, textY+28); ctx.stroke();
+      ctx.fillStyle = '#00d4ff';
+      ctx.beginPath(); ctx.arc(scanX, textY-28, 3, 0, TAU); ctx.fill();
+    }
+
+    // slot chips
+    ctx.font = '600 11px JetBrains Mono, monospace';
+    let cx = 14; const cy = 112;
+    for (const s of segs){
+      if (!s.slot) continue;
+      const revealed = scanX > s.x + s.w - 2;
+      const label = s.slot;
+      const cw = ctx.measureText(label).width + 22;
+      if (revealed){
+        const appear = clamp((scanX - (s.x+s.w)) / 40, 0, 1);
+        ctx.globalAlpha = appear;
+        ctx.fillStyle = s.col + '18';
+        ctx.strokeStyle = s.col + '88'; ctx.lineWidth = 1;
+        roundRect(ctx, cx, cy - 14*appear, cw, 28, 7);
+        ctx.fill(); ctx.stroke();
+        ctx.fillStyle = s.col;
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, cx+11, cy);
+        ctx.globalAlpha = 1;
+      }
+      cx += cw + 10;
+    }
+
+    // caption
+    ctx.font = '400 11px JetBrains Mono, monospace';
+    ctx.fillStyle = '#475569';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('raw query  →  structured fields', 14, 156);
+  });
+})();
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+// ───────────────────────── 2 · ELO CURVE ─────────────────────────
+(function(){
+  const cv = document.getElementById('cv-elo');
+  const ro = document.getElementById('ro-elo');
+  const ARS = 1938;
+  function P(d){ return 1/(1+Math.pow(10,-d/400)); }
+  modules.push(function(t){
+    const { ctx, w, h } = fit(cv, 240);
+    ctx.clearRect(0,0,w,h);
+    const padL=46, padR=20, padT=16, padB=30;
+    const pw=w-padL-padR, ph=h-padT-padB;
+    const X=d=>padL+(d+400)/800*pw;
+    const Y=p=>padT+(1-p)*ph;
+
+    // grid
+    ctx.strokeStyle='#1f2937'; ctx.lineWidth=1; ctx.font='400 9px JetBrains Mono';
+    ctx.fillStyle='#475569';
+    for(let p=0;p<=1;p+=0.25){
+      ctx.beginPath(); ctx.moveTo(padL,Y(p)); ctx.lineTo(w-padR,Y(p)); ctx.stroke();
+      ctx.textAlign='right'; ctx.textBaseline='middle';
+      ctx.fillText((p*100)+'%', padL-6, Y(p));
+    }
+    for(let d=-400;d<=400;d+=200){
+      ctx.beginPath(); ctx.moveTo(X(d),padT); ctx.lineTo(X(d),h-padB); ctx.stroke();
+      ctx.textAlign='center'; ctx.textBaseline='top';
+      ctx.fillText((d>0?'+':'')+d, X(d), h-padB+6);
+    }
+    // 50% reference
+    ctx.strokeStyle='#334155'; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(padL,Y(.5)); ctx.lineTo(w-padR,Y(.5)); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // sigmoid curve
+    const grad=ctx.createLinearGradient(padL,0,w-padR,0);
+    grad.addColorStop(0,'#4c1d95'); grad.addColorStop(.5,'#7c3aed'); grad.addColorStop(1,'#a78bfa');
+    ctx.strokeStyle=grad; ctx.lineWidth=2.5;
+    ctx.beginPath();
+    for(let d=-400;d<=400;d+=4){ const x=X(d),y=Y(P(d)); d===-400?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+    ctx.stroke();
+
+    // area under curve
+    ctx.lineTo(X(400),Y(0)); ctx.lineTo(X(-400),Y(0)); ctx.closePath();
+    ctx.fillStyle='rgba(124,58,237,0.07)'; ctx.fill();
+
+    // moving marker
+    const d = 380*Math.sin(t*0.55);
+    const p = P(d);
+    const mx=X(d), my=Y(p);
+    ctx.strokeStyle='rgba(167,139,250,0.4)'; ctx.lineWidth=1; ctx.setLineDash([2,3]);
+    ctx.beginPath(); ctx.moveTo(mx,my); ctx.lineTo(mx,h-padB); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(mx,my); ctx.lineTo(padL,my); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#a78bfa';
+    ctx.shadowColor='#a78bfa'; ctx.shadowBlur=12;
+    ctx.beginPath(); ctx.arc(mx,my,5.5,0,TAU); ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.strokeStyle='#fff'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(mx,my,5.5,0,TAU); ctx.stroke();
+
+    const opp = Math.round(ARS - d);
+    ro.innerHTML = `Arsenal <b>${ARS}</b> &nbsp;vs&nbsp; opponent <b>${opp}</b> &nbsp;·&nbsp; `+
+      `ΔElo <span class="hl">${d>=0?'+':''}${d.toFixed(0)}</span> &nbsp;→&nbsp; `+
+      `P(win) = <b>${(p*100).toFixed(1)}%</b>`;
+  });
+})();
+
+// ───────────────────────── 3 · DIXON-COLES ─────────────────────────
+(function(){
+  const cvP=document.getElementById('cv-dc-pois');
+  const cvG=document.getElementById('cv-dc-grid');
+  const cvB=document.getElementById('cv-dc-bar');
+  const ro=document.getElementById('ro-dc');
+  const N=6;
+  function dcAdj(h,a,lh,la){
+    if(h===0&&a===0) return 1-lh*la*0.06;
+    if(h===1&&a===0) return 1+la*0.06;
+    if(h===0&&a===1) return 1+lh*0.06;
+    if(h===1&&a===1) return 1-0.06;
+    return 1;
+  }
+  modules.push(function(t){
+    const lh=1.85+0.45*Math.sin(t*0.5);
+    const la=1.62+0.40*Math.sin(t*0.5+2.1);
+
+    // ---- Poisson bars ----
+    {
+      const {ctx,w,h}=fit(cvP,240);
+      ctx.clearRect(0,0,w,h);
+      ctx.font='600 9px JetBrains Mono'; ctx.fillStyle='#64748b'; ctx.textAlign='left'; ctx.textBaseline='top';
+      ctx.fillText('ARSENAL  λ='+lh.toFixed(2),8,4);
+      ctx.fillText('PSG  λ='+la.toFixed(2),8,122);
+      drawPois(ctx,w,8,18,w-16,92,lh,'#10b981','#34d399');
+      drawPois(ctx,w,8,136,w-16,92,la,'#7c3aed','#a78bfa');
+    }
+    function drawPois(ctx,W,x0,y0,bw,bh,lam,c1,c2){
+      const bar=bw/(N+1);
+      for(let k=0;k<=N;k++){
+        const pr=poisson(lam,k);
+        const bhh=clamp(pr/0.32,0,1)*bh;
+        const x=x0+k*bar;
+        const g=ctx.createLinearGradient(0,y0+bh-bhh,0,y0+bh);
+        g.addColorStop(0,c2); g.addColorStop(1,c1);
+        ctx.fillStyle=g;
+        roundRect(ctx,x+3,y0+bh-bhh,bar-6,bhh,3); ctx.fill();
+        ctx.fillStyle='#475569'; ctx.font='400 8px JetBrains Mono';
+        ctx.textAlign='center'; ctx.textBaseline='top';
+        ctx.fillText(k,x+bar/2,y0+bh+3);
+        ctx.fillStyle=c2; ctx.font='600 8px JetBrains Mono';
+        ctx.fillText((pr*100).toFixed(0),x+bar/2,y0+bh-bhh-10);
+      }
+    }
+
+    // ---- scoreline matrix ----
+    let pH=0,pD=0,pA=0,maxC=0;
+    const M=[];
+    for(let hh=0;hh<N;hh++){ M[hh]=[]; for(let aa=0;aa<N;aa++){
+      let pr=poisson(lh,hh)*poisson(la,aa)*dcAdj(hh,aa,lh,la);
+      M[hh][aa]=pr; maxC=Math.max(maxC,pr);
+      if(hh>aa)pH+=pr; else if(hh<aa)pA+=pr; else pD+=pr;
+    }}
+    const s=pH+pD+pA; pH/=s;pD/=s;pA/=s;
+    {
+      const {ctx,w,h}=fit(cvG,240);
+      ctx.clearRect(0,0,w,h);
+      const m=20, gw=w-m-6, gh=h-m-18, cell=Math.min(gw/N,gh/N);
+      const ox=m, oy=14;
+      ctx.font='400 8px JetBrains Mono';
+      ctx.fillStyle='#64748b'; ctx.textAlign='center'; ctx.textBaseline='bottom';
+      for(let a=0;a<N;a++) ctx.fillText(a, ox+a*cell+cell/2, oy-2);
+      ctx.save(); ctx.translate(8,oy+N*cell/2); ctx.rotate(-Math.PI/2);
+      ctx.fillText('ARSENAL goals →',0,0); ctx.restore();
+      ctx.textBaseline='middle'; ctx.textAlign='right';
+      for(let hh=0;hh<N;hh++) ctx.fillText(hh, ox-3, oy+hh*cell+cell/2);
+      for(let hh=0;hh<N;hh++) for(let a=0;a<N;a++){
+        const pr=M[hh][a], inten=pr/maxC;
+        let base;
+        if(hh>a) base=[16,185,129];
+        else if(hh<a) base=[124,58,237];
+        else base=[245,158,11];
+        const al=0.10+inten*0.78;
+        ctx.fillStyle=`rgba(${base[0]},${base[1]},${base[2]},${al})`;
+        roundRect(ctx,ox+a*cell+1.5,oy+hh*cell+1.5,cell-3,cell-3,3); ctx.fill();
+        if(inten>0.28){
+          ctx.fillStyle=inten>0.6?'#fff':'rgba(255,255,255,0.65)';
+          ctx.font='600 8px JetBrains Mono'; ctx.textAlign='center'; ctx.textBaseline='middle';
+          ctx.fillText((pr*100).toFixed(0),ox+a*cell+cell/2,oy+hh*cell+cell/2);
+        }
+      }
+      ctx.fillStyle='#64748b'; ctx.font='400 8px JetBrains Mono';
+      ctx.textAlign='right'; ctx.textBaseline='top';
+      ctx.fillText('PSG goals →', w-6, oy+N*cell+4);
+    }
+
+    // ---- H/D/A bar ----
+    {
+      const {ctx,w,h}=fit(cvB,56);
+      ctx.clearRect(0,0,w,h);
+      const segs=[['Arsenal',pH,'#10b981'],['Draw',pD,'#f59e0b'],['PSG',pA,'#7c3aed']];
+      let x=0; const y=10,bh=22;
+      for(const [lab,pr,c] of segs){
+        const sw=pr*w;
+        ctx.fillStyle=c+'cc'; ctx.fillRect(x,y,sw-2,bh);
+        ctx.fillStyle='#fff'; ctx.font='600 10px JetBrains Mono';
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        if(sw>54) ctx.fillText((pr*100).toFixed(1)+'%',x+sw/2,y+bh/2);
+        ctx.fillStyle=c; ctx.font='600 9px JetBrains Mono'; ctx.textBaseline='top';
+        ctx.fillText(lab,x+sw/2,y+bh+4);
+        x+=sw;
+      }
+    }
+    ro.innerHTML=`scoreline matrix Σ &nbsp;→&nbsp; Arsenal <span class="hl">${(pH*100).toFixed(1)}%</span> · `+
+      `Draw <b>${(pD*100).toFixed(1)}%</b> · PSG <b>${(pA*100).toFixed(1)}%</b>`;
+  });
+})();
+
+// ───────────────────────── 4 · ML ENSEMBLE ─────────────────────────
+(function(){
+  const cv=document.getElementById('cv-ml');
+  const ro=document.getElementById('ro-ml');
+  const models=[
+    {n:'Random Forest',w:0.25,c:'#00d4ff',base:0.39,fr:0.7,ph:0},
+    {n:'XGBoost',      w:0.375,c:'#7c3aed',base:0.46,fr:0.9,ph:1.7},
+    {n:'LightGBM',     w:0.375,c:'#10b981',base:0.44,fr:1.1,ph:3.4},
+  ];
+  modules.push(function(t){
+    const {ctx,w,h}=fit(cv,230);
+    ctx.clearRect(0,0,w,h);
+    const colW=w*0.62/3, gy0=20, gh=130;
+    let ens=0;
+    models.forEach((m,i)=>{
+      const p=m.base+0.035*Math.sin(t*m.fr+m.ph)+0.012*Math.sin(t*3.3+m.ph*2);
+      m.cur=p; ens+=m.w*p;
+      const cx=colW*i+colW/2+6;
+      // track
+      ctx.fillStyle='#131c2e';
+      roundRect(ctx,cx-20,gy0,40,gh,6); ctx.fill();
+      // fill
+      const fh=p*gh;
+      const g=ctx.createLinearGradient(0,gy0+gh-fh,0,gy0+gh);
+      g.addColorStop(0,m.c); g.addColorStop(1,m.c+'44');
+      ctx.fillStyle=g;
+      roundRect(ctx,cx-20,gy0+gh-fh,40,fh,6); ctx.fill();
+      // ticker dot
+      ctx.fillStyle='#fff'; ctx.shadowColor=m.c; ctx.shadowBlur=8;
+      ctx.beginPath(); ctx.arc(cx,gy0+gh-fh,3.5,0,TAU); ctx.fill(); ctx.shadowBlur=0;
+      // labels
+      ctx.fillStyle=m.c; ctx.font='600 10px JetBrains Mono';
+      ctx.textAlign='center'; ctx.textBaseline='top';
+      ctx.fillText((p*100).toFixed(1)+'%',cx,gy0+gh+8);
+      ctx.fillStyle='#94a3b8'; ctx.font='600 9px Inter';
+      ctx.fillText(m.n,cx,gy0+gh+24);
+      ctx.fillStyle='#475569'; ctx.font='400 8px JetBrains Mono';
+      ctx.fillText('weight '+(m.w*100)+'%',cx,gy0+gh+38);
+    });
+
+    // arrow zone
+    const ax=w*0.62+6;
+    ctx.strokeStyle='#334155'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(ax,gy0+gh/2); ctx.lineTo(ax+26,gy0+gh/2); ctx.stroke();
+    ctx.fillStyle='#334155';
+    ctx.beginPath(); ctx.moveTo(ax+26,gy0+gh/2-4); ctx.lineTo(ax+34,gy0+gh/2); ctx.lineTo(ax+26,gy0+gh/2+4); ctx.fill();
+
+    // ensemble gauge
+    const ex=w*0.83, ey=gy0+gh/2, R=46;
+    ctx.lineWidth=10; ctx.strokeStyle='#131c2e';
+    ctx.beginPath(); ctx.arc(ex,ey,R,0,TAU); ctx.stroke();
+    const gg=ctx.createLinearGradient(ex-R,0,ex+R,0);
+    gg.addColorStop(0,'#10b981'); gg.addColorStop(1,'#34d399');
+    ctx.strokeStyle=gg; ctx.lineCap='round';
+    ctx.beginPath(); ctx.arc(ex,ey,R,-Math.PI/2,-Math.PI/2+ens*TAU); ctx.stroke();
+    ctx.lineCap='butt';
+    ctx.fillStyle='#fff'; ctx.font='700 19px JetBrains Mono';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText((ens*100).toFixed(1)+'%',ex,ey-4);
+    ctx.fillStyle='#64748b'; ctx.font='600 8px JetBrains Mono';
+    ctx.fillText('ENSEMBLE',ex,ey+13);
+
+    ro.innerHTML=`soft-vote = 0.25·RF + 0.375·XGB + 0.375·LGBM &nbsp;→&nbsp; `+
+      `<span class="hl">${(ens*100).toFixed(1)}%</span>`;
+  });
+})();
+
+// ───────────────────────── 5 · BLEND ─────────────────────────
+(function(){
+  const cv=document.getElementById('cv-blend');
+  const ro=document.getElementById('ro-blend');
+  const rows=[
+    {n:'ELO',        w:0.40,c:'#a78bfa',base:0.54,fr:0.4,ph:0},
+    {n:'Dixon-Coles',w:0.40,c:'#fbbf24',base:0.47,fr:0.55,ph:1.3},
+    {n:'H2H',        w:0.20,c:'#67e8f9',base:0.50,fr:0.7,ph:2.6},
+  ];
+  modules.push(function(t){
+    const {ctx,w,h}=fit(cv,250);
+    ctx.clearRect(0,0,w,h);
+    const lx=14, bx=120, bw=w-bx-150, rh=30;
+    let base=0;
+    rows.forEach((r,i)=>{
+      const v=r.base+0.05*Math.sin(t*r.fr+r.ph);
+      r.cur=v; base+=r.w*v;
+      const y=20+i*rh;
+      ctx.fillStyle='#94a3b8'; ctx.font='600 11px Inter'; ctx.textAlign='left'; ctx.textBaseline='middle';
+      ctx.fillText(r.n,lx,y+9);
+      ctx.fillStyle='#475569'; ctx.font='400 8px JetBrains Mono';
+      ctx.fillText('×'+r.w.toFixed(2),lx,y+21);
+      ctx.fillStyle='#131c2e'; roundRect(ctx,bx,y,bw,18,4); ctx.fill();
+      const fw=v*bw;
+      ctx.fillStyle=r.c+'cc'; roundRect(ctx,bx,y,fw,18,4); ctx.fill();
+      ctx.fillStyle=r.c; ctx.font='600 10px JetBrains Mono'; ctx.textAlign='left';
+      ctx.fillText((v*100).toFixed(1)+'%',bx+bw+8,y+9);
+      // contribution flow line
+      ctx.strokeStyle=r.c+'55'; ctx.lineWidth=1+r.w*4;
+      ctx.beginPath();
+      ctx.moveTo(bx+fw,y+9);
+      ctx.bezierCurveTo(bx+bw+70,y+9, bx+bw+70,138, bx+bw+90,138);
+      ctx.stroke();
+    });
+
+    // base node
+    const ml=0.46+0.03*Math.sin(t*0.8+1);
+    const news=0.045*Math.sin(t*0.6+2);
+    const stat=0.70*base+0.30*ml;
+    const final=clamp(stat+news,0.02,0.98);
+
+    const nodeX=bx+bw+90;
+    function node(x,y,label,val,col,r){
+      ctx.fillStyle=col+'22'; ctx.strokeStyle=col; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.arc(x,y,r,0,TAU); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='#fff'; ctx.font='700 13px JetBrains Mono';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText((val*100).toFixed(1),x,y-3);
+      ctx.fillStyle=col; ctx.font='600 8px JetBrains Mono';
+      ctx.fillText(label,x,y+10);
+    }
+    // base → +ML → +news → final  flow
+    node(nodeX,138,'BASE',base,'#f87171',26);
+    ctx.strokeStyle='#334155'; ctx.lineWidth=1.5;
+    arrow(ctx,nodeX+28,138,nodeX+58,138);
+    ctx.fillStyle='#6ee7b7'; ctx.font='600 9px JetBrains Mono'; ctx.textAlign='center'; ctx.textBaseline='bottom';
+    ctx.fillText('+30% ML',nodeX+43,132);
+    ctx.fillStyle='#34d399'; ctx.textBaseline='top';
+    ctx.fillText((ml*100).toFixed(0)+'%',nodeX+43,142);
+    node(nodeX+86,138,'STAT',stat,'#fbbf24',26);
+    arrow(ctx,nodeX+114,138,nodeX+144,138);
+    ctx.fillStyle=news>=0?'#34d399':'#f87171'; ctx.font='600 9px JetBrains Mono'; ctx.textBaseline='bottom';
+    ctx.fillText('news',nodeX+129,132);
+    ctx.textBaseline='top';
+    ctx.fillText((news>=0?'+':'')+(news*100).toFixed(1)+'%',nodeX+129,142);
+    // final
+    ctx.shadowColor='#34d399'; ctx.shadowBlur=14;
+    node(nodeX+176,138,'FINAL',final,'#34d399',30);
+    ctx.shadowBlur=0;
+
+    ro.innerHTML=`base = .40·ELO + .40·DC + .20·H2H = <b>${(base*100).toFixed(1)}%</b> &nbsp;→&nbsp; `+
+      `stat = .70·base + .30·ML &nbsp;→&nbsp; final <span class="hl">${(final*100).toFixed(1)}%</span>`;
+  });
+  function arrow(ctx,x1,y,x2,yy){
+    ctx.strokeStyle='#334155'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(x2,yy); ctx.stroke();
+    ctx.fillStyle='#334155';
+    ctx.beginPath(); ctx.moveTo(x2,yy-4); ctx.lineTo(x2+7,yy); ctx.lineTo(x2,yy+4); ctx.fill();
+  }
+})();
+
+// ───────────────────────── 6 · 9 AGENTS ─────────────────────────
+(function(){
+  const cv=document.getElementById('cv-agents');
+  const ro=document.getElementById('ro-agents');
+  const agents=[
+    {n:'StatisticsAnalyst', w:0.22,c:'#fb923c',base:0.55},
+    {n:'TacticsScout',      w:0.18,c:'#a78bfa',base:0.52},
+    {n:'InjurySpecialist',  w:0.15,c:'#f87171',base:0.49},
+    {n:'NewsIntelligence',  w:0.13,c:'#67e8f9',base:0.57},
+    {n:'Contrarian',        w:0.10,c:'#fbbf24',base:0.38},
+    {n:'MarketIntelligence',w:0.10,c:'#34d399',base:0.44},
+    {n:'PsychologyAnalyst', w:0.05,c:'#c084fc',base:0.53},
+    {n:'WeatherAnalyst',    w:0.04,c:'#7dd3fc',base:0.50},
+    {n:'HomeGroundExpert',  w:0.03,c:'#86efac',base:0.51},
+  ];
+  agents.forEach((a,i)=>{ a.ph=i*0.9; a.cf=0.5; a.p=a.base; });
+  modules.push(function(t){
+    const {ctx,w,h}=fit(cv,270);
+    ctx.clearRect(0,0,w,h);
+    const padL=14,padR=14, axY=h-58, aw=w-padL-padR;
+    const X=p=>padL+p*aw;
+
+    // axis
+    ctx.strokeStyle='#1f2937'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(padL,axY); ctx.lineTo(w-padR,axY); ctx.stroke();
+    ctx.font='400 9px JetBrains Mono'; ctx.fillStyle='#475569';
+    ctx.textAlign='center'; ctx.textBaseline='top';
+    for(let p=0;p<=1;p+=0.25){
+      ctx.beginPath(); ctx.moveTo(X(p),axY-3); ctx.lineTo(X(p),axY+3); ctx.stroke();
+      ctx.fillText((p*100)+'%',X(p),axY+7);
+    }
+    ctx.beginPath(); ctx.strokeStyle='#334155'; ctx.setLineDash([3,3]);
+    ctx.moveTo(X(.5),28); ctx.lineTo(X(.5),axY); ctx.stroke(); ctx.setLineDash([]);
+
+    // agent markers — debate jitter then settle
+    let num=0,den=0;
+    agents.forEach((a,i)=>{
+      const tgt=a.base+0.07*Math.sin(t*0.35+a.ph);
+      a.p+=(tgt-a.p)*0.06;
+      a.p+=0.004*Math.sin(t*5+a.ph*3);          // debate jitter
+      a.cf=0.62+0.22*Math.sin(t*0.6+a.ph*1.3);
+      num+=a.w*a.cf*a.p; den+=a.w*a.cf;
+      const x=X(a.p);
+      const lane=28+(i%3)*16 + Math.floor(i/3)*0;  // vertical spread
+      const y=44+i*((axY-70)/8);
+      // stick to axis
+      ctx.strokeStyle=a.c+'33'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x,axY); ctx.stroke();
+      // marker
+      const r=4+a.w*22;
+      ctx.globalAlpha=0.35+a.cf*0.6;
+      ctx.fillStyle=a.c; ctx.shadowColor=a.c; ctx.shadowBlur=a.cf*10;
+      ctx.beginPath(); ctx.arc(x,y,r,0,TAU); ctx.fill();
+      ctx.shadowBlur=0; ctx.globalAlpha=1;
+      // label
+      ctx.fillStyle=a.c; ctx.font='600 9px JetBrains Mono';
+      ctx.textAlign= x<w*0.6?'left':'right'; ctx.textBaseline='middle';
+      const lx= x<w*0.6 ? x+r+6 : x-r-6;
+      ctx.fillText(a.n+'  '+(a.p*100).toFixed(0)+'%',lx,y);
+    });
+
+    // consensus
+    const cons=num/den;
+    const cx=X(cons);
+    ctx.strokeStyle='#fb923c'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(cx,24); ctx.lineTo(cx,axY); ctx.stroke();
+    ctx.fillStyle='#f97316'; ctx.shadowColor='#f97316'; ctx.shadowBlur=16;
+    ctx.beginPath(); ctx.moveTo(cx,axY-7); ctx.lineTo(cx-7,axY-19); ctx.lineTo(cx+7,axY-19); ctx.closePath();
+    ctx.fill(); ctx.shadowBlur=0;
+    ctx.fillStyle='#fb923c'; ctx.font='700 10px JetBrains Mono';
+    ctx.textAlign='center'; ctx.textBaseline='bottom';
+    ctx.fillText('CONSENSUS '+(cons*100).toFixed(1)+'%',cx,22);
+
+    const stat=0.452;
+    const final=0.72*stat+0.28*cons;
+    ro.innerHTML=`consensus = Σ(wᵢ·confᵢ·pᵢ) / Σ(wᵢ·confᵢ) = <b>${(cons*100).toFixed(1)}%</b> &nbsp;→&nbsp; `+
+      `final = .72·stat + .28·debate = <span class="hl">${(final*100).toFixed(1)}%</span>`;
+  });
+})();
+
+// ───────────────────────── 7 · EDGE + KELLY ─────────────────────────
+(function(){
+  const cv=document.getElementById('cv-edge');
+  const ro=document.getElementById('ro-edge');
+  modules.push(function(t){
+    const {ctx,w,h}=fit(cv,240);
+    ctx.clearRect(0,0,w,h);
+    const model=0.37+0.075*Math.sin(t*0.5);
+    const market=0.315+0.02*Math.sin(t*0.33+1);
+    const edge=model-market;
+
+    const padL=92, bw=w-padL-30;
+    const X=p=>padL+p*bw;
+
+    // scale ticks
+    ctx.font='400 9px JetBrains Mono'; ctx.fillStyle='#475569';
+    ctx.textAlign='center'; ctx.textBaseline='top';
+    for(let p=0;p<=0.6;p+=0.15){
+      ctx.strokeStyle='#1f2937'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(X(p),24); ctx.lineTo(X(p),150); ctx.stroke();
+      ctx.fillText((p*100)+'%',X(p),154);
+    }
+
+    function bar(y,label,p,col){
+      ctx.fillStyle='#94a3b8'; ctx.font='600 11px Inter';
+      ctx.textAlign='left'; ctx.textBaseline='middle';
+      ctx.fillText(label,12,y+13);
+      ctx.fillStyle='#131c2e'; roundRect(ctx,padL,y,bw,26,5); ctx.fill();
+      const g=ctx.createLinearGradient(padL,0,X(p),0);
+      g.addColorStop(0,col+'66'); g.addColorStop(1,col);
+      ctx.fillStyle=g; roundRect(ctx,padL,y,Math.max(p*bw,3),26,5); ctx.fill();
+      ctx.fillStyle='#fff'; ctx.font='700 11px JetBrains Mono'; ctx.textAlign='left';
+      ctx.fillText((p*100).toFixed(1)+'%',X(p)+7,y+13);
+    }
+    bar(36,'P(model)',model,'#34d399');
+    bar(78,'P(market)',market,'#64748b');
+
+    // edge gap visual
+    const gy=120;
+    const x1=X(Math.min(model,market)), x2=X(Math.max(model,market));
+    ctx.fillStyle=edge>=0?'rgba(52,211,153,0.18)':'rgba(248,113,113,0.18)';
+    ctx.fillRect(x1,30,x2-x1,98);
+    ctx.strokeStyle=edge>=0?'#34d399':'#f87171'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(X(model),30); ctx.lineTo(X(model),128); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(X(market),30); ctx.lineTo(X(market),128); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=edge>=0?'#34d399':'#f87171';
+    ctx.font='700 11px JetBrains Mono'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('edge '+(edge>=0?'+':'')+(edge*100).toFixed(1)+'%',(x1+x2)/2,gy);
+
+    // classification thresholds bar
+    const ty=178, tw=w-24;
+    const zones=[
+      {l:'NEGATIVE',c:'#ef4444',a:-0.10,b:0},
+      {l:'WEAK',c:'#64748b',a:0,b:0.02},
+      {l:'MODERATE',c:'#f59e0b',a:0.02,b:0.05},
+      {l:'STRONG',c:'#10b981',a:0.05,b:0.15},
+    ];
+    const span=0.25, Z=e=>12+(e+0.10)/span*tw;
+    for(const z of zones){
+      ctx.fillStyle=z.c+'33';
+      ctx.fillRect(Z(z.a),ty,Z(z.b)-Z(z.a),20);
+      ctx.fillStyle=z.c; ctx.font='600 8px JetBrains Mono';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      if(Z(z.b)-Z(z.a)>52) ctx.fillText(z.l,(Z(z.a)+Z(z.b))/2,ty+10);
+    }
+    // edge needle
+    const nx=clamp(Z(edge),12,12+tw);
+    ctx.strokeStyle='#fff'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(nx,ty-5); ctx.lineTo(nx,ty+25); ctx.stroke();
+    ctx.fillStyle='#fff';
+    ctx.beginPath(); ctx.moveTo(nx,ty-5); ctx.lineTo(nx-4,ty-12); ctx.lineTo(nx+4,ty-12); ctx.fill();
+
+    // Kelly
+    let cls='WEAK',ccol='#64748b';
+    if(edge<0){cls='NEGATIVE';ccol='#f87171';}
+    else if(edge>=0.05){cls='STRONG';ccol='#34d399';}
+    else if(edge>=0.02){cls='MODERATE';ccol='#fbbf24';}
+    const dec=1/market, b=dec-1, q=1-model;
+    let kel=(model*b-q)/b; kel=Math.max(0,kel)/4;
+
+    ctx.fillStyle=ccol; ctx.font='700 12px JetBrains Mono';
+    ctx.textAlign='right'; ctx.textBaseline='top';
+    ctx.fillText(cls,w-12,ty+30);
+    ctx.fillStyle='#64748b'; ctx.font='400 10px JetBrains Mono'; ctx.textAlign='left';
+    ctx.fillText('¼-Kelly stake: '+(kel*100).toFixed(2)+'% of bankroll',12,ty+30);
+
+    ro.innerHTML=`edge = ${(model*100).toFixed(1)}% − ${(market*100).toFixed(1)}% = `+
+      `<span class="hl">${edge>=0?'+':''}${(edge*100).toFixed(1)}%</span> `+
+      `→ <b style="color:${ccol}">${cls}</b> · stake <b>${(kel*100).toFixed(2)}%</b>`;
+  });
+})();
+
+// ───────────────────────── boot ─────────────────────────
+function boot(){ T0 = performance.now(); requestAnimationFrame(loop); }
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(boot);
+else window.addEventListener('load', boot);
+window.addEventListener('resize', ()=>{});
+</script>
+</body>
+</html>
