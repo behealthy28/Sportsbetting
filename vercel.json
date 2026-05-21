@@ -12,8 +12,6 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "app.py" },
-    { "src": "/pipeline", "dest": "/static/pipeline.html" },
-    { "src": "/app", "dest": "/static/index.html" },
-    { "src": "/", "dest": "/static/pipeline.html" }
+    { "src": "/(.*)", "dest": "/static/pipeline.html" }
   ]
 }
