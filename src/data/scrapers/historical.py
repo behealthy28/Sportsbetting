@@ -534,7 +534,7 @@ def download_kaggle_dataset(dataset_id: str, output_dir: Path = None) -> Path | 
     """
     if not _kaggle_available():
         return None
-    if not _KAGGLE_DATASET_RE.match(dataset_id):
+    if not _KAGGLE_DATASET_RE.match(dataset_id.lower()):
         raise ValueError(f"Invalid Kaggle dataset_id format: {dataset_id!r}")
     if output_dir is None:
         output_dir = RAW_DIR / "kaggle" / dataset_id.replace("/", "_")

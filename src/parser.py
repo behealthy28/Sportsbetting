@@ -38,7 +38,11 @@ SPORT_INDICATORS = {
 }
 
 NEUTRAL_KEYWORDS = ["neutral", "at wembley", "at munich", "at doha", "world cup",
-                    "euro final", "at stadium", "hosted by"]
+                    "euro final", "at stadium", "hosted by",
+                    "champions league final", "ucl final", "europa league final",
+                    "fa cup final", "copa final", "cup final", "grand final",
+                    "at lisbon", "at istanbul", "at paris", "at berlin", "at madrid",
+                    "at rome", "at london", "at milan"]
 COMPETITION_PATTERNS = [
     r"(world cup|euro \d{4}|euros?|copa america|afcon|nations league|"
     r"champions league|premier league|la liga|bundesliga|serie a|ligue 1|"
