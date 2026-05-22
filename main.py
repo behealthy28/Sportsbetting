@@ -37,6 +37,7 @@ def _banner():
             ("    <match query>  ", "white"), ("— predict (e.g. Portugal vs Spain)\n", "dim"),
             ("    data <name>    ", "white"), ("— show raw data for a team/player before betting\n", "dim"),
             ("    today          ", "white"), ("— list today's & upcoming fixtures\n", "dim"),
+            ("    edges          ", "white"), ("— scan upcoming fixtures, rank by edge vs Polymarket\n", "dim"),
             ("    dashboard      ", "white"), ("— live Bloomberg-style terminal (4-panel)\n", "dim"),
             ("    autotrade      ", "white"), ("— one-shot: scan fixtures and auto-log dry-run bets with strong edge\n", "dim"),
             ("    dashboard auto ", "white"), ("— dashboard + continuous auto-trading (dry-run)\n", "dim"),
@@ -231,6 +232,166 @@ def _run_backtest(sport: str = None):
         run_all_backtests(console)
 
 
+def _infer_sport_from_league(league: str) -> str:
+    l = league.lower()
+    if any(k in l for k in ("ufc", "mma", "fighting", "combat")):
+        return "ufc"
+    if any(k in l for k in ("tennis", "atp", "wta")):
+        return "tennis"
+    if any(k in l for k in ("boxing",)):
+        return "boxing"
+    if any(k in l for k in ("cricket",)):
+        return "cricket"
+    if any(k in l for k in ("darts",)):
+        return "darts"
+    return "football"
+
+
+def _show_edges(days_ahead: int = 5, max_fixtures: int = 35):
+    """Scan upcoming fixtures across all sports and rank by Polymarket edge."""
+    from src.data.scrapers.fixtures import get_todays_fixtures
+    from src.predictor import SPORT_HANDLERS
+    from src.display.terminal import _outcome_label
+    from rich.table import Table
+    from rich import box
+    from datetime import datetime
+
+    console.print("\n[dim]  Fetching upcoming fixtures...[/dim]")
+    fixtures = get_todays_fixtures(days_ahead=days_ahead)
+
+    upcoming = [
+        f for f in fixtures
+        if f.get("status", "Scheduled") in ("Scheduled", "", "Upcoming", "Scheduled ")
+    ]
+
+    if not upcoming:
+        console.print("[yellow]  No upcoming fixtures found.[/yellow]\n")
+        return
+
+    console.print(
+        f"[dim]  {len(upcoming)} upcoming fixtures found — running predictions + Polymarket lookup "
+        f"(this takes ~1 min)...[/dim]\n"
+    )
+
+    results = []
+    checked = 0
+    for fixture in upcoming[:max_fixtures]:
+        home = fixture.get("home", "")
+        away = fixture.get("away", "")
+        date = (fixture.get("date") or "")[:10]
+        league = fixture.get("league", "")
+        if not home or not away:
+            continue
+
+        sport = _infer_sport_from_league(league)
+        handler = SPORT_HANDLERS.get(sport)
+        if handler is None:
+            continue
+
+        checked += 1
+        console.print(
+            f"[dim]  [{checked}/{min(len(upcoming), max_fixtures)}] "
+            f"{home} v {away}[/dim]",
+            end="\r",
+        )
+
+        try:
+            result = handler.predict(home, away, date, {
+                "competition": league,
+                "is_neutral": False,
+                "venue": fixture.get("venue", ""),
+            })
+        except Exception:
+            continue
+
+        results.append({
+            "result": result,
+            "date": date,
+            "league": league,
+            "sport": sport,
+            "edge_pct": result.best_edge_pct if result.market_probs else None,
+            "kelly": result.kelly_stake_pct if result.market_probs else None,
+        })
+
+    console.print(" " * 80, end="\r")  # clear progress line
+
+    # Sort: strongest edge first, no-market fixtures at the bottom
+    results.sort(key=lambda x: x["edge_pct"] if x["edge_pct"] is not None else -999, reverse=True)
+
+    table = Table(
+        box=box.SIMPLE,
+        show_header=True,
+        header_style="bold dim",
+        padding=(0, 1),
+        show_edge=False,
+    )
+    table.add_column("Date",    style="dim",        width=10)
+    table.add_column("Sport",   style="dim",        width=9)
+    table.add_column("Match",                       min_width=26)
+    table.add_column("Best Bet",                    min_width=14)
+    table.add_column("Model%",  justify="right",    width=7)
+    table.add_column("Mkt%",    justify="right",    width=6)
+    table.add_column("Edge",    justify="right",    width=8)
+    table.add_column("Kelly%",  justify="right",    width=7)
+    table.add_column("Signal",                      width=10)
+
+    for r in results:
+        result = r["result"]
+        edge_pct = r["edge_pct"]
+        kelly = r["kelly"]
+        best_key = result.best_bet
+
+        model_p = market_p = None
+        if best_key and result.edges:
+            info = result.edges.get(best_key, {})
+            model_p = info.get("model_prob")
+            market_p = info.get("market_prob")
+
+        bet_label = _outcome_label(best_key, result.entity1, result.entity2) if best_key else "—"
+
+        if edge_pct is not None:
+            if edge_pct >= 5:
+                edge_str = f"[bright_green]+{edge_pct:.1f}%[/bright_green]"
+                signal   = "[bright_green]STRONG ✦[/bright_green]"
+            elif edge_pct >= 2:
+                edge_str = f"[yellow]+{edge_pct:.1f}%[/yellow]"
+                signal   = "[yellow]MODERATE[/yellow]"
+            elif edge_pct > 0:
+                edge_str = f"[dim]+{edge_pct:.1f}%[/dim]"
+                signal   = "[dim]WEAK[/dim]"
+            else:
+                edge_str = f"[red]{edge_pct:.1f}%[/red]"
+                signal   = "[red]NEGATIVE[/red]"
+        else:
+            edge_str = "[dim]no mkt[/dim]"
+            signal   = "[dim]—[/dim]"
+
+        table.add_row(
+            r["date"],
+            r["sport"].upper()[:8],
+            f"{result.entity1} v {result.entity2}",
+            bet_label,
+            f"{model_p*100:.1f}%" if model_p else "—",
+            f"{market_p*100:.1f}%" if market_p else "—",
+            edge_str,
+            f"{kelly:.1f}%" if kelly else "—",
+            signal,
+        )
+
+    console.print(
+        Panel(
+            table,
+            title="[bold white]  Upcoming Edges — All Sports[/bold white]",
+            border_style="bright_green",
+            padding=(0, 1),
+        )
+    )
+    console.print(
+        f"[dim]  {len(results)} fixtures analysed  ·  ranked by edge vs Polymarket  ·  "
+        f"type a match name to run the full prediction[/dim]\n"
+    )
+
+
 def _run_autotrade():
     """One-shot autotrade scan: fetch fixtures, predict, auto-log qualifying dry-run bets."""
     from src.data.scrapers.fixtures import get_todays_fixtures
@@ -357,6 +518,18 @@ def _dispatch(line: str) -> bool:
         _show_fixtures(days_ahead=3)
         return True
 
+    if low in ("edges", "scan", "value", "upcoming edges", "find edges"):
+        _show_edges()
+        return True
+
+    if low.startswith("edges ") or low.startswith("scan "):
+        try:
+            days = int(cmd.split()[1])
+        except (IndexError, ValueError):
+            days = 5
+        _show_edges(days_ahead=days)
+        return True
+
     if low in ("dashboard", "live", "monitor", "terminal"):
         from src.dashboard import run_dashboard
         run_dashboard(scan_interval=60.0, days_ahead=2)
@@ -469,6 +642,14 @@ def main():
         elif low in ("dashboard auto", "dashboard autotrade", "live auto"):
             from src.dashboard import run_dashboard
             run_dashboard(scan_interval=60.0, days_ahead=2, autotrade=True)
+        elif low in ("edges", "scan", "value", "upcoming edges", "find edges"):
+            _show_edges()
+        elif low.startswith("edges ") or low.startswith("scan "):
+            try:
+                days = int(low.split()[1])
+            except (IndexError, ValueError):
+                days = 5
+            _show_edges(days_ahead=days)
         elif low in ("autotrade", "autobet", "auto"):
             _run_autotrade()
         elif low.startswith("ask "):
