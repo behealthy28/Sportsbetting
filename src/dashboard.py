@@ -202,9 +202,29 @@ def _predict_one(fixture: dict) -> Optional[dict]:
     market = fixture.get("_probs") or result.market_probs
     if market:
         state.mark_source("Polymarket", "ok")
+
     edges = result.edges or {}
     if not edges and market:
-        edges = calculate_edge(probs, market)
+        # Remap model probs to match Polymarket market keys before edge calc
+        p1 = probs.get("home_win") or probs.get("p1_win") or probs.get("f1_win") or 0.0
+        p2 = probs.get("away_win") or probs.get("p2_win") or probs.get("f2_win") or 0.0
+        draw = probs.get("draw", 0.0)
+        e1l, e2l = home.lower(), away.lower()
+        mapped = {}
+        for k in market:
+            kl = k.lower()
+            if e1l in kl or kl == "yes":
+                mapped[k] = p1
+            elif e2l in kl or kl == "no":
+                mapped[k] = p2
+            elif "draw" in kl or "tie" in kl:
+                mapped[k] = draw
+        if not mapped:
+            vals = [p1, p2, draw] if draw else [p1, p2]
+            for i, k in enumerate(market):
+                if i < len(vals):
+                    mapped[k] = vals[i]
+        edges = calculate_edge(mapped, market) if mapped else {}
 
     # Pick the most relevant outcome to display
     side_key = None

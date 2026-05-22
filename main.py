@@ -301,21 +301,31 @@ def _show_edges(days_ahead: int = 14, top_n: int = 5):
         if not market_probs:
             return None
 
+        # Extract win probs — handle all sport key conventions
+        p = result.probabilities or {}
+        p1 = p.get("home_win") or p.get("p1_win") or p.get("f1_win") or 0.0
+        p2 = p.get("away_win") or p.get("p2_win") or p.get("f2_win") or 0.0
+        draw = p.get("draw", 0.0)
+
         model_probs = {}
         for k in market_probs:
-            if e1.lower() in k or "yes" in k:
-                model_probs[k] = result.probabilities.get("home_win", result.probabilities.get("win", 0))
-            elif e2.lower() in k or "no" in k:
-                model_probs[k] = result.probabilities.get("away_win", result.probabilities.get("lose", 0))
-            elif "draw" in k or "tie" in k:
-                model_probs[k] = result.probabilities.get("draw", 0)
+            kl = k.lower()
+            if e1.lower() in kl or kl == "yes":
+                model_probs[k] = p1
+            elif e2.lower() in kl or kl == "no":
+                model_probs[k] = p2
+            elif "draw" in kl or "tie" in kl:
+                model_probs[k] = draw
 
         if not model_probs:
-            keys = list(market_probs.keys())
-            probs_list = list(result.probabilities.values())
-            for i, k in enumerate(keys):
-                if i < len(probs_list):
-                    model_probs[k] = probs_list[i]
+            # Positional fallback
+            for i, k in enumerate(market_probs):
+                if i == 0:
+                    model_probs[k] = p1
+                elif i == 1:
+                    model_probs[k] = p2
+                elif i == 2:
+                    model_probs[k] = draw
 
         edges = calculate_edge(model_probs, market_probs)
         best_key, best_info = best_bet(edges)
