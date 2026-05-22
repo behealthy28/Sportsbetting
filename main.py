@@ -255,7 +255,9 @@ def _show_edges(days_ahead: int = 60, top_n: int = 20):
         console.print("[yellow]  Could not reach Polymarket API — check your internet connection.[/yellow]\n")
         return
 
-    console.print(f"[dim]  {len(markets)} sports markets found — running EdgeFinder pipeline (parallel)...[/dim]\n")
+    # Slice to top_n by volume before running the pipeline — no need to process hundreds
+    markets = markets[:top_n]
+    console.print(f"[dim]  Analysing top {len(markets)} markets by volume...[/dim]\n")
 
     def _process_market(mkt: dict) -> dict | None:
         question = mkt["question"]
@@ -366,9 +368,7 @@ def _show_edges(days_ahead: int = 60, top_n: int = 20):
                 except (FutureTimeout, Exception):
                     pass
 
-    # Sort by edge descending, show top N
     rows.sort(key=lambda x: x["edge_pct"] if x["edge_pct"] is not None else -999, reverse=True)
-    rows = rows[:top_n]
 
     table = Table(
         box=box.SIMPLE,
