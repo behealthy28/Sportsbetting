@@ -258,24 +258,31 @@ def _fetch_polymarket_sports(days_ahead: int = 60) -> list:
                       "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
         "Accept": "application/json",
         "Referer": "https://polymarket.com/",
+        "Origin": "https://polymarket.com",
     }
 
     raw = []
-    # Try CLOB API first
-    try:
-        resp = requests.get(
-            "https://clob.polymarket.com/markets",
-            params={"active": "true", "closed": "false", "limit": 500},
-            headers=headers, timeout=15,
-        )
-        if resp.status_code == 200:
-            data = resp.json()
-            raw = data.get("data", []) if isinstance(data, dict) else data
-    except Exception:
-        pass
 
-    # Fallback: gamma API
-    if not raw:
+    # Strategy 1: gamma API with sports tag slug (most reliable for sports)
+    for tag in ("sports", "soccer", "football", "mma", "tennis", "basketball", "boxing", "cricket"):
+        if len(raw) >= 800:
+            break
+        try:
+            resp = requests.get(
+                "https://gamma-api.polymarket.com/markets",
+                params={"active": "true", "closed": "false", "limit": 200,
+                        "tag_slug": tag, "order": "volumeNum", "ascending": "false"},
+                headers=headers, timeout=12,
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                batch = data if isinstance(data, list) else data.get("data", data.get("markets", []))
+                raw.extend(batch)
+        except Exception:
+            pass
+
+    # Strategy 2: gamma API without tag filter (catch anything with "vs" in title)
+    if len(raw) < 20:
         try:
             resp = requests.get(
                 "https://gamma-api.polymarket.com/markets",
@@ -285,12 +292,38 @@ def _fetch_polymarket_sports(days_ahead: int = 60) -> list:
             )
             if resp.status_code == 200:
                 data = resp.json()
-                raw = data if isinstance(data, list) else data.get("data", data.get("markets", []))
+                batch = data if isinstance(data, list) else data.get("data", data.get("markets", []))
+                raw.extend(batch)
+        except Exception:
+            pass
+
+    # Strategy 3: CLOB API fallback
+    if len(raw) < 20:
+        try:
+            resp = requests.get(
+                "https://clob.polymarket.com/markets",
+                params={"active": "true", "closed": "false", "limit": 500},
+                headers=headers, timeout=15,
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                batch = data.get("data", []) if isinstance(data, dict) else data
+                raw.extend(batch)
         except Exception:
             pass
 
     if not raw:
         return []
+
+    # Deduplicate by question text
+    seen_q = set()
+    deduped = []
+    for m in raw:
+        q = (m.get("question") or "").strip()
+        if q and q not in seen_q:
+            seen_q.add(q)
+            deduped.append(m)
+    raw = deduped
 
     out = []
     for m in raw:
@@ -300,7 +333,7 @@ def _fetch_polymarket_sports(days_ahead: int = 60) -> list:
         if any(kw in q for kw in _NON_SPORTS):
             continue
 
-        # Sports detection via category / tags / keywords
+        # Sports detection — very permissive: category OR any sports keyword
         category = (m.get("category") or "").lower()
         tags_raw = m.get("tags") or []
         tags = set()
@@ -308,24 +341,28 @@ def _fetch_polymarket_sports(days_ahead: int = 60) -> list:
             tags.add(t.lower() if isinstance(t, str) else t.get("slug", t.get("label", "")).lower())
 
         is_sports = (
-            category == "sports"
+            "sport" in category
             or bool(_SPORT_TAGS & tags)
             or any(kw in q for kw in [
-                " vs ", " v ", "match", "fight", "championship",
-                "final", "tournament", "cup", "league", "bout",
+                " vs ", " v ", "match", "fight", "championship", "final",
+                "tournament", "cup", "league", "bout", "season", "win the",
+                "world cup", "playoffs", "series", "title", "grand prix",
             ])
         )
         if not is_sports:
             continue
 
-        # Date filter
+        # Date filter — only skip if ALREADY expired; accept anything in the future
+        # (Polymarket end dates can be set months after the actual game)
         end_date = m.get("end_date_iso") or m.get("endDate") or ""
-        end_dt = None
         if end_date:
             try:
                 end_dt = datetime.fromisoformat(end_date.replace("Z", "+00:00"))
-                if end_dt < now or end_dt > cutoff:
-                    continue
+                if end_dt < now:
+                    continue           # already closed
+                # Soft cap: prefer events within days_ahead but include slightly beyond
+                if end_dt > cutoff + timedelta(days=60):
+                    continue           # too far out (> 120 days)
             except Exception:
                 pass
 
