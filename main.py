@@ -352,14 +352,26 @@ def _fetch_polymarket_sports(days_ahead: int = 60) -> list:
         if any(kw in q for kw in _NON_SPORTS):
             continue
 
-        is_sports = any(kw in q for kw in [
-            " vs ", " vs.", "match", "fight", "championship", "final",
-            "tournament", "cup", "league", "bout", "playoff", "series", "title",
-            "world cup", "grand prix", "nfl", "nba", "mlb", "nhl", "ncaa",
-            "premier league", "champions league", "ufc", "mma", "tennis",
-            "wimbledon", "open", "boxing", "cricket", "f1", "rugby",
+        # Primary: " vs " is the strongest matchup signal on Polymarket
+        has_vs = " vs " in q or " vs." in q
+
+        # Secondary: specific sport/league names that appear without "vs"
+        # (e.g. "Will Arsenal win the Champions League?")
+        has_sport_name = any(kw in q for kw in [
+            "nfl", "nba", "mlb", "nhl", "ncaab", "ncaaf", "ncaa",
+            "ufc", " mma ", "boxing", "heavyweight", "lightweight",
+            "premier league", "champions league", "europa league",
+            "la liga", "serie a", "bundesliga", "ligue 1",
+            "world cup", "copa america", "euro 2026", "euro 2025",
+            "wimbledon", "us open", "french open", "australian open",
+            "grand slam", " atp ", " wta ", "roland garros",
+            "formula 1", " f1 ", "grand prix", "motogp",
+            "cricket", " ipl ", "test match", "odi",
+            "rugby", "six nations", "super rugby",
+            "super bowl", "world series", "stanley cup", "nba finals",
         ])
-        if not is_sports:
+
+        if not has_vs and not has_sport_name:
             continue
 
         # Parse outcome prices
