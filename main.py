@@ -255,9 +255,14 @@ def _show_edges(days_ahead: int = 60, top_n: int = 20):
         console.print("[yellow]  Could not reach Polymarket API — check your internet connection.[/yellow]\n")
         return
 
-    # Slice to top_n by volume before running the pipeline — no need to process hundreds
-    markets = markets[:top_n]
-    console.print(f"[dim]  Analysing top {len(markets)} markets by volume...[/dim]\n")
+    # Keep only markets where a matchup can be parsed ("X vs Y" format)
+    # and take top_n by volume — cheap pre-filter before running any model
+    parseable = [m for m in markets if _parse_matchup(m["question"]) != (None, None)]
+    if not parseable:
+        console.print("[yellow]  No 'X vs Y' matchup markets found in Polymarket right now.[/yellow]\n")
+        return
+    markets = parseable[:top_n]
+    console.print(f"[dim]  Analysing top {len(markets)} matchup markets by volume...[/dim]\n")
 
     def _process_market(mkt: dict) -> dict | None:
         question = mkt["question"]
