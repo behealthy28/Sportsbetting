@@ -119,34 +119,15 @@ state = DashboardState()
 # ─── Data refresh ──────────────────────────────────────────────────────────────
 
 def _fetch_fixtures(days_ahead: int):
-    """Pull upcoming fixtures (ESPN/SportsDB primary, Polymarket fallback)."""
-    state.scan_status = "Fetching fixtures..."
-    try:
-        from src.data.scrapers.fixtures import get_todays_fixtures
-        fixtures = get_todays_fixtures(days_ahead=days_ahead)
-        state.fixtures = fixtures[:20]
-        state.mark_source("Fixtures", "ok" if fixtures else "empty")
-    except Exception as e:
-        state.last_error = f"fixtures: {e}"
-        state.mark_source("Fixtures", "err")
-
-    # If no ESPN/SportsDB fixtures, pull from Polymarket as fallback source
-    if not state.fixtures:
-        _fetch_polymarket_fixtures(days_ahead=7)
-
-
-def _fetch_polymarket_fixtures(days_ahead: int = 7):
-    """Populate state.fixtures from Polymarket when ESPN returns nothing."""
+    """Populate scanner fixtures — Polymarket primary, ESPN supplemental."""
     state.scan_status = "Fetching from Polymarket..."
+    fixtures = []
+
+    # Primary: Polymarket top matchups (highest volume = most relevant markets)
     try:
         from src.data.polymarket import fetch_sports_markets, parse_matchup, infer_sport
-        markets = fetch_sports_markets(days_ahead=days_ahead)
-        if not markets:
-            state.mark_source("Polymarket", "empty")
-            return
-
-        fixtures = []
-        for mkt in markets[:30]:
+        markets = fetch_sports_markets(days_ahead=max(days_ahead, 14))
+        for mkt in markets:
             e1, e2 = parse_matchup(mkt["question"])
             if not e1 or not e2:
                 continue
@@ -155,18 +136,38 @@ def _fetch_polymarket_fixtures(days_ahead: int = 7):
                 "home": e1,
                 "away": e2,
                 "date": mkt["end_date"],
-                "league": mkt["question"][:40],
+                "league": mkt["question"][:50],
                 "venue": "",
                 "source": "polymarket",
                 "sport": sport,
                 "_probs": mkt["probs"],
             })
-
-        state.fixtures = fixtures[:20]
+            if len(fixtures) >= 20:
+                break
         state.mark_source("Polymarket", "ok" if fixtures else "empty")
     except Exception as e:
         state.last_error = f"polymarket: {e}"
         state.mark_source("Polymarket", "err")
+
+    # Supplement with ESPN if Polymarket short
+    if len(fixtures) < 10:
+        state.scan_status = "Fetching fixtures (ESPN)..."
+        try:
+            from src.data.scrapers.fixtures import get_todays_fixtures
+            espn = get_todays_fixtures(days_ahead=days_ahead)
+            seen = {(f["home"].lower(), f["away"].lower()) for f in fixtures}
+            for f in espn:
+                k = (f.get("home", "").lower(), f.get("away", "").lower())
+                if k not in seen:
+                    fixtures.append(f)
+                    seen.add(k)
+                if len(fixtures) >= 20:
+                    break
+            state.mark_source("Fixtures", "ok" if espn else "empty")
+        except Exception as e:
+            state.mark_source("Fixtures", "err")
+
+    state.fixtures = fixtures[:20]
 
 
 def _predict_one(fixture: dict) -> Optional[dict]:
@@ -244,7 +245,7 @@ def _predict_one(fixture: dict) -> Optional[dict]:
 
 def _refresh_predictions(batch_size: int = 20):
     """Run all fixture predictions in parallel with a per-fixture timeout."""
-    from concurrent.futures import ThreadPoolExecutor, as_completed
+    from concurrent.futures import ThreadPoolExecutor, wait as fut_wait
     if not state.fixtures:
         return
     state.scan_status = "Predicting..."
@@ -257,9 +258,10 @@ def _refresh_predictions(batch_size: int = 20):
 
     with ThreadPoolExecutor(max_workers=6) as pool:
         futures = {pool.submit(_run, f): f for f in state.fixtures[:batch_size]}
-        for fut in as_completed(futures, timeout=30):
+        done, _ = fut_wait(futures, timeout=60)
+        for fut in done:
             try:
-                f, row = fut.result(timeout=8)
+                f, row = fut.result()
                 if row is not None:
                     key = (f.get("home", ""), f.get("away", ""), (f.get("date") or "")[:10])
                     state.predictions[key] = row
