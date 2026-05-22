@@ -119,37 +119,73 @@ state = DashboardState()
 # ─── Data refresh ──────────────────────────────────────────────────────────────
 
 def _fetch_fixtures(days_ahead: int):
-    """Pull upcoming fixtures and update state.fixtures + scanner rows scaffold."""
+    """Pull upcoming fixtures (ESPN/SportsDB primary, Polymarket fallback)."""
     state.scan_status = "Fetching fixtures..."
     try:
         from src.data.scrapers.fixtures import get_todays_fixtures
         fixtures = get_todays_fixtures(days_ahead=days_ahead)
-        state.fixtures = fixtures[:20]  # cap to keep predictions tractable
+        state.fixtures = fixtures[:20]
         state.mark_source("Fixtures", "ok" if fixtures else "empty")
     except Exception as e:
         state.last_error = f"fixtures: {e}"
         state.mark_source("Fixtures", "err")
 
+    # If no ESPN/SportsDB fixtures, pull from Polymarket as fallback source
+    if not state.fixtures:
+        _fetch_polymarket_fixtures(days_ahead=7)
+
+
+def _fetch_polymarket_fixtures(days_ahead: int = 7):
+    """Populate state.fixtures from Polymarket when ESPN returns nothing."""
+    state.scan_status = "Fetching from Polymarket..."
+    try:
+        from src.data.polymarket import fetch_sports_markets, parse_matchup, infer_sport
+        markets = fetch_sports_markets(days_ahead=days_ahead)
+        if not markets:
+            state.mark_source("Polymarket", "empty")
+            return
+
+        fixtures = []
+        for mkt in markets[:30]:
+            e1, e2 = parse_matchup(mkt["question"])
+            if not e1 or not e2:
+                continue
+            sport = infer_sport(mkt["question"])
+            fixtures.append({
+                "home": e1,
+                "away": e2,
+                "date": mkt["end_date"],
+                "league": mkt["question"][:40],
+                "venue": "",
+                "source": "polymarket",
+                "sport": sport,
+                "_probs": mkt["probs"],
+            })
+
+        state.fixtures = fixtures[:20]
+        state.mark_source("Polymarket", "ok" if fixtures else "empty")
+    except Exception as e:
+        state.last_error = f"polymarket: {e}"
+        state.mark_source("Polymarket", "err")
+
 
 def _predict_one(fixture: dict) -> Optional[dict]:
     """Predict + fetch odds for a single fixture. Returns row dict or None."""
     from src.predictor import SPORT_HANDLERS
-    from src.data.market import get_market_odds
     from src.market.edge import calculate_edge, best_bet
-
-    sport = _infer_sport(fixture)
-    handler = SPORT_HANDLERS.get(sport)
-    if handler is None:
-        return None
 
     home = fixture.get("home") or ""
     away = fixture.get("away") or ""
     if not home or not away:
         return None
 
+    sport = fixture.get("sport") or _infer_sport(fixture)
+    handler = SPORT_HANDLERS.get(sport)
+    if handler is None:
+        return None
+
     date = (fixture.get("date") or "")[:10] or datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
-    # Model prediction (call handler directly to skip terminal output)
     try:
         result = handler.predict(home, away, date, {
             "competition": fixture.get("league", ""),
@@ -160,7 +196,9 @@ def _predict_one(fixture: dict) -> Optional[dict]:
         return None
 
     probs = result.probabilities or {}
-    market = result.market_probs
+
+    # Use pre-fetched Polymarket probs when fixture came from Polymarket
+    market = fixture.get("_probs") or result.market_probs
     if market:
         state.mark_source("Polymarket", "ok")
     edges = result.edges or {}
@@ -615,6 +653,22 @@ def _render_all(layout: Layout):
     layout["footer"].update(render_footer())
 
 
+def _dashboard_loop(layout: Layout, scan_interval: float, days_ahead: int):
+    """Inner event loop — separated so it can run with or without screen=True."""
+    last_scan = 0.0
+    while True:
+        now = time.time()
+        if now - last_scan >= scan_interval:
+            try:
+                run_scan_cycle(days_ahead=days_ahead)
+            except Exception as e:
+                state.last_error = str(e)
+                state.scanning = False
+            last_scan = now
+        _render_all(layout)
+        time.sleep(0.5)
+
+
 def run_dashboard(scan_interval: float = 60.0, days_ahead: int = 2, autotrade: bool = False):
     """Launch the live dashboard. Refreshes a batch of predictions every scan_interval seconds."""
     state.autotrade_enabled = autotrade
@@ -622,19 +676,14 @@ def run_dashboard(scan_interval: float = 60.0, days_ahead: int = 2, autotrade: b
     _render_all(layout)
 
     try:
-        with Live(layout, console=console, refresh_per_second=2, screen=True):
-            last_scan = 0.0
-            while True:
-                now = time.time()
-                if now - last_scan >= scan_interval:
-                    try:
-                        run_scan_cycle(days_ahead=days_ahead)
-                    except Exception as e:
-                        state.last_error = str(e)
-                        state.scanning = False
-                    last_scan = now
-                _render_all(layout)
-                time.sleep(0.5)
+        # screen=True gives full-screen Bloomberg-style experience on most terminals.
+        # Falls back to inline scrolling mode if the terminal doesn't support it.
+        try:
+            with Live(layout, console=console, refresh_per_second=2, screen=True):
+                _dashboard_loop(layout, scan_interval, days_ahead)
+        except Exception:
+            with Live(layout, console=console, refresh_per_second=2, screen=False):
+                _dashboard_loop(layout, scan_interval, days_ahead)
     except KeyboardInterrupt:
         console.print(
             f"\n[{ACCENT}]Dashboard stopped. {state.cycle} cycles · "
