@@ -239,7 +239,7 @@ from src.data.polymarket import (
 )
 
 
-def _show_edges(days_ahead: int = 60, top_n: int = 20):
+def _show_edges(days_ahead: int = 14, top_n: int = 5):
     """Pull biggest upcoming events from Polymarket, run pipeline, rank by edge."""
     from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError as FutureTimeout
     from src.predictor import SPORT_HANDLERS
@@ -576,7 +576,7 @@ def _dispatch(line: str) -> bool:
         try:
             days = int(cmd.split()[1])
         except (IndexError, ValueError):
-            days = 5
+            days = 14
         _show_edges(days_ahead=days)
         return True
 
