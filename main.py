@@ -414,18 +414,28 @@ def _fetch_polymarket_sports(days_ahead: int = 60) -> list:
 def _parse_matchup(question: str):
     """Extract (entity1, entity2) from a Polymarket question. Returns (None, None) if ambiguous."""
     import re
-    # Match "X vs Y" or "X v Y" with flexible surrounding context
-    m = re.search(
-        r'([A-Za-z][A-Za-z\s\'\-\.]{1,28?}?)\s+vs?\.?\s+([A-Za-z][A-Za-z\s\'\-\.]{1,28?}?)'
-        r'(?=\s*[\?\-:\|,]|\s+(?:to\s|in\s|at\s|for\s|game|match|fight|bout|final|who|which|2024|2025|2026)|$)',
-        question, re.IGNORECASE,
-    )
-    if not m:
+    q = question.strip()
+
+    # Locate the "vs" / "vs." / "v" separator
+    sep = re.search(r'\s+vs?\.?\s+', q, re.IGNORECASE)
+    if not sep:
         return None, None
-    e1 = re.sub(r'(?i)^(will\s+|who\s+wins\s+|does\s+|can\s+)', '', m.group(1)).strip()
-    e2 = re.sub(r'(?i)\s+(win|beat|wins?|to\s+win).*$', '', m.group(2)).strip()
-    if e1 and e2 and len(e1) > 2 and len(e2) > 2:
-        return e1.strip(), e2.strip()
+
+    left = q[:sep.start()].strip()
+    right = q[sep.end():].strip()
+
+    # Strip a leading league/competition prefix ("NBA:", "T20 Series ...:")
+    if ":" in left:
+        left = left.split(":")[-1].strip()
+    # Cut the right side at a subtitle / dash / ISO date
+    right = re.split(r'\s*[:\|]\s*|\s+-\s+|\s+\d{4}-\d{2}-\d{2}', right)[0].strip()
+
+    # Remove question-style prefixes/suffixes
+    left = re.sub(r'(?i)^(will|who\s+wins|does|can)\s+', '', left).strip()
+    right = re.sub(r'(?i)\s+(to\s+win|win|beat|wins?)\b.*$', '', right).strip()
+
+    if 2 < len(left) < 40 and 2 < len(right) < 40:
+        return left, right
     return None, None
 
 
@@ -452,7 +462,7 @@ def _show_edges(days_ahead: int = 60, top_n: int = 20):
     from rich.table import Table
     from rich import box
 
-    console.print("\n[dim]  Pulling sports markets from Polymarket (next 60 days, sorted by volume)...[/dim]")
+    console.print(f"\n[dim]  Pulling sports markets from Polymarket (next {days_ahead} days, sorted by volume)...[/dim]")
     markets = _fetch_polymarket_sports(days_ahead=days_ahead)
 
     if not markets:
