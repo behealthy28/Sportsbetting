@@ -242,22 +242,29 @@ def _predict_one(fixture: dict) -> Optional[dict]:
     }
 
 
-def _refresh_predictions(batch_size: int = 4):
-    """Rotate through fixtures and refresh model predictions for a small batch."""
+def _refresh_predictions(batch_size: int = 20):
+    """Run all fixture predictions in parallel with a per-fixture timeout."""
+    from concurrent.futures import ThreadPoolExecutor, as_completed
     if not state.fixtures:
         return
-    state.scan_status = f"Predicting batch of {batch_size}..."
-    n = len(state.fixtures)
-    for i in range(batch_size):
-        if not state.fixtures:
-            break
-        idx = (state.predict_cursor + i) % n
-        f = state.fixtures[idx]
-        key = (f.get("home", ""), f.get("away", ""), (f.get("date") or "")[:10])
-        row = _predict_one(f)
-        if row is not None:
-            state.predictions[key] = row
-    state.predict_cursor = (state.predict_cursor + batch_size) % n
+    state.scan_status = "Predicting..."
+
+    def _run(f):
+        try:
+            return (f, _predict_one(f))
+        except Exception:
+            return (f, None)
+
+    with ThreadPoolExecutor(max_workers=6) as pool:
+        futures = {pool.submit(_run, f): f for f in state.fixtures[:batch_size]}
+        for fut in as_completed(futures, timeout=30):
+            try:
+                f, row = fut.result(timeout=8)
+                if row is not None:
+                    key = (f.get("home", ""), f.get("away", ""), (f.get("date") or "")[:10])
+                    state.predictions[key] = row
+            except Exception:
+                pass
 
 
 def _refresh_alerts():
@@ -654,16 +661,26 @@ def _render_all(layout: Layout):
 
 
 def _dashboard_loop(layout: Layout, scan_interval: float, days_ahead: int):
-    """Inner event loop — separated so it can run with or without screen=True."""
+    """Inner event loop. Scan runs in a background thread; render loop is never blocked."""
+    import threading
+    _scan_lock = threading.Lock()
+
+    def _bg_scan():
+        if not _scan_lock.acquire(blocking=False):
+            return  # previous scan still running
+        try:
+            run_scan_cycle(days_ahead=days_ahead)
+        except Exception as e:
+            state.last_error = str(e)
+            state.scanning = False
+        finally:
+            _scan_lock.release()
+
     last_scan = 0.0
     while True:
         now = time.time()
         if now - last_scan >= scan_interval:
-            try:
-                run_scan_cycle(days_ahead=days_ahead)
-            except Exception as e:
-                state.last_error = str(e)
-                state.scanning = False
+            threading.Thread(target=_bg_scan, daemon=True).start()
             last_scan = now
         _render_all(layout)
         time.sleep(0.5)
