@@ -37,7 +37,7 @@ def _banner():
             ("    <match query>  ", "white"), ("— predict (e.g. Portugal vs Spain)\n", "dim"),
             ("    data <name>    ", "white"), ("— show raw data for a team/player before betting\n", "dim"),
             ("    today          ", "white"), ("— list today's & upcoming fixtures\n", "dim"),
-            ("    edges          ", "white"), ("— scan upcoming fixtures, rank by edge vs Polymarket\n", "dim"),
+            ("    edges          ", "white"), ("— biggest upcoming events from Polymarket (60 days), top 20 by edge\n", "dim"),
             ("    dashboard      ", "white"), ("— live Bloomberg-style terminal (4-panel)\n", "dim"),
             ("    autotrade      ", "white"), ("— one-shot: scan fixtures and auto-log dry-run bets with strong edge\n", "dim"),
             ("    dashboard auto ", "white"), ("— dashboard + continuous auto-trading (dry-run)\n", "dim"),
@@ -232,91 +232,288 @@ def _run_backtest(sport: str = None):
         run_all_backtests(console)
 
 
-def _infer_sport_from_league(league: str) -> str:
-    l = league.lower()
-    if any(k in l for k in ("ufc", "mma", "fighting", "combat")):
+_NON_SPORTS = [
+    "election", "crypto", "bitcoin", "ethereum", "price", "president",
+    "senate", "congress", "fed rate", "interest rate", "gdp", "war",
+    "oscar", "emmy", "grammy", "nobel", "inflation", "stock", "trump",
+    "biden", "harris", "elon", "spacex", "nasa",
+]
+
+_SPORT_TAGS = {
+    "sports", "soccer", "football", "basketball", "tennis", "mma", "ufc",
+    "boxing", "cricket", "nfl", "nba", "mlb", "nhl", "golf", "rugby",
+}
+
+
+def _fetch_polymarket_sports(days_ahead: int = 60) -> list:
+    """Fetch upcoming sports markets directly from Polymarket, sorted by volume."""
+    import requests
+    import json as _json
+    from datetime import datetime, timezone, timedelta
+
+    now = datetime.now(timezone.utc)
+    cutoff = now + timedelta(days=days_ahead)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Accept": "application/json",
+        "Referer": "https://polymarket.com/",
+    }
+
+    raw = []
+    # Try CLOB API first
+    try:
+        resp = requests.get(
+            "https://clob.polymarket.com/markets",
+            params={"active": "true", "closed": "false", "limit": 500},
+            headers=headers, timeout=15,
+        )
+        if resp.status_code == 200:
+            data = resp.json()
+            raw = data.get("data", []) if isinstance(data, dict) else data
+    except Exception:
+        pass
+
+    # Fallback: gamma API
+    if not raw:
+        try:
+            resp = requests.get(
+                "https://gamma-api.polymarket.com/markets",
+                params={"active": "true", "closed": "false", "limit": 500,
+                        "order": "volumeNum", "ascending": "false"},
+                headers=headers, timeout=15,
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                raw = data if isinstance(data, list) else data.get("data", data.get("markets", []))
+        except Exception:
+            pass
+
+    if not raw:
+        return []
+
+    out = []
+    for m in raw:
+        q = (m.get("question") or "").lower()
+
+        # Skip obvious non-sports
+        if any(kw in q for kw in _NON_SPORTS):
+            continue
+
+        # Sports detection via category / tags / keywords
+        category = (m.get("category") or "").lower()
+        tags_raw = m.get("tags") or []
+        tags = set()
+        for t in tags_raw:
+            tags.add(t.lower() if isinstance(t, str) else t.get("slug", t.get("label", "")).lower())
+
+        is_sports = (
+            category == "sports"
+            or bool(_SPORT_TAGS & tags)
+            or any(kw in q for kw in [
+                " vs ", " v ", "match", "fight", "championship",
+                "final", "tournament", "cup", "league", "bout",
+            ])
+        )
+        if not is_sports:
+            continue
+
+        # Date filter
+        end_date = m.get("end_date_iso") or m.get("endDate") or ""
+        end_dt = None
+        if end_date:
+            try:
+                end_dt = datetime.fromisoformat(end_date.replace("Z", "+00:00"))
+                if end_dt < now or end_dt > cutoff:
+                    continue
+            except Exception:
+                pass
+
+        # Parse outcome prices
+        probs = {}
+        tokens = m.get("tokens") or []
+        if tokens:
+            for tok in tokens:
+                outcome = (tok.get("outcome") or "").lower()
+                price = float(tok.get("price") or 0)
+                if outcome:
+                    probs[outcome] = price
+        else:
+            try:
+                outcomes = m.get("outcomes") or "[]"
+                prices = m.get("outcomePrices") or "[]"
+                if isinstance(outcomes, str):
+                    outcomes = _json.loads(outcomes)
+                if isinstance(prices, str):
+                    prices = _json.loads(prices)
+                for o, p in zip(outcomes, prices):
+                    probs[str(o).lower()] = float(p)
+            except Exception:
+                pass
+
+        volume = float(m.get("volume_num") or m.get("volume") or 0)
+        out.append({
+            "question": m.get("question", ""),
+            "end_date": end_date[:10] if end_date else "",
+            "probs": probs,
+            "volume": volume,
+            "tags": list(tags),
+        })
+
+    out.sort(key=lambda x: x["volume"], reverse=True)
+    return out
+
+
+def _parse_matchup(question: str):
+    """Extract (entity1, entity2) from a Polymarket question. Returns (None, None) if ambiguous."""
+    import re
+    # Match "X vs Y" or "X v Y" with flexible surrounding context
+    m = re.search(
+        r'([A-Za-z][A-Za-z\s\'\-\.]{1,28?}?)\s+vs?\.?\s+([A-Za-z][A-Za-z\s\'\-\.]{1,28?}?)'
+        r'(?=\s*[\?\-:\|,]|\s+(?:to\s|in\s|at\s|for\s|game|match|fight|bout|final|who|which|2024|2025|2026)|$)',
+        question, re.IGNORECASE,
+    )
+    if not m:
+        return None, None
+    e1 = re.sub(r'(?i)^(will\s+|who\s+wins\s+|does\s+|can\s+)', '', m.group(1)).strip()
+    e2 = re.sub(r'(?i)\s+(win|beat|wins?|to\s+win).*$', '', m.group(2)).strip()
+    if e1 and e2 and len(e1) > 2 and len(e2) > 2:
+        return e1.strip(), e2.strip()
+    return None, None
+
+
+def _infer_sport_from_question(question: str, tags: list) -> str:
+    q = question.lower()
+    t = " ".join(tags).lower()
+    combined = q + " " + t
+    if any(k in combined for k in ("ufc", "mma", "fight", "knockout", "submission", "bout")):
         return "ufc"
-    if any(k in l for k in ("tennis", "atp", "wta")):
+    if any(k in combined for k in ("tennis", "atp", "wta", "grand slam", "wimbledon", "open")):
         return "tennis"
-    if any(k in l for k in ("boxing",)):
+    if any(k in combined for k in ("boxing", "heavyweight", "title bout", "round")):
         return "boxing"
-    if any(k in l for k in ("cricket",)):
+    if any(k in combined for k in ("cricket", "ipl", "test match", "odi")):
         return "cricket"
-    if any(k in l for k in ("darts",)):
-        return "darts"
     return "football"
 
 
-def _show_edges(days_ahead: int = 5, max_fixtures: int = 35):
-    """Scan upcoming fixtures across all sports and rank by Polymarket edge."""
-    from src.data.scrapers.fixtures import get_todays_fixtures
+def _show_edges(days_ahead: int = 60, top_n: int = 20):
+    """Pull biggest upcoming events from Polymarket, run pipeline, rank by edge."""
     from src.predictor import SPORT_HANDLERS
     from src.display.terminal import _outcome_label
+    from src.market.edge import calculate_edge, best_bet
     from rich.table import Table
     from rich import box
-    from datetime import datetime
 
-    console.print("\n[dim]  Fetching upcoming fixtures...[/dim]")
-    fixtures = get_todays_fixtures(days_ahead=days_ahead)
+    console.print("\n[dim]  Pulling sports markets from Polymarket (next 60 days, sorted by volume)...[/dim]")
+    markets = _fetch_polymarket_sports(days_ahead=days_ahead)
 
-    upcoming = [
-        f for f in fixtures
-        if f.get("status", "Scheduled") in ("Scheduled", "", "Upcoming", "Scheduled ")
-    ]
-
-    if not upcoming:
-        console.print("[yellow]  No upcoming fixtures found.[/yellow]\n")
+    if not markets:
+        console.print(
+            "[yellow]  Could not reach Polymarket API — check your internet connection.[/yellow]\n"
+        )
         return
 
-    console.print(
-        f"[dim]  {len(upcoming)} upcoming fixtures found — running predictions + Polymarket lookup "
-        f"(this takes ~1 min)...[/dim]\n"
-    )
+    console.print(f"[dim]  {len(markets)} sports markets found — running EdgeFinder pipeline...[/dim]\n")
 
-    results = []
+    rows = []
+    no_data = []
     checked = 0
-    for fixture in upcoming[:max_fixtures]:
-        home = fixture.get("home", "")
-        away = fixture.get("away", "")
-        date = (fixture.get("date") or "")[:10]
-        league = fixture.get("league", "")
-        if not home or not away:
+
+    for mkt in markets:
+        question = mkt["question"]
+        e1, e2 = _parse_matchup(question)
+        if not e1 or not e2:
+            no_data.append({"question": question, "reason": "cannot parse matchup"})
             continue
 
-        sport = _infer_sport_from_league(league)
+        sport = _infer_sport_from_question(question, mkt.get("tags", []))
         handler = SPORT_HANDLERS.get(sport)
         if handler is None:
+            no_data.append({"question": question, "reason": "no handler"})
             continue
 
         checked += 1
         console.print(
-            f"[dim]  [{checked}/{min(len(upcoming), max_fixtures)}] "
-            f"{home} v {away}[/dim]",
+            f"[dim]  [{checked}] {e1} v {e2}[/dim]" + " " * 20,
             end="\r",
         )
 
         try:
-            result = handler.predict(home, away, date, {
-                "competition": league,
+            result = handler.predict(e1, e2, mkt["end_date"], {
+                "competition": question,
                 "is_neutral": False,
-                "venue": fixture.get("venue", ""),
             })
         except Exception:
+            no_data.append({"question": question, "reason": "no data"})
             continue
 
-        results.append({
-            "result": result,
-            "date": date,
-            "league": league,
+        # Inject Polymarket probs directly (already fetched)
+        market_probs = mkt["probs"]
+        if not market_probs:
+            no_data.append({"question": question, "reason": "no market prices"})
+            continue
+
+        # Build model probs in the same key space as market probs
+        model_probs = {}
+        for k in market_probs:
+            if e1.lower() in k or "yes" in k:
+                model_probs[k] = result.probabilities.get("home_win", result.probabilities.get("win", 0))
+            elif e2.lower() in k or "no" in k:
+                model_probs[k] = result.probabilities.get("away_win", result.probabilities.get("lose", 0))
+            elif "draw" in k or "tie" in k:
+                model_probs[k] = result.probabilities.get("draw", 0)
+
+        if not model_probs:
+            # Fallback: map by position
+            keys = list(market_probs.keys())
+            probs_list = list(result.probabilities.values())
+            for i, k in enumerate(keys):
+                if i < len(probs_list):
+                    model_probs[k] = probs_list[i]
+
+        edges = calculate_edge(model_probs, market_probs)
+        best_key, best_info = best_bet(edges)
+
+        if not best_info:
+            edge_pct = None
+            kelly = None
+            model_p = market_p = None
+            bet_label = "—"
+        else:
+            edge_pct = best_info["edge_pct"]
+            model_p = best_info["model_prob"]
+            market_p = best_info["market_prob"]
+            # Quarter-Kelly
+            if market_p and market_p > 0:
+                dec = 1 / market_p
+                b = dec - 1
+                q = 1 - model_p
+                raw_k = (model_p * b - q) / b
+                kelly = max(0.0, raw_k / 4) * 100
+            else:
+                kelly = None
+            bet_label = best_key.title() if best_key else "—"
+
+        rows.append({
+            "question": question,
+            "e1": result.entity1,
+            "e2": result.entity2,
             "sport": sport,
-            "edge_pct": result.best_edge_pct if result.market_probs else None,
-            "kelly": result.kelly_stake_pct if result.market_probs else None,
+            "date": mkt["end_date"],
+            "volume": mkt["volume"],
+            "edge_pct": edge_pct,
+            "kelly": kelly,
+            "model_p": model_p,
+            "market_p": market_p,
+            "bet_label": bet_label,
         })
 
-    console.print(" " * 80, end="\r")  # clear progress line
+    console.print(" " * 80, end="\r")
 
-    # Sort: strongest edge first, no-market fixtures at the bottom
-    results.sort(key=lambda x: x["edge_pct"] if x["edge_pct"] is not None else -999, reverse=True)
+    # Sort by edge descending, show top N
+    rows.sort(key=lambda x: x["edge_pct"] if x["edge_pct"] is not None else -999, reverse=True)
+    rows = rows[:top_n]
 
     table = Table(
         box=box.SIMPLE,
@@ -325,30 +522,18 @@ def _show_edges(days_ahead: int = 5, max_fixtures: int = 35):
         padding=(0, 1),
         show_edge=False,
     )
-    table.add_column("Date",    style="dim",        width=10)
-    table.add_column("Sport",   style="dim",        width=9)
-    table.add_column("Match",                       min_width=26)
-    table.add_column("Best Bet",                    min_width=14)
-    table.add_column("Model%",  justify="right",    width=7)
-    table.add_column("Mkt%",    justify="right",    width=6)
-    table.add_column("Edge",    justify="right",    width=8)
-    table.add_column("Kelly%",  justify="right",    width=7)
-    table.add_column("Signal",                      width=10)
+    table.add_column("Date",      style="dim",       width=10)
+    table.add_column("Sport",     style="dim",       width=9)
+    table.add_column("Match",                        min_width=28)
+    table.add_column("Best Bet",                     min_width=14)
+    table.add_column("Model%",    justify="right",   width=7)
+    table.add_column("Mkt%",      justify="right",   width=6)
+    table.add_column("Edge",      justify="right",   width=8)
+    table.add_column("Kelly%",    justify="right",   width=7)
+    table.add_column("Signal",                       width=10)
 
-    for r in results:
-        result = r["result"]
+    for r in rows:
         edge_pct = r["edge_pct"]
-        kelly = r["kelly"]
-        best_key = result.best_bet
-
-        model_p = market_p = None
-        if best_key and result.edges:
-            info = result.edges.get(best_key, {})
-            model_p = info.get("model_prob")
-            market_p = info.get("market_prob")
-
-        bet_label = _outcome_label(best_key, result.entity1, result.entity2) if best_key else "—"
-
         if edge_pct is not None:
             if edge_pct >= 5:
                 edge_str = f"[bright_green]+{edge_pct:.1f}%[/bright_green]"
@@ -363,33 +548,38 @@ def _show_edges(days_ahead: int = 5, max_fixtures: int = 35):
                 edge_str = f"[red]{edge_pct:.1f}%[/red]"
                 signal   = "[red]NEGATIVE[/red]"
         else:
-            edge_str = "[dim]no mkt[/dim]"
+            edge_str = "[dim]—[/dim]"
             signal   = "[dim]—[/dim]"
 
         table.add_row(
             r["date"],
             r["sport"].upper()[:8],
-            f"{result.entity1} v {result.entity2}",
-            bet_label,
-            f"{model_p*100:.1f}%" if model_p else "—",
-            f"{market_p*100:.1f}%" if market_p else "—",
+            f"{r['e1']} v {r['e2']}",
+            r["bet_label"],
+            f"{r['model_p']*100:.1f}%" if r["model_p"] else "—",
+            f"{r['market_p']*100:.1f}%" if r["market_p"] else "—",
             edge_str,
-            f"{kelly:.1f}%" if kelly else "—",
+            f"{r['kelly']:.1f}%" if r["kelly"] else "—",
             signal,
         )
 
     console.print(
         Panel(
             table,
-            title="[bold white]  Upcoming Edges — All Sports[/bold white]",
+            title=f"[bold white]  Top {top_n} Edges — Biggest Polymarket Sports (next {days_ahead} days)[/bold white]",
             border_style="bright_green",
             padding=(0, 1),
         )
     )
-    console.print(
-        f"[dim]  {len(results)} fixtures analysed  ·  ranked by edge vs Polymarket  ·  "
-        f"type a match name to run the full prediction[/dim]\n"
-    )
+
+    no_data_count = len(no_data)
+    if no_data_count:
+        console.print(
+            f"[dim]  {no_data_count} markets skipped (no matchup data / unsupported sport) · "
+            f"type a match name to run any prediction manually[/dim]\n"
+        )
+    else:
+        console.print(f"[dim]  type a match name to run the full prediction[/dim]\n")
 
 
 def _run_autotrade():
