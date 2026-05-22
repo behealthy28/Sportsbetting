@@ -430,6 +430,19 @@ def _parse_matchup(question: str):
     # Cut the right side at a subtitle / dash / ISO date
     right = re.split(r'\s*[:\|]\s*|\s+-\s+|\s+\d{4}-\d{2}-\d{2}', right)[0].strip()
 
+    # Strip a leading competition/format prefix that has no colon
+    # (e.g. "T20 Series Jersey" -> "Jersey", "Friendly England" -> "England")
+    _PREFIX = (
+        r'(?i)^(t20(\s+series)?|t10|odi(\s+series)?|test(\s+series|\s+match)?|'
+        r'ipl|the\s+hundred|friendly|international\s+friendly|'
+        r'premier\s+league|la\s+liga|serie\s+a|bundesliga|ligue\s+1|'
+        r'champions\s+league|europa\s+league|ucl|uel|epl|mls)\s+'
+    )
+    prev = None
+    while prev != left:
+        prev = left
+        left = re.sub(_PREFIX, '', left).strip()
+
     # Remove question-style prefixes/suffixes
     left = re.sub(r'(?i)^(will|who\s+wins|does|can)\s+', '', left).strip()
     right = re.sub(r'(?i)\s+(to\s+win|win|beat|wins?)\b.*$', '', right).strip()
@@ -441,16 +454,31 @@ def _parse_matchup(question: str):
 
 def _infer_sport_from_question(question: str, tags: list) -> str:
     q = question.lower()
-    t = " ".join(tags).lower()
-    combined = q + " " + t
-    if any(k in combined for k in ("ufc", "mma", "fight", "knockout", "submission", "bout")):
+    t = " ".join(str(x) for x in tags).lower()
+    c = q + " " + t
+
+    if any(k in c for k in (
+        "ufc", "mma", " bellator", "knockout", "submission", "octagon",
+        "wins by", "fight night", "fight result",
+    )):
         return "ufc"
-    if any(k in combined for k in ("tennis", "atp", "wta", "grand slam", "wimbledon", "open")):
+    if any(k in c for k in (
+        "tennis", " atp", " wta", "grand slam", "wimbledon", "us open",
+        "french open", "australian open", "roland garros", "first set",
+        "tiebreak",
+    )):
         return "tennis"
-    if any(k in combined for k in ("boxing", "heavyweight", "title bout", "round")):
+    if any(k in c for k in (
+        "boxing", "title bout", "weigh-in", "heavyweight title",
+        "by decision", "by tko", "by ko",
+    )):
         return "boxing"
-    if any(k in combined for k in ("cricket", "ipl", "test match", "odi")):
+    if any(k in c for k in (
+        "cricket", " ipl", "test match", " odi", "t20", "the hundred",
+        "most sixes", "most runs", "most wickets",
+    )):
         return "cricket"
+    # Default: football/soccer accounts for the bulk of Polymarket matchups
     return "football"
 
 
@@ -496,12 +524,33 @@ def _show_edges(days_ahead: int = 60, top_n: int = 20):
             end="\r",
         )
 
-        try:
-            result = handler.predict(e1, e2, mkt["end_date"], {
-                "competition": question,
-                "is_neutral": False,
-            })
-        except Exception:
+        ctx = {"competition": question, "is_neutral": False}
+
+        def _try(sp):
+            h = SPORT_HANDLERS.get(sp)
+            if h is None:
+                return None
+            try:
+                return h.predict(e1, e2, mkt["end_date"], ctx)
+            except Exception:
+                return None
+
+        result = _try(sport)
+
+        # Bare "Name vs Name" markets default to football — if football
+        # found no real data, retry as UFC then tennis and keep whichever
+        # actually resolved data sources.
+        if (
+            sport == "football"
+            and (result is None or not getattr(result, "data_sources", None))
+        ):
+            for alt in ("ufc", "tennis"):
+                alt_res = _try(alt)
+                if alt_res is not None and getattr(alt_res, "data_sources", None):
+                    result, sport = alt_res, alt
+                    break
+
+        if result is None:
             no_data.append({"question": question, "reason": "no data"})
             continue
 
