@@ -263,52 +263,90 @@ def _fetch_polymarket_sports(days_ahead: int = 60) -> list:
 
     raw = []
 
-    # Strategy 1: gamma API with sports tag slug (most reliable for sports)
-    for tag in ("sports", "soccer", "football", "mma", "tennis", "basketball", "boxing", "cricket"):
-        if len(raw) >= 800:
-            break
-        try:
-            resp = requests.get(
-                "https://gamma-api.polymarket.com/markets",
-                params={"active": "true", "closed": "false", "limit": 200,
-                        "tag_slug": tag, "order": "volumeNum", "ascending": "false"},
-                headers=headers, timeout=12,
-            )
-            if resp.status_code == 200:
-                data = resp.json()
-                batch = data if isinstance(data, list) else data.get("data", data.get("markets", []))
-                raw.extend(batch)
-        except Exception:
-            pass
-
-    # Strategy 2: gamma API without tag filter (catch anything with "vs" in title)
-    if len(raw) < 20:
-        try:
-            resp = requests.get(
-                "https://gamma-api.polymarket.com/markets",
-                params={"active": "true", "closed": "false", "limit": 500,
-                        "order": "volumeNum", "ascending": "false"},
-                headers=headers, timeout=15,
-            )
-            if resp.status_code == 200:
-                data = resp.json()
-                batch = data if isinstance(data, list) else data.get("data", data.get("markets", []))
-                raw.extend(batch)
-        except Exception:
-            pass
-
-    # Strategy 3: CLOB API fallback
-    if len(raw) < 20:
-        try:
+    # CLOB API — paginate with next_cursor until we reach upcoming markets.
+    # Default sort is oldest-first so we page forward until end dates are in
+    # the future, then harvest until we hit the cutoff.
+    try:
+        cursor = "MA=="          # CLOB cursor for offset 0
+        pages_fetched = 0
+        found_future = False
+        while pages_fetched < 40:   # hard cap: 40 pages × 500 = 20 000 markets
+            params = {"limit": 500}
+            if cursor and cursor != "MA==":
+                params["next_cursor"] = cursor
             resp = requests.get(
                 "https://clob.polymarket.com/markets",
-                params={"active": "true", "closed": "false", "limit": 500},
-                headers=headers, timeout=15,
+                params=params, headers=headers, timeout=15,
             )
-            if resp.status_code == 200:
+            if resp.status_code != 200:
+                break
+            data = resp.json()
+            batch = data.get("data", []) if isinstance(data, dict) else data
+            if not batch:
+                break
+
+            for m in batch:
+                ed = m.get("end_date_iso") or ""
+                if not ed:
+                    continue
+                try:
+                    edt = datetime.fromisoformat(ed.replace("Z", "+00:00"))
+                    if edt < now:
+                        continue        # expired — skip but keep paginating
+                    if edt > cutoff:
+                        found_future = True
+                        continue        # too far ahead — skip but keep a few more pages
+                    raw.append(m)
+                    found_future = True
+                except Exception:
+                    pass
+
+            cursor = data.get("next_cursor", "") if isinstance(data, dict) else ""
+            pages_fetched += 1
+            # Once we've found future markets and the batch end dates are all
+            # beyond cutoff, stop paginating.
+            if found_future and batch:
+                last_ed = batch[-1].get("end_date_iso", "")
+                if last_ed and last_ed > cutoff.isoformat():
+                    break
+            if not cursor:
+                break
+    except Exception:
+        pass
+
+    # Gamma API — sorted by endDateIso ascending to hit upcoming markets first
+    if len(raw) < 20:
+        try:
+            for offset in range(0, 3000, 500):
+                resp = requests.get(
+                    "https://gamma-api.polymarket.com/markets",
+                    params={"active": "true", "closed": "false", "limit": 500,
+                            "offset": offset, "order": "endDateIso", "ascending": "true"},
+                    headers=headers, timeout=15,
+                )
+                if resp.status_code != 200:
+                    break
                 data = resp.json()
-                batch = data.get("data", []) if isinstance(data, dict) else data
-                raw.extend(batch)
+                batch = data if isinstance(data, list) else data.get("data", data.get("markets", []))
+                if not batch:
+                    break
+                for m in batch:
+                    ed = m.get("endDateIso") or m.get("endDate") or ""
+                    if not ed:
+                        raw.append(m)
+                        continue
+                    try:
+                        edt = datetime.fromisoformat(ed.replace("Z", "+00:00"))
+                        if now <= edt <= cutoff:
+                            raw.append(m)
+                        elif edt > cutoff:
+                            break       # sorted ascending: rest are even further out
+                    except Exception:
+                        raw.append(m)
+                # Stop if we've reached future-dated markets
+                last_ed = batch[-1].get("endDateIso") or batch[-1].get("endDate") or ""
+                if last_ed and last_ed > cutoff.isoformat():
+                    break
         except Exception:
             pass
 
@@ -316,7 +354,7 @@ def _fetch_polymarket_sports(days_ahead: int = 60) -> list:
         return []
 
     # Deduplicate by question text
-    seen_q = set()
+    seen_q: set = set()
     deduped = []
     for m in raw:
         q = (m.get("question") or "").strip()
@@ -329,42 +367,20 @@ def _fetch_polymarket_sports(days_ahead: int = 60) -> list:
     for m in raw:
         q = (m.get("question") or "").lower()
 
-        # Skip obvious non-sports
+        # Skip obvious non-sports (category/tags are unpopulated — use keywords only)
         if any(kw in q for kw in _NON_SPORTS):
             continue
 
-        # Sports detection — very permissive: category OR any sports keyword
-        category = (m.get("category") or "").lower()
-        tags_raw = m.get("tags") or []
-        tags = set()
-        for t in tags_raw:
-            tags.add(t.lower() if isinstance(t, str) else t.get("slug", t.get("label", "")).lower())
-
-        is_sports = (
-            "sport" in category
-            or bool(_SPORT_TAGS & tags)
-            or any(kw in q for kw in [
-                " vs ", " v ", "match", "fight", "championship", "final",
-                "tournament", "cup", "league", "bout", "season", "win the",
-                "world cup", "playoffs", "series", "title", "grand prix",
-            ])
-        )
+        # Sports detection by keyword (category field is always empty on Polymarket)
+        is_sports = any(kw in q for kw in [
+            " vs ", " vs.", ": ", "match", "fight", "championship", "final",
+            "tournament", "cup", "league", "bout", "playoff", "series", "title",
+            "world cup", "grand prix", "nfl", "nba", "mlb", "nhl", "ncaa",
+            "premier league", "champions league", "ufc", "mma", "tennis",
+            "wimbledon", "open", "boxing", "cricket", "f1",
+        ])
         if not is_sports:
             continue
-
-        # Date filter — only skip if ALREADY expired; accept anything in the future
-        # (Polymarket end dates can be set months after the actual game)
-        end_date = m.get("end_date_iso") or m.get("endDate") or ""
-        if end_date:
-            try:
-                end_dt = datetime.fromisoformat(end_date.replace("Z", "+00:00"))
-                if end_dt < now:
-                    continue           # already closed
-                # Soft cap: prefer events within days_ahead but include slightly beyond
-                if end_dt > cutoff + timedelta(days=60):
-                    continue           # too far out (> 120 days)
-            except Exception:
-                pass
 
         # Parse outcome prices
         probs = {}
@@ -388,13 +404,15 @@ def _fetch_polymarket_sports(days_ahead: int = 60) -> list:
             except Exception:
                 pass
 
-        volume = float(m.get("volume_num") or m.get("volume") or 0)
+        volume = float(m.get("volume_num") or m.get("volumeNum") or m.get("volume") or 0)
+        end_date = (
+            m.get("end_date_iso") or m.get("endDateIso") or m.get("endDate") or ""
+        )
         out.append({
             "question": m.get("question", ""),
             "end_date": end_date[:10] if end_date else "",
             "probs": probs,
             "volume": volume,
-            "tags": list(tags),
         })
 
     out.sort(key=lambda x: x["volume"], reverse=True)
@@ -464,7 +482,7 @@ def _show_edges(days_ahead: int = 60, top_n: int = 20):
             no_data.append({"question": question, "reason": "cannot parse matchup"})
             continue
 
-        sport = _infer_sport_from_question(question, mkt.get("tags", []))
+        sport = _infer_sport_from_question(question, [])
         handler = SPORT_HANDLERS.get(sport)
         if handler is None:
             no_data.append({"question": question, "reason": "no handler"})
