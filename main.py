@@ -241,45 +241,32 @@ from src.data.polymarket import (
 
 def _show_edges(days_ahead: int = 60, top_n: int = 20):
     """Pull biggest upcoming events from Polymarket, run pipeline, rank by edge."""
+    from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError as FutureTimeout
     from src.predictor import SPORT_HANDLERS
-    from src.display.terminal import _outcome_label
     from src.market.edge import calculate_edge, best_bet
     from rich.table import Table
     from rich import box
+    from rich.progress import Progress, SpinnerColumn, BarColumn, TaskProgressColumn, TextColumn
 
     console.print(f"\n[dim]  Pulling sports markets from Polymarket (next {days_ahead} days, sorted by volume)...[/dim]")
     markets = _fetch_polymarket_sports(days_ahead=days_ahead)
 
     if not markets:
-        console.print(
-            "[yellow]  Could not reach Polymarket API — check your internet connection.[/yellow]\n"
-        )
+        console.print("[yellow]  Could not reach Polymarket API — check your internet connection.[/yellow]\n")
         return
 
-    console.print(f"[dim]  {len(markets)} sports markets found — running EdgeFinder pipeline...[/dim]\n")
+    console.print(f"[dim]  {len(markets)} sports markets found — running EdgeFinder pipeline (parallel)...[/dim]\n")
 
-    rows = []
-    no_data = []
-    checked = 0
-
-    for mkt in markets:
+    def _process_market(mkt: dict) -> dict | None:
         question = mkt["question"]
         e1, e2 = _parse_matchup(question)
         if not e1 or not e2:
-            no_data.append({"question": question, "reason": "cannot parse matchup"})
-            continue
+            return None
 
         sport = _infer_sport_from_question(question, [])
         handler = SPORT_HANDLERS.get(sport)
         if handler is None:
-            no_data.append({"question": question, "reason": "no handler"})
-            continue
-
-        checked += 1
-        console.print(
-            f"[dim]  [{checked}] {e1} v {e2}[/dim]" + " " * 20,
-            end="\r",
-        )
+            return None
 
         ctx = {"competition": question, "is_neutral": False}
 
@@ -293,14 +280,7 @@ def _show_edges(days_ahead: int = 60, top_n: int = 20):
                 return None
 
         result = _try(sport)
-
-        # Bare "Name vs Name" markets default to football — if football
-        # found no real data, retry as UFC then tennis and keep whichever
-        # actually resolved data sources.
-        if (
-            sport == "football"
-            and (result is None or not getattr(result, "data_sources", None))
-        ):
+        if sport == "football" and (result is None or not getattr(result, "data_sources", None)):
             for alt in ("ufc", "tennis"):
                 alt_res = _try(alt)
                 if alt_res is not None and getattr(alt_res, "data_sources", None):
@@ -308,16 +288,12 @@ def _show_edges(days_ahead: int = 60, top_n: int = 20):
                     break
 
         if result is None:
-            no_data.append({"question": question, "reason": "no data"})
-            continue
+            return None
 
-        # Inject Polymarket probs directly (already fetched)
         market_probs = mkt["probs"]
         if not market_probs:
-            no_data.append({"question": question, "reason": "no market prices"})
-            continue
+            return None
 
-        # Build model probs in the same key space as market probs
         model_probs = {}
         for k in market_probs:
             if e1.lower() in k or "yes" in k:
@@ -328,7 +304,6 @@ def _show_edges(days_ahead: int = 60, top_n: int = 20):
                 model_probs[k] = result.probabilities.get("draw", 0)
 
         if not model_probs:
-            # Fallback: map by position
             keys = list(market_probs.keys())
             probs_list = list(result.probabilities.values())
             for i, k in enumerate(keys):
@@ -339,26 +314,21 @@ def _show_edges(days_ahead: int = 60, top_n: int = 20):
         best_key, best_info = best_bet(edges)
 
         if not best_info:
-            edge_pct = None
-            kelly = None
-            model_p = market_p = None
+            edge_pct = kelly = model_p = market_p = None
             bet_label = "—"
         else:
             edge_pct = best_info["edge_pct"]
             model_p = best_info["model_prob"]
             market_p = best_info["market_prob"]
-            # Quarter-Kelly
             if market_p and market_p > 0:
-                dec = 1 / market_p
-                b = dec - 1
-                q = 1 - model_p
-                raw_k = (model_p * b - q) / b
+                b = (1 / market_p) - 1
+                raw_k = (model_p * b - (1 - model_p)) / b
                 kelly = max(0.0, raw_k / 4) * 100
             else:
                 kelly = None
             bet_label = best_key.title() if best_key else "—"
 
-        rows.append({
+        return {
             "question": question,
             "e1": result.entity1,
             "e2": result.entity2,
@@ -370,9 +340,31 @@ def _show_edges(days_ahead: int = 60, top_n: int = 20):
             "model_p": model_p,
             "market_p": market_p,
             "bet_label": bet_label,
-        })
+        }
 
-    console.print(" " * 80, end="\r")
+    rows = []
+    PER_MARKET_TIMEOUT = 8  # seconds — skips markets that hang on HTTP lookups
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[dim]{task.description}"),
+        BarColumn(bar_width=30),
+        TaskProgressColumn(),
+        console=console,
+        transient=True,
+    ) as progress:
+        task = progress.add_task("Scanning markets...", total=len(markets))
+
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            futures = {pool.submit(_process_market, mkt): mkt for mkt in markets}
+            for fut in as_completed(futures):
+                progress.advance(task)
+                try:
+                    row = fut.result(timeout=PER_MARKET_TIMEOUT)
+                    if row:
+                        rows.append(row)
+                except (FutureTimeout, Exception):
+                    pass
 
     # Sort by edge descending, show top N
     rows.sort(key=lambda x: x["edge_pct"] if x["edge_pct"] is not None else -999, reverse=True)
