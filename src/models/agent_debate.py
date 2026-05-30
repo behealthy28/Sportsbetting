@@ -314,7 +314,7 @@ def run_debate(
     for agent in _AGENTS:
         try:
             response = client.messages.create(
-                model="claude-haiku-4-5-20251001",  # fast + cheap for debate agents
+                model="claude-opus-4-8",
                 max_tokens=256,
                 system=[
                     {"type": "text", "text": agent["system"], "cache_control": _CACHE_TYPE}
