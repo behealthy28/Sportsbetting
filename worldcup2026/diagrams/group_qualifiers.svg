@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="490" height="642" preserveAspectRatio="xMinYMin meet" viewBox="0 0 490 642" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="490" height="642"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-642)" style="clip-path: url(#clip)">
+		<rect x="0" y="0" width="490" height="642" style="stroke: rgb(0%,0%,0%); stroke-linecap: miter; stroke-width: 1;"/>
+		<g transform="">
+			<rect x="0" y="486" width="158" height="150" style="stroke: rgb(81%,84%,82%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="0" y="618" width="158" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="6" y="623" style="font-family: Helvetica-Bold; font-size: 9px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,1246) scale(1,-1)">GROUP A</text>
+			<text x="8" y="610" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1220) scale(1,-1)">Mexico</text>
+			<rect x="8" y="598" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="598" width="85.3776" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="100" y="598" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1196) scale(1,-1)">97%</text>
+			<text x="8" y="582" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1164) scale(1,-1)">S.Korea</text>
+			<rect x="8" y="570" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="570" width="80.1152" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="100" y="570" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1140) scale(1,-1)">91%</text>
+			<text x="8" y="554" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1108) scale(1,-1)">Czechia</text>
+			<rect x="8" y="542" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="542" width="44.9856" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="100" y="542" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1084) scale(1,-1)">51%</text>
+			<text x="8" y="526" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1052) scale(1,-1)">S.Africa</text>
+			<rect x="8" y="514" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="514" width="20.8604" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="100" y="514" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1028) scale(1,-1)">24%</text>
+			<rect x="166" y="486" width="158" height="150" style="stroke: rgb(81%,84%,82%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="166" y="618" width="158" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="172" y="623" style="font-family: Helvetica-Bold; font-size: 9px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,1246) scale(1,-1)">GROUP B</text>
+			<text x="174" y="610" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1220) scale(1,-1)">Canada</text>
+			<rect x="174" y="598" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="598" width="85.97159999999997" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="266" y="598" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1196) scale(1,-1)">98%</text>
+			<text x="174" y="582" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1164) scale(1,-1)">Switzerland</text>
+			<rect x="174" y="570" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="570" width="85.5976" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="266" y="570" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1140) scale(1,-1)">97%</text>
+			<text x="174" y="554" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1108) scale(1,-1)">Bosnia</text>
+			<rect x="174" y="542" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="542" width="37.0128" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="266" y="542" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1084) scale(1,-1)">42%</text>
+			<text x="174" y="526" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1052) scale(1,-1)">Qatar</text>
+			<rect x="174" y="514" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="514" width="16.566000000000003" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="266" y="514" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1028) scale(1,-1)">19%</text>
+			<rect x="332" y="486" width="158" height="150" style="stroke: rgb(81%,84%,82%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="332" y="618" width="158" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="338" y="623" style="font-family: Helvetica-Bold; font-size: 9px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,1246) scale(1,-1)">GROUP C</text>
+			<text x="340" y="610" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1220) scale(1,-1)">Brazil</text>
+			<rect x="340" y="598" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="598" width="85.95839999999998" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="432" y="598" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1196) scale(1,-1)">98%</text>
+			<text x="340" y="582" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1164) scale(1,-1)">Morocco</text>
+			<rect x="340" y="570" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="570" width="84.89359999999999" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="432" y="570" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1140) scale(1,-1)">96%</text>
+			<text x="340" y="554" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1108) scale(1,-1)">Scotland</text>
+			<rect x="340" y="542" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="542" width="61.494399999999985" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="432" y="542" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1084) scale(1,-1)">70%</text>
+			<text x="340" y="526" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1052) scale(1,-1)">Haiti</text>
+			<rect x="340" y="514" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="514" width="6.37560000000002" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="432" y="514" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,1028) scale(1,-1)">7%</text>
+			<rect x="0" y="324" width="158" height="150" style="stroke: rgb(81%,84%,82%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="0" y="456" width="158" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="6" y="461" style="font-family: Helvetica-Bold; font-size: 9px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,922) scale(1,-1)">GROUP D</text>
+			<text x="8" y="448" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,896) scale(1,-1)">Turkey</text>
+			<rect x="8" y="436" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="436" width="72.1908" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="100" y="436" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,872) scale(1,-1)">82%</text>
+			<text x="8" y="420" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,840) scale(1,-1)">USA</text>
+			<rect x="8" y="408" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="408" width="65.4148" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="100" y="408" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,816) scale(1,-1)">74%</text>
+			<text x="8" y="392" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,784) scale(1,-1)">Paraguay</text>
+			<rect x="8" y="380" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="380" width="53.446799999999996" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="100" y="380" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,760) scale(1,-1)">61%</text>
+			<text x="8" y="364" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,728) scale(1,-1)">Australia</text>
+			<rect x="8" y="352" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="352" width="50.43280000000001" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="100" y="352" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,704) scale(1,-1)">57%</text>
+			<rect x="166" y="324" width="158" height="150" style="stroke: rgb(81%,84%,82%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="166" y="456" width="158" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="172" y="461" style="font-family: Helvetica-Bold; font-size: 9px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,922) scale(1,-1)">GROUP E</text>
+			<text x="174" y="448" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,896) scale(1,-1)">Germany</text>
+			<rect x="174" y="436" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="436" width="85.60199999999998" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="266" y="436" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,872) scale(1,-1)">97%</text>
+			<text x="174" y="420" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,840) scale(1,-1)">Ecuador</text>
+			<rect x="174" y="408" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="408" width="77.49279999999999" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="266" y="408" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,816) scale(1,-1)">88%</text>
+			<text x="174" y="392" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,784) scale(1,-1)">Ivory Coast</text>
+			<rect x="174" y="380" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="380" width="71.4428" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="266" y="380" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,760) scale(1,-1)">81%</text>
+			<text x="174" y="364" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,728) scale(1,-1)">Curacao</text>
+			<rect x="174" y="352" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="352" width="7.400800000000004" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="266" y="352" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,704) scale(1,-1)">8%</text>
+			<rect x="332" y="324" width="158" height="150" style="stroke: rgb(81%,84%,82%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="332" y="456" width="158" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="338" y="461" style="font-family: Helvetica-Bold; font-size: 9px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,922) scale(1,-1)">GROUP F</text>
+			<text x="340" y="448" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,896) scale(1,-1)">Japan</text>
+			<rect x="340" y="436" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="436" width="82.65840000000003" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="432" y="436" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,872) scale(1,-1)">94%</text>
+			<text x="340" y="420" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,840) scale(1,-1)">Netherlands</text>
+			<rect x="340" y="408" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="408" width="81.03039999999999" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="432" y="408" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,816) scale(1,-1)">92%</text>
+			<text x="340" y="392" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,784) scale(1,-1)">Sweden</text>
+			<rect x="340" y="380" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="380" width="52.19720000000001" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="432" y="380" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,760) scale(1,-1)">59%</text>
+			<text x="340" y="364" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,728) scale(1,-1)">Tunisia</text>
+			<rect x="340" y="352" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="352" width="20.138800000000003" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="432" y="352" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,704) scale(1,-1)">23%</text>
+			<rect x="0" y="162" width="158" height="150" style="stroke: rgb(81%,84%,82%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="0" y="294" width="158" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="6" y="299" style="font-family: Helvetica-Bold; font-size: 9px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,598) scale(1,-1)">GROUP G</text>
+			<text x="8" y="286" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,572) scale(1,-1)">Belgium</text>
+			<rect x="8" y="274" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="274" width="83.1688" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="100" y="274" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,548) scale(1,-1)">95%</text>
+			<text x="8" y="258" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,516) scale(1,-1)">Egypt</text>
+			<rect x="8" y="246" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="246" width="70.8752" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="100" y="246" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,492) scale(1,-1)">81%</text>
+			<text x="8" y="230" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,460) scale(1,-1)">Iran</text>
+			<rect x="8" y="218" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="218" width="63.835200000000015" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="100" y="218" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,436) scale(1,-1)">73%</text>
+			<text x="8" y="202" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,404) scale(1,-1)">N.Zealand</text>
+			<rect x="8" y="190" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="190" width="20.0024" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="100" y="190" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,380) scale(1,-1)">23%</text>
+			<rect x="166" y="162" width="158" height="150" style="stroke: rgb(81%,84%,82%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="166" y="294" width="158" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="172" y="299" style="font-family: Helvetica-Bold; font-size: 9px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,598) scale(1,-1)">GROUP H</text>
+			<text x="174" y="286" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,572) scale(1,-1)">Spain</text>
+			<rect x="174" y="274" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="274" width="87.4588" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="266" y="274" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,548) scale(1,-1)">99%</text>
+			<text x="174" y="258" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,516) scale(1,-1)">Uruguay</text>
+			<rect x="174" y="246" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="246" width="78.958" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="266" y="246" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,492) scale(1,-1)">90%</text>
+			<text x="174" y="230" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,460) scale(1,-1)">Saudi Arabia</text>
+			<rect x="174" y="218" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="218" width="30.73399999999998" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="266" y="218" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,436) scale(1,-1)">35%</text>
+			<text x="174" y="202" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,404) scale(1,-1)">Cape Verde</text>
+			<rect x="174" y="190" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="190" width="24.283600000000007" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="266" y="190" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,380) scale(1,-1)">28%</text>
+			<rect x="332" y="162" width="158" height="150" style="stroke: rgb(81%,84%,82%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="332" y="294" width="158" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="338" y="299" style="font-family: Helvetica-Bold; font-size: 9px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,598) scale(1,-1)">GROUP I</text>
+			<text x="340" y="286" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,572) scale(1,-1)">France</text>
+			<rect x="340" y="274" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="274" width="83.44600000000003" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="432" y="274" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,548) scale(1,-1)">95%</text>
+			<text x="340" y="258" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,516) scale(1,-1)">Norway</text>
+			<rect x="340" y="246" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="246" width="74.42160000000001" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="432" y="246" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,492) scale(1,-1)">85%</text>
+			<text x="340" y="230" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,460) scale(1,-1)">Senegal</text>
+			<rect x="340" y="218" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="218" width="73.87599999999998" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="432" y="218" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,436) scale(1,-1)">84%</text>
+			<text x="340" y="202" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,404) scale(1,-1)">Iraq</text>
+			<rect x="340" y="190" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="190" width="10.199200000000019" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="432" y="190" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,380) scale(1,-1)">12%</text>
+			<rect x="0" y="0" width="158" height="150" style="stroke: rgb(81%,84%,82%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="0" y="132" width="158" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="6" y="137" style="font-family: Helvetica-Bold; font-size: 9px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,274) scale(1,-1)">GROUP J</text>
+			<text x="8" y="124" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,248) scale(1,-1)">Argentina</text>
+			<rect x="8" y="112" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="112" width="86.54800000000002" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="100" y="112" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,224) scale(1,-1)">98%</text>
+			<text x="8" y="96" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,192) scale(1,-1)">Austria</text>
+			<rect x="8" y="84" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="84" width="72.54719999999999" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="100" y="84" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,168) scale(1,-1)">82%</text>
+			<text x="8" y="68" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,136) scale(1,-1)">Algeria</text>
+			<rect x="8" y="56" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="56" width="67.8172" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="100" y="56" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,112) scale(1,-1)">77%</text>
+			<text x="8" y="40" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,80) scale(1,-1)">Jordan</text>
+			<rect x="8" y="28" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="8" y="28" width="10.4544" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="100" y="28" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,56) scale(1,-1)">12%</text>
+			<rect x="166" y="0" width="158" height="150" style="stroke: rgb(81%,84%,82%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="166" y="132" width="158" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="172" y="137" style="font-family: Helvetica-Bold; font-size: 9px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,274) scale(1,-1)">GROUP K</text>
+			<text x="174" y="124" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,248) scale(1,-1)">Portugal</text>
+			<rect x="174" y="112" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="112" width="82.92239999999998" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="266" y="112" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,224) scale(1,-1)">94%</text>
+			<text x="174" y="96" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,192) scale(1,-1)">Colombia</text>
+			<rect x="174" y="84" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="84" width="80.45839999999998" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="266" y="84" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,168) scale(1,-1)">91%</text>
+			<text x="174" y="68" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,136) scale(1,-1)">DR Congo</text>
+			<rect x="174" y="56" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="56" width="37.69479999999999" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="266" y="56" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,112) scale(1,-1)">43%</text>
+			<text x="174" y="40" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,80) scale(1,-1)">Uzbekistan</text>
+			<rect x="174" y="28" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="174" y="28" width="30.610799999999983" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="266" y="28" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,56) scale(1,-1)">35%</text>
+			<rect x="332" y="0" width="158" height="150" style="stroke: rgb(81%,84%,82%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(100%,100%,100%); fill-rule: evenodd;"/>
+			<rect x="332" y="132" width="158" height="18" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="338" y="137" style="font-family: Helvetica-Bold; font-size: 9px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,274) scale(1,-1)">GROUP L</text>
+			<text x="340" y="124" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,248) scale(1,-1)">England</text>
+			<rect x="340" y="112" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="112" width="86.89120000000003" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(4%,23%,18%); fill-rule: evenodd;"/>
+			<text x="432" y="112" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,224) scale(1,-1)">99%</text>
+			<text x="340" y="96" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,192) scale(1,-1)">Croatia</text>
+			<rect x="340" y="84" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="84" width="79.69720000000001" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="432" y="84" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,168) scale(1,-1)">91%</text>
+			<text x="340" y="68" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,136) scale(1,-1)">Ghana</text>
+			<rect x="340" y="56" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="56" width="49.90480000000002" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="432" y="56" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,112) scale(1,-1)">57%</text>
+			<text x="340" y="40" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,80) scale(1,-1)">Panama</text>
+			<rect x="340" y="28" width="88" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(93%,94%,94%); fill-rule: evenodd;"/>
+			<rect x="340" y="28" width="14.537599999999998" height="7" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(81%,84%,82%); fill-rule: evenodd;"/>
+			<text x="432" y="28" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,56) scale(1,-1)">17%</text>
+		</g>
+	</g>
+</svg>

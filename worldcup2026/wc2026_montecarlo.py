@@ -239,13 +239,15 @@ def simulate(n=N, played=None):
     cur = slots
     for _ in range(5):
         cur = _play_round(cur); rounds.append(cur)
+    r16 = np.bincount(rounds[0].reshape(-1), minlength=NT)             # reached R16 (16)
+    qf = np.bincount(rounds[1].reshape(-1), minlength=NT)              # reached QF (8)
     semi = np.bincount(rounds[2].reshape(-1), minlength=NT)            # reached SF (4)
     finalist = np.bincount(rounds[3].reshape(-1), minlength=NT)        # finalists (2)
     champ = np.bincount(rounds[4].reshape(-1), minlength=NT)           # winner (1)
 
     tod = lambda arr: {TEAMS[i]: int(arr[i]) for i in range(NT) if arr[i] > 0}
     return {"n": n, "champ": tod(champ), "finalist": tod(finalist),
-            "semi": tod(semi), "advance": tod(advance)}
+            "semi": tod(semi), "qf": tod(qf), "r16": tod(r16), "advance": tod(advance)}
 
 
 def main():

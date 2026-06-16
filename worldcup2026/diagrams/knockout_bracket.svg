@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="500" height="690" preserveAspectRatio="xMinYMin meet" viewBox="0 0 500 690" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="500" height="690"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-690)" style="clip-path: url(#clip)">
+		<rect x="0" y="0" width="500" height="690" style="stroke: rgb(0%,0%,0%); stroke-linecap: miter; stroke-width: 1;"/>
+		<g transform="">
+			<rect x="4" y="650.375" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="8" y="656.375" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,1312) scale(1,-1)">France</text>
+			<rect x="4" y="609.125" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(49%,54%,54%); fill-rule: evenodd;"/>
+			<text x="8" y="615.125" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,1230) scale(1,-1)">Germany</text>
+			<rect x="4" y="567.875" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="8" y="573.875" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,1147) scale(1,-1)">Netherlands</text>
+			<rect x="4" y="526.625" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(49%,54%,54%); fill-rule: evenodd;"/>
+			<text x="8" y="532.625" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,1065) scale(1,-1)">Mexico</text>
+			<rect x="4" y="485.375" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="8" y="491.375" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,982) scale(1,-1)">Brazil</text>
+			<rect x="4" y="444.125" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(49%,54%,54%); fill-rule: evenodd;"/>
+			<text x="8" y="450.125" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,900) scale(1,-1)">Senegal</text>
+			<rect x="4" y="402.875" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="8" y="408.875" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,817) scale(1,-1)">England</text>
+			<rect x="4" y="361.625" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(49%,54%,54%); fill-rule: evenodd;"/>
+			<text x="8" y="367.625" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,735) scale(1,-1)">Sweden</text>
+			<rect x="4" y="320.375" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="8" y="326.375" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,652) scale(1,-1)">Spain</text>
+			<rect x="4" y="279.125" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(49%,54%,54%); fill-rule: evenodd;"/>
+			<text x="8" y="285.125" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,570) scale(1,-1)">Croatia</text>
+			<rect x="4" y="237.875" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="8" y="243.875" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,487) scale(1,-1)">Belgium</text>
+			<rect x="4" y="196.625" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(49%,54%,54%); fill-rule: evenodd;"/>
+			<text x="8" y="202.625" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,405) scale(1,-1)">Turkey</text>
+			<rect x="4" y="155.375" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="8" y="161.375" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,322) scale(1,-1)">Argentina</text>
+			<rect x="4" y="114.125" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(49%,54%,54%); fill-rule: evenodd;"/>
+			<text x="8" y="120.125" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,240) scale(1,-1)">USA</text>
+			<rect x="4" y="72.875" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="8" y="78.875" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,157) scale(1,-1)">Portugal</text>
+			<rect x="4" y="31.625" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(49%,54%,54%); fill-rule: evenodd;"/>
+			<text x="8" y="37.625" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,75) scale(1,-1)">Switzerland</text>
+			<path d="M 90,659.375 L 109,659.375 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 90,618.125 L 109,618.125 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,659.375 L 109,618.125 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,638.75 L 128,638.75 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<rect x="128" y="629.75" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="132" y="635.75" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,1271) scale(1,-1)">France</text>
+			<path d="M 90,576.875 L 109,576.875 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 90,535.625 L 109,535.625 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,576.875 L 109,535.625 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,556.25 L 128,556.25 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<rect x="128" y="547.25" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(49%,54%,54%); fill-rule: evenodd;"/>
+			<text x="132" y="553.25" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,1106) scale(1,-1)">Netherlands</text>
+			<path d="M 90,494.375 L 109,494.375 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 90,453.125 L 109,453.125 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,494.375 L 109,453.125 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,473.75 L 128,473.75 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<rect x="128" y="464.75" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(49%,54%,54%); fill-rule: evenodd;"/>
+			<text x="132" y="470.75" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,941) scale(1,-1)">Brazil</text>
+			<path d="M 90,411.875 L 109,411.875 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 90,370.625 L 109,370.625 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,411.875 L 109,370.625 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,391.25 L 128,391.25 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<rect x="128" y="382.25" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="132" y="388.25" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,776) scale(1,-1)">England</text>
+			<path d="M 90,329.375 L 109,329.375 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 90,288.125 L 109,288.125 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,329.375 L 109,288.125 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,308.75 L 128,308.75 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<rect x="128" y="299.75" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="132" y="305.75" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,611) scale(1,-1)">Spain</text>
+			<path d="M 90,246.875 L 109,246.875 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 90,205.625 L 109,205.625 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,246.875 L 109,205.625 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,226.25 L 128,226.25 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<rect x="128" y="217.25" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(49%,54%,54%); fill-rule: evenodd;"/>
+			<text x="132" y="223.25" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,446) scale(1,-1)">Belgium</text>
+			<path d="M 90,164.375 L 109,164.375 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 90,123.125 L 109,123.125 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,164.375 L 109,123.125 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,143.75 L 128,143.75 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<rect x="128" y="134.75" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="132" y="140.75" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,281) scale(1,-1)">Argentina</text>
+			<path d="M 90,81.875 L 109,81.875 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 90,40.625 L 109,40.625 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,81.875 L 109,40.625 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 109,61.25 L 128,61.25 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<rect x="128" y="52.25" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(49%,54%,54%); fill-rule: evenodd;"/>
+			<text x="132" y="58.25" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,116) scale(1,-1)">Portugal</text>
+			<path d="M 214,638.75 L 233,638.75 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 214,556.25 L 233,556.25 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 233,638.75 L 233,556.25 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 233,597.5 L 252,597.5 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<rect x="252" y="588.5" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(49%,54%,54%); fill-rule: evenodd;"/>
+			<text x="256" y="594.5" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,1189) scale(1,-1)">France</text>
+			<path d="M 214,473.75 L 233,473.75 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 214,391.25 L 233,391.25 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 233,473.75 L 233,391.25 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 233,432.5 L 252,432.5 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<rect x="252" y="423.5" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="256" y="429.5" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,859) scale(1,-1)">England</text>
+			<path d="M 214,308.75 L 233,308.75 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 214,226.25 L 233,226.25 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 233,308.75 L 233,226.25 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 233,267.5 L 252,267.5 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<rect x="252" y="258.5" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(49%,54%,54%); fill-rule: evenodd;"/>
+			<text x="256" y="264.5" style="font-family: Helvetica; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,529) scale(1,-1)">Spain</text>
+			<path d="M 214,143.75 L 233,143.75 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 214,61.25 L 233,61.25 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 233,143.75 L 233,61.25 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 233,102.5 L 252,102.5 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<rect x="252" y="93.5" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="256" y="99.5" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,199) scale(1,-1)">Argentina</text>
+			<path d="M 338,597.5 L 349,597.5 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 338,432.5 L 349,432.5 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 349,597.5 L 349,432.5 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 349,515 L 360,515 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<rect x="360" y="506.0" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(18%,54%,34%); fill-rule: evenodd;"/>
+			<text x="364" y="512.0" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(100%,100%,100%); stroke:none;" transform="translate(0,1024) scale(1,-1)">England</text>
+			<path d="M 338,267.5 L 349,267.5 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 338,102.5 L 349,102.5 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 349,267.5 L 349,102.5 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 349,185 L 360,185 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<rect x="360" y="176.0" width="86" height="18.0" rx="2" ry="2" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(85%,64%,12%); fill-rule: evenodd;"/>
+			<text x="364" y="182.0" style="font-family: Helvetica-Bold; font-size: 7.5px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,364) scale(1,-1)">Argentina</text>
+			<path d="M 446,515 L 446,515 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 446,185 L 446,185 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 446,515 L 446,185 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<path d="M 446,350 L 446,350 Z" style="stroke: rgb(60%,65%,62%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<rect x="446" y="337.0" width="94" height="26.0" rx="3" ry="3" style="stroke: rgb(85%,64%,12%); stroke-linecap: butt; stroke-width: 1.4; fill: rgb(100%,96%,87%); fill-rule: evenodd;"/>
+			<text x="451" y="353.0" style="font-family: Helvetica-Bold; font-size: 6.5px;fill: rgb(85%,64%,12%); stroke:none;" transform="translate(0,706) scale(1,-1)">CHAMPION</text>
+			<text x="451" y="342.0" style="font-family: Helvetica-Bold; font-size: 10px;fill: rgb(7%,14%,11%); stroke:none;" transform="translate(0,684) scale(1,-1)">Argentina</text>
+			<text x="4" y="688" style="font-family: Helvetica-Bold; font-size: 7px;fill: rgb(4%,23%,18%); stroke:none;" transform="translate(0,1376) scale(1,-1)">Round of 16</text>
+			<text x="128" y="688" style="font-family: Helvetica-Bold; font-size: 7px;fill: rgb(4%,23%,18%); stroke:none;" transform="translate(0,1376) scale(1,-1)">R16 winners</text>
+			<text x="252" y="688" style="font-family: Helvetica-Bold; font-size: 7px;fill: rgb(4%,23%,18%); stroke:none;" transform="translate(0,1376) scale(1,-1)">Quarter-finals</text>
+			<text x="360" y="688" style="font-family: Helvetica-Bold; font-size: 7px;fill: rgb(4%,23%,18%); stroke:none;" transform="translate(0,1376) scale(1,-1)">Semi-finals</text>
+			<text x="446" y="688" style="font-family: Helvetica-Bold; font-size: 7px;fill: rgb(4%,23%,18%); stroke:none;" transform="translate(0,1376) scale(1,-1)">Final</text>
+		</g>
+	</g>
+</svg>
