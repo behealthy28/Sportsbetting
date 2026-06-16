@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WC2026 Engine — Vault</title>
+<style>
+  :root{
+    --bg:#1e1e1e; --bg2:#262626; --side:#202020; --line:#363636;
+    --txt:#dcddde; --dim:#999; --pur:#a882ff; --pur2:#7c5cff;
+    --green:#4ec9a8; --blue:#569cd6; --gold:#e0c285; --red:#f07178;
+    --mono:'SF Mono',ui-monospace,Consolas,monospace;
+    --ui:-apple-system,'Segoe UI',Roboto,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--txt);font-family:var(--ui);height:100vh;
+       display:flex;overflow:hidden;font-size:14px}
+
+  /* ---- title bar ---- */
+  .app{display:flex;flex-direction:column;width:100%;height:100vh}
+  .titlebar{height:34px;background:#181818;display:flex;align-items:center;
+    padding:0 14px;gap:8px;border-bottom:1px solid var(--line);flex:none;
+    font-size:12px;color:var(--dim)}
+  .tdot{width:11px;height:11px;border-radius:50%}
+  .body{display:flex;flex:1;min-height:0}
+
+  /* ---- sidebar (file explorer) ---- */
+  .sidebar{width:236px;background:var(--side);border-right:1px solid var(--line);
+    display:flex;flex-direction:column;flex:none}
+  .vname{padding:11px 14px;font-weight:600;font-size:13px;color:#cfcfcf;
+    display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
+  .vname .vdot{width:18px;height:18px;border-radius:6px;background:var(--pur);
+    display:grid;place-items:center;font-size:11px;color:#fff}
+  .files{overflow-y:auto;padding:6px 6px 20px;flex:1}
+  .folder{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;
+    padding:9px 8px 4px}
+  .file{padding:5px 9px;border-radius:6px;cursor:pointer;font-size:13px;
+    color:#c5c5c5;display:flex;align-items:center;gap:7px;line-height:1.35}
+  .file:hover{background:#2d2d2d}
+  .file.active{background:#34304a;color:#fff}
+  .file .ic{color:var(--pur);font-size:11px}
+  .file.active .ic{color:var(--pur)}
+
+  /* ---- main note ---- */
+  .main{flex:1;display:flex;flex-direction:column;min-width:0}
+  .tabbar{height:36px;background:var(--bg);border-bottom:1px solid var(--line);
+    display:flex;align-items:center;padding:0 12px;gap:6px;flex:none}
+  .tab{font-size:12.5px;color:#cfcfcf;background:var(--bg2);padding:5px 12px;
+    border-radius:7px 7px 0 0;border:1px solid var(--line);border-bottom:none}
+  .note{flex:1;overflow-y:auto;padding:30px 46px 80px}
+  .note-inner{max-width:720px;margin:0 auto}
+  h1.t{font-size:30px;font-weight:700;margin-bottom:4px;letter-spacing:-.01em}
+  .crumb{color:var(--pur);font-size:12px;margin-bottom:18px;font-family:var(--mono)}
+  h2{font-size:17px;margin:26px 0 10px;color:#fff;display:flex;align-items:center;gap:8px}
+  h2::before{content:"";width:3px;height:16px;background:var(--pur);border-radius:2px}
+  p{line-height:1.7;color:#c8c9ca;margin:8px 0}
+  .tag{display:inline-block;background:#34304a;color:var(--pur);font-size:11px;
+    padding:2px 9px;border-radius:20px;font-family:var(--mono);margin-right:6px}
+  code{background:#2a2a2a;padding:1px 6px;border-radius:4px;font-family:var(--mono);
+    font-size:12.5px;color:var(--gold)}
+  .callout{border-left:3px solid var(--blue);background:#202a33;border-radius:6px;
+    padding:10px 14px;margin:14px 0;font-size:13px}
+  .callout.g{border-color:var(--green);background:#1e2a26}
+  .callout .ct{font-weight:600;color:var(--blue);font-size:12px;margin-bottom:3px}
+  .callout.g .ct{color:var(--green)}
+  ul{margin:8px 0 8px 4px;list-style:none}
+  li{padding:3px 0 3px 18px;position:relative;line-height:1.6;color:#c8c9ca}
+  li::before{content:"›";position:absolute;left:2px;color:var(--pur)}
+  .lk{color:var(--pur);cursor:pointer;border-bottom:1px solid #4a3f6b}
+  .lk:hover{background:#34304a}
+
+  /* diagram frame */
+  .diagram{background:var(--bg2);border:1px solid var(--line);border-radius:10px;
+    padding:18px;margin:16px 0;text-align:center}
+  .diagram svg{max-width:100%;height:auto}
+  .dcap{font-size:11px;color:var(--dim);margin-top:8px;font-family:var(--mono)}
+
+  /* ---- right: graph/backlinks ---- */
+  .right{width:230px;background:var(--side);border-left:1px solid var(--line);
+    flex:none;display:flex;flex-direction:column}
+  .rhead{padding:10px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--dim);border-bottom:1px solid var(--line)}
+  .graph{padding:10px}
+  .bl{padding:11px 14px}
+  .bl .blk{font-size:13px;color:#c5c5c5;padding:5px 8px;border-radius:6px;cursor:pointer;
+    display:flex;align-items:center;gap:6px}
+  .bl .blk:hover{background:#2d2d2d}
+  .statusbar{height:24px;background:#181818;border-top:1px solid var(--line);
+    display:flex;align-items:center;justify-content:flex-end;padding:0 14px;gap:16px;
+    font-size:11px;color:var(--dim);flex:none;font-family:var(--mono)}
+
+  .hidden{display:none}
+  svg text{font-family:var(--mono);fill:var(--txt)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="titlebar">
+    <span class="tdot" style="background:#ff5f57"></span>
+    <span class="tdot" style="background:#febc2e"></span>
+    <span class="tdot" style="background:#28c840"></span>
+    <span style="margin-left:10px">WC2026 Prediction Engine — Obsidian Vault</span>
+  </div>
+
+  <div class="body">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="vname"><span class="vdot">⬡</span> sportsbetting</div>
+      <div class="files" id="files">
+        <div class="folder">📁 Pipeline</div>
+        <!-- files injected by JS -->
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+      <div class="tabbar"><span class="tab" id="tabname">00 — Overview.md</span></div>
+      <div class="note"><div class="note-inner" id="note"></div></div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+      <div class="rhead">Graph view</div>
+      <div class="graph">
+        <svg viewBox="0 0 210 200" id="graph"></svg>
+      </div>
+      <div class="rhead">Linked mentions</div>
+      <div class="bl" id="backlinks"></div>
+    </div>
+  </div>
+
+  <div class="statusbar">
+    <span id="sb-step">step 0 / 7</span><span>20,000 sims</span><span>Dixon-Coles · Elo</span>
+  </div>
+</div>
+
+<script>
+/* ---------- shared SVG helpers ---------- */
+const NS="http://www.w3.org/2000/svg";
+
+/* ---------- per-step note content + diagram ---------- */
+const STEPS=[
+{ file:"00 — Overview.md", title:"WC2026 Prediction Engine", crumb:"vault / overview",
+  tags:["#pipeline","#monte-carlo"],
+  body:`<p>One scoreline is built by <b>7 stacked layers</b> — never a black box.
+  Expected goals (λ) start statistical, get nudged by conditions, tactics and
+  on-pitch duels, then a 19-phase event sim runs <b>20,000×</b>.</p>
+  <p>Open each note on the left to see the layer and its diagram. Worked example
+  throughout: <span class="lk" onclick="go(1)">Brazil vs Morocco</span>.</p>`,
+  diagram:overviewDiagram, cap:"the full stack — xG flows top → bottom" },
+
+{ file:"01 — Data Model.md", title:"1 · Data Model", crumb:"vault / pipeline / data-model",
+  tags:["#dixon-coles","#elo","#base-xG"],
+  body:`<p>The statistical floor. A <b>45% Dixon-Coles</b> goal-rate model
+  (attack/defence strengths fit by MLE, with the low-score correlation term) is
+  blended with a <b>55% Elo</b> strength rating.</p>
+  <div class="callout"><div class="ct">Output</div>base expected goals —
+  <code>BRA 1.62</code> vs <code>MAR 1.05</code></div>
+  <p>Feeds → <span class="lk" onclick="go(2)">Agent Panel</span>.</p>`,
+  diagram:dataDiagram, cap:"45% Dixon-Coles + 55% Elo → base λ" },
+
+{ file:"02 — Agent Panel.md", title:"2 · 10-Agent Panel", crumb:"vault / pipeline / agents",
+  tags:["#agents","#multipliers"],
+  body:`<p>Ten condition agents each vote a <b>multiplier</b> on the base rate
+  (clamped 0.65–1.45). Net effect is multiplicative.</p>
+  <ul><li><b>Form · Momentum · H2H</b> — recent signal</li>
+  <li><b>Tactician · Tempo</b> — match shape</li>
+  <li><b>Host/Crowd · Travel · Climate</b> — environment</li>
+  <li><b>Injury/News · Hydration</b> — late + physical</li></ul>`,
+  diagram:agentDiagram, cap:"10 agents → net ×multiplier per side" },
+
+{ file:"03 — Tactical Engine.md", title:"3 · Tactical Engine", crumb:"vault / pipeline / tactics",
+  tags:["#style-vectors","#mechanisms"],
+  body:`<p>Each style is a <b>vector</b>: line-height, press, directness, width,
+  transition, compactness. The mismatch produces additive xG deltas + a
+  <code>cagey</code> factor.</p>
+  <div class="callout"><div class="ct">Read</div>Morocco's deep block + counter vs
+  Brazil's possession → fewer chances, higher transition threat.</div>`,
+  diagram:radarDiagram, cap:"style-vs-style as overlaid vectors" },
+
+{ file:"04 — Player Lanes.md", title:"4 · Player / Flank Lanes", crumb:"vault / pipeline / lanes",
+  tags:["#duels","#channels"],
+  body:`<p>The on-pitch part: position-by-position duels down the
+  <b>left / central / right</b> channels, with attribute tags interacting
+  (pace vs high full-back, poacher vs aerial CB…).</p>
+  <div class="callout g"><div class="ct">Key duel</div>
+  <b>Vinícius (LW)</b> vs <b>Hakimi (RB)</b> — elite pace at an attacking
+  full-back who pushes high = Brazil's prime lane.</div>`,
+  diagram:pitchDiagram, cap:"lane duels on the pitch (L / C / R channels)" },
+
+{ file:"04b — Formation & Chem.md", title:"4b · Formation + Chemistry",
+  crumb:"vault / pipeline / shape", tags:["#formation","#cohesion"],
+  body:`<p>Shape decides midfield numbers, wing-backs and low-block geometry;
+  <b>chemistry (0–100)</b> scales how cleanly a side executes it.</p>
+  <ul><li>Brazil <b>4-3-3</b> · chem 80</li>
+  <li>Morocco <b>4-1-4-1 / 5-4-1 block</b> · chem <b>88</b> (drilled, tight unit)</li></ul>`,
+  diagram:formDiagram, cap:"4-3-3 vs a compact 5-4-1 block" },
+
+{ file:"05 — Blend.md", title:"5 · Blend", crumb:"vault / pipeline / blend",
+  tags:["#final-lambda"],
+  body:`<p>Combine the streams: <b>70%</b> data+panel, <b>30%</b> player-layer
+  (tactics + lanes + shape) → the <b>final expected goals</b> that drive the sim.</p>
+  <div class="callout g"><div class="ct">Final λ</div>
+  <code>BRA 1.38</code> — <code>MAR 1.02</code></div>`,
+  diagram:blendDiagram, cap:"70 / 30 blend → final λ" },
+
+{ file:"06 — Game-State.md", title:"6 · Game-State", crumb:"vault / pipeline / game-state",
+  tags:["#park","#chase","#solidity"],
+  body:`<p>Teams don't play at a constant rate. The sim shifts scoring/conceding
+  rates by <b>scoreline</b>: park the bus when ahead, chase when behind, with a
+  transition-threat term for counters.</p>
+  <div class="callout"><div class="ct">Calibrated to</div>
+  first-goal → win ≈ <code>0.70</code> · half-time lead → win ≈ <code>0.77</code></div>`,
+  diagram:stateDiagram, cap:"behaviour changes by score state" },
+
+{ file:"07 — Event Sim.md", title:"7 · Event Sim", crumb:"vault / pipeline / sim",
+  tags:["#19-phase","#20k-sims"],
+  body:`<p>A <b>19-phase</b> minute-by-minute simulation (18 regulation + a
+  late-skewed <b>stoppage phase</b> — late goals are real) is run <b>20,000×</b>,
+  vectorised in numpy (~4s for the whole tournament).</p>
+  <div class="callout g"><div class="ct">Verdict — Brazil vs Morocco</div>
+  BRA 41% / Draw 30% / MAR 29% · modal scoreline <b>1–1</b> → toss-up.</div>`,
+  diagram:simDiagram, cap:"20k sims → outcome split + scoreline cloud" },
+];
+
+/* ================= DIAGRAM BUILDERS ================= */
+function svg(w,h){const s=document.createElementNS(NS,"svg");
+  s.setAttribute("viewBox",`0 0 ${w} ${h}`);s.setAttribute("width",w);return s;}
+function el(p,t,a,txt){const e=document.createElementNS(NS,t);
+  for(const k in a)e.setAttribute(k,a[k]); if(txt!=null)e.textContent=txt; p.appendChild(e);return e;}
+
+function overviewDiagram(){
+  const s=svg(560,320); const labs=["DATA MODEL","10-AGENT PANEL","TACTICAL ENGINE",
+    "PLAYER LANES","FORMATION+CHEM","BLEND → λ","GAME-STATE","EVENT SIM 20k"];
+  const cols=["#569cd6","#a882ff","#4ec9a8","#e0c285","#e0c285","#a882ff","#4ec9a8","#f07178"];
+  labs.forEach((l,i)=>{const y=14+i*37;
+    el(s,"rect",{x:120,y,width:320,height:28,rx:7,fill:"#262626",stroke:cols[i],"stroke-width":1.4});
+    el(s,"circle",{cx:104,cy:y+14,r:9,fill:cols[i]});
+    el(s,"text",{x:104,y:y+18,"text-anchor":"middle","font-size":11,fill:"#111"},
+      i===4?"4b":(i<5?i+1:i));
+    el(s,"text",{x:135,y:y+18,"font-size":12.5,fill:"#dcddde"},l);
+    if(i<labs.length-1)el(s,"line",{x1:104,y1:y+24,x2:104,y2:y+37+5,stroke:"#555","stroke-width":1.6});
+  });
+  el(s,"text",{x:280,y:312,"text-anchor":"middle","font-size":11,fill:"#e0c285"},
+    "λ flows top → bottom · output: BRA 41% / Draw 30% / MAR 29%");
+  return s;
+}
+function dataDiagram(){
+  const s=svg(540,200);
+  // two stacked bars showing blend
+  el(s,"text",{x:20,y:30,"font-size":12,fill:"#999"},"BLEND WEIGHT");
+  el(s,"rect",{x:20,y:42,width:0.45*480,height:34,rx:5,fill:"#569cd6"});
+  el(s,"rect",{x:20+0.45*480,y:42,width:0.55*480,height:34,rx:5,fill:"#a882ff"});
+  el(s,"text",{x:128,y:64,"text-anchor":"middle","font-size":12,fill:"#fff"},"Dixon-Coles 45%");
+  el(s,"text",{x:380,y:64,"text-anchor":"middle","font-size":12,fill:"#fff"},"Elo 55%");
+  // base lambda output
+  el(s,"text",{x:20,y:118,"font-size":12,fill:"#999"},"BASE λ (expected goals)");
+  el(s,"rect",{x:20,y:130,width:220,height:46,rx:8,fill:"#262626",stroke:"#569cd6"});
+  el(s,"text",{x:130,y:160,"text-anchor":"middle","font-size":18,fill:"#e0c285"},"BRA 1.62");
+  el(s,"rect",{x:300,y:130,width:220,height:46,rx:8,fill:"#262626",stroke:"#569cd6"});
+  el(s,"text",{x:410,y:160,"text-anchor":"middle","font-size":18,fill:"#e0c285"},"MAR 1.05");
+  return s;
+}
+function agentDiagram(){
+  const s=svg(540,250); const names=["Form","Momentum","H2H","Tactician","Tempo",
+    "Host","Travel","Climate","Injury","Hydration"];
+  names.forEach((n,i)=>{const cx=70+(i%5)*100, cy=40+Math.floor(i/5)*70;
+    el(s,"circle",{cx,cy,r:26,fill:"#262626",stroke:"#a882ff","stroke-width":1.4});
+    el(s,"text",{x:cx,y:cy+4,"text-anchor":"middle","font-size":10,fill:"#dcddde"},n);
+    el(s,"line",{x1:cx,y1:cy+26,x2:270,y2:200,stroke:"#3a3450","stroke-width":1});
+  });
+  el(s,"rect",{x:180,y:200,width:180,height:36,rx:8,fill:"#34304a",stroke:"#a882ff"});
+  el(s,"text",{x:270,y:223,"text-anchor":"middle","font-size":13,fill:"#fff"},"net ×mult  (0.65–1.45)");
+  return s;
+}
+function radarDiagram(){
+  const s=svg(540,260); const cx=270,cy=125,R=95;
+  const ax=["line-height","press","directness","width","transition","compact"];
+  const bra=[.85,.8,.4,.75,.55,.6], mar=[.35,.55,.8,.45,.85,.85];
+  // grid
+  for(let g=1;g<=3;g++){let pts="";for(let i=0;i<6;i++){const a=-Math.PI/2+i*Math.PI/3;
+    pts+=`${cx+Math.cos(a)*R*g/3},${cy+Math.sin(a)*R*g/3} `;}
+    el(s,"polygon",{points:pts,fill:"none",stroke:"#363636"});}
+  ax.forEach((a,i)=>{const ang=-Math.PI/2+i*Math.PI/3;
+    el(s,"text",{x:cx+Math.cos(ang)*(R+22),y:cy+Math.sin(ang)*(R+22)+4,
+      "text-anchor":"middle","font-size":10,fill:"#999"},a);});
+  function poly(v,col){let p="";v.forEach((val,i)=>{const a=-Math.PI/2+i*Math.PI/3;
+    p+=`${cx+Math.cos(a)*R*val},${cy+Math.sin(a)*R*val} `;});
+    el(s,"polygon",{points:p,fill:col+"22",stroke:col,"stroke-width":2});}
+  poly(bra,"#e0c285"); poly(mar,"#f07178");
+  el(s,"text",{x:40,y:245,"font-size":11,fill:"#e0c285"},"■ Brazil");
+  el(s,"text",{x:130,y:245,"font-size":11,fill:"#f07178"},"■ Morocco");
+  return s;
+}
+function pitchDiagram(){
+  const s=svg(540,250);
+  el(s,"rect",{x:30,y:20,width:480,height:210,rx:8,fill:"#1d3326",stroke:"#2e5a3e"});
+  el(s,"line",{x1:270,y1:20,x2:270,y2:230,stroke:"#2e5a3e"});
+  el(s,"circle",{cx:270,cy:125,r:34,fill:"none",stroke:"#2e5a3e"});
+  // three channels
+  ["LEFT","CENTRAL","RIGHT"].forEach((c,i)=>{
+    el(s,"text",{x:30,y:50+i*70,"font-size":9,fill:"#6fae87"},c);});
+  // key duel highlight LW vs RB
+  el(s,"circle",{cx:120,cy:55,r:16,fill:"#e0c285"});
+  el(s,"text",{x:120,y:59,"text-anchor":"middle","font-size":9,fill:"#111"},"Vini");
+  el(s,"circle",{cx:420,cy:55,r:16,fill:"#f07178"});
+  el(s,"text",{x:420,y:59,"text-anchor":"middle","font-size":8,fill:"#111"},"Hakimi");
+  el(s,"line",{x1:136,y1:55,x2:404,y2:55,stroke:"#e0c285","stroke-width":2,"stroke-dasharray":"5 4"});
+  el(s,"text",{x:270,y:46,"text-anchor":"middle","font-size":10,fill:"#e0c285"},"pace vs high FB ▲");
+  // other dots
+  [[120,125],[120,195],[200,90],[200,160],[200,125]].forEach(([x,y])=>
+    el(s,"circle",{cx:x,cy:y,r:9,fill:"#caa15a"}));
+  [[420,125],[420,195],[340,90],[340,160],[340,125]].forEach(([x,y])=>
+    el(s,"circle",{cx:x,cy:y,r:9,fill:"#c25a64"}));
+  return s;
+}
+function formDiagram(){
+  const s=svg(540,250);
+  function team(ox,rows,col,lab){
+    el(s,"text",{x:ox+90,y:18,"text-anchor":"middle","font-size":12,fill:col},lab);
+    rows.forEach((n,r)=>{for(let i=0;i<n;i++){
+      const x=ox+30+(i+ (4-n)/2)*40, y=40+r*48;
+      el(s,"circle",{cx:x,cy:y,r:11,fill:col});}});
+  }
+  team(0,[1,3,3,3],"#e0c285","Brazil 4-3-3");      // GK,D,M,F-ish
+  el(s,"line",{x1:270,y1:30,x2:270,y2:220,stroke:"#363636"});
+  team(280,[1,4,4,1],"#f07178","Morocco 5-4-1 block");
+  return s;
+}
+function blendDiagram(){
+  const s=svg(540,180);
+  el(s,"rect",{x:40,y:40,width:160,height:50,rx:8,fill:"#262626",stroke:"#a882ff"});
+  el(s,"text",{x:120,y:62,"text-anchor":"middle","font-size":11,fill:"#999"},"data+panel");
+  el(s,"text",{x:120,y:80,"text-anchor":"middle","font-size":13,fill:"#fff"},"70%");
+  el(s,"rect",{x:40,y:100,width:160,height:50,rx:8,fill:"#262626",stroke:"#4ec9a8"});
+  el(s,"text",{x:120,y:122,"text-anchor":"middle","font-size":11,fill:"#999"},"player-layer");
+  el(s,"text",{x:120,y:140,"text-anchor":"middle","font-size":13,fill:"#fff"},"30%");
+  el(s,"path",{d:"M200 65 Q 270 95 330 95",stroke:"#777",fill:"none","stroke-width":1.5});
+  el(s,"path",{d:"M200 125 Q 270 95 330 95",stroke:"#777",fill:"none","stroke-width":1.5});
+  el(s,"rect",{x:330,y:70,width:170,height:50,rx:8,fill:"#1e2a26",stroke:"#4ec9a8"});
+  el(s,"text",{x:415,y:90,"text-anchor":"middle","font-size":11,fill:"#999"},"FINAL λ");
+  el(s,"text",{x:415,y:108,"text-anchor":"middle","font-size":14,fill:"#e0c285"},"1.38 — 1.02");
+  return s;
+}
+function stateDiagram(){
+  const s=svg(540,220);
+  const nodes=[["LEADING",120,60,"#4ec9a8","park bus ↓ rate"],
+               ["LEVEL",270,150,"#a882ff","base rate"],
+               ["TRAILING",420,60,"#f07178","chase ↑ rate"]];
+  el(s,"path",{d:"M150 75 Q 210 130 250 145",stroke:"#555",fill:"none","stroke-width":1.5,"marker-end":""});
+  el(s,"path",{d:"M390 75 Q 330 130 290 145",stroke:"#555",fill:"none","stroke-width":1.5});
+  nodes.forEach(([n,x,y,c,d])=>{
+    el(s,"rect",{x:x-60,y:y-20,width:120,height:40,rx:20,fill:"#262626",stroke:c,"stroke-width":1.6});
+    el(s,"text",{x,y:y-2,"text-anchor":"middle","font-size":12,fill:c},n);
+    el(s,"text",{x,y:y+13,"text-anchor":"middle","font-size":9,fill:"#999"},d);
+  });
+  el(s,"text",{x:270,y:205,"text-anchor":"middle","font-size":10,fill:"#999"},
+    "calibrated: first-goal→win ≈ 0.70 · HT lead→win ≈ 0.77");
+  return s;
+}
+function simDiagram(){
+  const s=svg(540,230);
+  // outcome split bars
+  const out=[["BRA",41,"#4ec9a8"],["Draw",30,"#888"],["MAR",29,"#f07178"]];
+  out.forEach(([l,v,c],i)=>{const y=20+i*30;
+    el(s,"text",{x:20,y:y+15,"font-size":11,fill:"#999"},l);
+    el(s,"rect",{x:70,y,width:v*4,height:20,rx:4,fill:c});
+    el(s,"text",{x:80+v*4,y:y+15,"font-size":11,fill:"#fff"},v+"%");});
+  // scoreline cloud (histogram)
+  el(s,"text",{x:20,y:135,"font-size":11,fill:"#999"},"SCORELINE CLOUD");
+  const sc=[["1-1",14],["1-0",11],["2-1",9],["0-0",8],["2-0",7],["0-1",6],["2-2",5]];
+  sc.forEach(([l,v],i)=>{const x=40+i*70;
+    el(s,"rect",{x,y:200-v*5.5,width:46,height:v*5.5,rx:4,
+      fill:l==="1-1"?"#e0c285":"#3a3450",stroke:l==="1-1"?"#e0c285":"#555"});
+    el(s,"text",{x:x+23,y:215,"text-anchor":"middle","font-size":10,fill:"#999"},l);
+    el(s,"text",{x:x+23,y:195-v*5.5,"text-anchor":"middle","font-size":9,fill:"#dcddde"},v+"%");});
+  return s;
+}
+
+/* ================= RENDER ================= */
+const filesEl=document.getElementById("files");
+STEPS.forEach((st,i)=>{
+  const d=document.createElement("div");
+  d.className="file"+(i===0?" active":""); d.dataset.i=i;
+  d.innerHTML=`<span class="ic">📄</span>${st.file}`;
+  d.onclick=()=>go(i); filesEl.appendChild(d);
+});
+
+function go(i){
+  const st=STEPS[i];
+  document.querySelectorAll(".file").forEach(f=>f.classList.toggle("active",+f.dataset.i===i));
+  document.getElementById("tabname").textContent=st.file;
+  document.getElementById("sb-step").textContent=`step ${i} / 7`;
+  const n=document.getElementById("note");
+  n.innerHTML=`<div class="crumb">${st.crumb}</div>
+    <h1 class="t">${st.title}</h1>
+    <div>${st.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+    ${st.body}
+    <h2>Diagram</h2>
+    <div class="diagram" id="dia"></div>`;
+  document.getElementById("dia").appendChild(st.diagram());
+  const cap=document.createElement("div");cap.className="dcap";cap.textContent=st.cap;
+  document.getElementById("dia").appendChild(cap);
+  drawGraph(i); drawBacklinks(i);
+  n.parentElement.scrollTop=0;
+}
+
+/* mini graph view — nodes are the steps, active one highlighted */
+function drawGraph(active){
+  const g=document.getElementById("graph");g.innerHTML="";
+  const pts=STEPS.map((_,i)=>{const a=-Math.PI/2+i*2*Math.PI/STEPS.length;
+    return [105+Math.cos(a)*72,100+Math.sin(a)*72];});
+  pts.forEach((p,i)=>{if(i<pts.length-1)
+    el(g,"line",{x1:p[0],y1:p[1],x2:pts[i+1][0],y2:pts[i+1][1],stroke:"#3a3450","stroke-width":1});});
+  el(g,"line",{x1:105,y1:100,x2:105,y2:100,stroke:"#3a3450"});
+  pts.forEach((p,i)=>{
+    el(g,"line",{x1:105,y1:100,x2:p[0],y2:p[1],stroke:"#2c2c2c","stroke-width":.8});});
+  pts.forEach((p,i)=>{
+    el(g,"circle",{cx:p[0],cy:p[1],r:i===active?8:5,
+      fill:i===active?"#a882ff":"#555",stroke:i===active?"#fff":"none","stroke-width":1});});
+}
+function drawBacklinks(i){
+  const b=document.getElementById("backlinks");
+  const links=[]; if(i>0)links.push([i-1,"← "+STEPS[i-1].title]);
+  if(i<STEPS.length-1)links.push([i+1,"→ "+STEPS[i+1].title]);
+  b.innerHTML=links.map(([j,t])=>`<div class="blk" onclick="go(${j})">🔗 ${t}</div>`).join("")
+    ||`<div class="blk" style="color:#666">no links</div>`;
+}
+
+go(0);
+</script>
+</body>
+</html>

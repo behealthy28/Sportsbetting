@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WC2026 Prediction Engine — Pipeline</title>
+<style>
+  :root{
+    --bg:#05070d; --panel:#0b1018; --line:#16202e;
+    --txt:#e8eef6; --dim:#7f93a8; --accent:#1fd6a8; --accent2:#3aa0ff;
+    --gold:#ffcb45; --red:#ff5a6e; --mono:'SF Mono',ui-monospace,'Cascadia Code',Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#000;color:var(--txt);font-family:var(--mono);-webkit-font-smoothing:antialiased}
+  /* 9:16 stage for clean screen-record */
+  .stage{
+    position:relative;width:min(440px,100vw);min-height:100vh;margin:0 auto;
+    background:
+      radial-gradient(1200px 500px at 50% -8%,rgba(31,214,168,.10),transparent 60%),
+      radial-gradient(900px 500px at 50% 120%,rgba(58,160,255,.10),transparent 60%),
+      var(--bg);
+    padding:26px 18px 40px;overflow:hidden;
+  }
+  /* scanline + grain vibe */
+  .stage::before{
+    content:"";position:absolute;inset:0;pointer-events:none;z-index:50;
+    background:repeating-linear-gradient(0deg,rgba(255,255,255,.015) 0 1px,transparent 1px 3px);
+    mix-blend-mode:overlay;
+  }
+  /* ---------- header ---------- */
+  .top{display:flex;justify-content:space-between;align-items:center;
+       font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);
+       box-shadow:0 0 10px var(--accent);display:inline-block;margin-right:6px;
+       animation:blink 1.4s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+  h1{font-size:23px;letter-spacing:.02em;margin:14px 0 2px;font-weight:700;
+     background:linear-gradient(90deg,#fff,#9fe9d6);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{font-size:11px;color:var(--dim);letter-spacing:.05em;margin-bottom:6px}
+  .match{display:flex;align-items:center;gap:10px;margin:14px 0 6px;
+         padding:10px 12px;border:1px solid var(--line);border-radius:12px;
+         background:linear-gradient(180deg,#0d141d,#0a0f16)}
+  .match .t{font-size:15px;font-weight:700;flex:1}
+  .match .t.away{text-align:right}
+  .match .vs{font-size:9px;color:var(--dim);letter-spacing:.2em}
+  .flag{font-size:18px}
+
+  /* ---------- pipeline ---------- */
+  .pipe{position:relative;margin-top:14px}
+  .layer{
+    position:relative;border:1px solid var(--line);border-radius:13px;
+    background:linear-gradient(180deg,#0c121b,#090d14);
+    padding:11px 13px;margin-bottom:11px;opacity:0;transform:translateY(14px) scale(.985);
+    animation:rise .55s forwards;
+  }
+  @keyframes rise{to{opacity:1;transform:none}}
+  .layer.lit{border-color:rgba(31,214,168,.55);
+    box-shadow:0 0 0 1px rgba(31,214,168,.18),0 8px 30px -12px rgba(31,214,168,.4)}
+  .lhead{display:flex;align-items:center;gap:9px;margin-bottom:3px}
+  .num{font-size:9px;width:20px;height:20px;flex:none;border-radius:6px;
+       display:grid;place-items:center;background:#10202c;color:var(--accent);
+       border:1px solid rgba(31,214,168,.3);font-weight:700}
+  .ltitle{font-size:12.5px;font-weight:700;letter-spacing:.04em}
+  .ltag{margin-left:auto;font-size:9px;color:var(--accent2);
+        border:1px solid rgba(58,160,255,.3);padding:2px 7px;border-radius:20px}
+  .ldesc{font-size:10.5px;color:var(--dim);line-height:1.5}
+  .ldesc b{color:var(--txt);font-weight:600}
+
+  /* connector with traveling pulse */
+  .conn{position:absolute;left:50%;width:2px;height:11px;
+        background:linear-gradient(var(--line),var(--line));transform:translateX(-50%);z-index:1}
+  .pulse{position:absolute;left:50%;top:0;width:8px;height:8px;border-radius:50%;
+         transform:translate(-50%,-50%);background:var(--gold);
+         box-shadow:0 0 14px 3px var(--gold);opacity:0;z-index:60}
+  .pulse.run{animation:travel 6.2s linear infinite}
+  @keyframes travel{
+    0%{opacity:0;top:8%}
+    6%{opacity:1}
+    94%{opacity:1}
+    100%{opacity:0;top:99%}
+  }
+
+  /* agent grid */
+  .agents{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px}
+  .ag{font-size:8.5px;text-align:center;padding:5px 2px;border-radius:7px;
+      background:#0a1118;border:1px solid var(--line);color:var(--dim);
+      transition:.3s}
+  .ag.on{color:var(--accent);border-color:rgba(31,214,168,.5);
+         background:#0c1a1c;box-shadow:0 0 10px -2px rgba(31,214,168,.5)}
+
+  /* xG chips */
+  .xg{display:inline-flex;gap:6px;font-size:11px;font-weight:700;margin-top:7px}
+  .chip{padding:2px 9px;border-radius:7px;background:#11202c;border:1px solid rgba(58,160,255,.3)}
+  .chip .v{color:var(--gold)}
+
+  /* result bars */
+  .bars{margin-top:9px}
+  .bar{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:10.5px}
+  .bar .lab{width:74px;color:var(--dim)}
+  .track{flex:1;height:11px;background:#0a121a;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+  .fill{height:100%;width:0;border-radius:6px;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+  .bar .pct{width:34px;text-align:right;font-weight:700}
+  .f-home{background:linear-gradient(90deg,#1fd6a8,#19b890)}
+  .f-draw{background:linear-gradient(90deg,#7f93a8,#5b6b7d)}
+  .f-away{background:linear-gradient(90deg,#ff5a6e,#d83b50)}
+
+  .scores{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+  .sc{font-size:10px;padding:4px 8px;border-radius:7px;background:#0c1620;
+      border:1px solid var(--line);color:var(--dim)}
+  .sc.top{color:var(--gold);border-color:rgba(255,203,69,.4);background:#161208}
+  .sc b{color:var(--txt)}
+
+  .verdict{margin-top:14px;text-align:center;padding:14px;border-radius:14px;
+    border:1px solid rgba(255,203,69,.35);
+    background:radial-gradient(400px 120px at 50% 0,rgba(255,203,69,.12),transparent),#0a0f16;
+    opacity:0;animation:rise .6s forwards;animation-delay:6.0s}
+  .verdict .k{font-size:9px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase}
+  .verdict .big{font-size:30px;font-weight:800;margin:5px 0;letter-spacing:.02em;
+    background:linear-gradient(90deg,#ffcb45,#ffe7a0);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .verdict .note{font-size:10.5px;color:var(--dim)}
+
+  .foot{margin-top:16px;display:flex;justify-content:space-between;
+        font-size:8.5px;color:#3f4e5e;letter-spacing:.1em;text-transform:uppercase}
+
+  /* staged delays */
+  .d0{animation-delay:.2s}.d1{animation-delay:.7s}.d2{animation-delay:1.2s}
+  .d3{animation-delay:1.7s}.d4{animation-delay:2.2s}.d5{animation-delay:2.7s}
+  .d6{animation-delay:3.2s}.d7{animation-delay:3.7s}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="top">
+    <span><span class="dot"></span>WC2026 ENGINE · LIVE</span>
+    <span>v4 · 20,000 SIMS</span>
+  </div>
+
+  <h1>The Prediction Stack</h1>
+  <div class="sub">how one scoreline is actually built — 7 layers, no black box</div>
+
+  <div class="match">
+    <span class="t"><span class="flag">🇧🇷</span> Brazil</span>
+    <span class="vs">VS</span>
+    <span class="t away">Morocco <span class="flag">🇲🇦</span></span>
+  </div>
+
+  <div class="pipe">
+
+    <div class="layer d0" id="L1">
+      <div class="lhead"><span class="num">1</span><span class="ltitle">DATA MODEL</span>
+        <span class="ltag">base xG</span></div>
+      <div class="ldesc"><b>45% Dixon-Coles</b> (goal-rate MLE) blended with <b>55% Elo</b> strength.
+        The statistical floor every match starts from.</div>
+      <div class="xg"><span class="chip">🇧🇷 <span class="v">1.62</span></span>
+        <span class="chip">🇲🇦 <span class="v">1.05</span></span></div>
+    </div>
+    <div class="conn" style="margin-top:-11px"></div>
+
+    <div class="layer d1" id="L2">
+      <div class="lhead"><span class="num">2</span><span class="ltitle">10-AGENT PANEL</span>
+        <span class="ltag">×multipliers</span></div>
+      <div class="ldesc">Ten condition agents nudge the rate up or down — each votes a multiplier.</div>
+      <div class="agents">
+        <div class="ag">Form</div><div class="ag">Momentum</div><div class="ag">H2H</div>
+        <div class="ag">Tactician</div><div class="ag">Tempo</div><div class="ag">Host/Crowd</div>
+        <div class="ag">Travel</div><div class="ag">Climate</div><div class="ag">Injury/News</div>
+        <div class="ag">Hydration</div>
+      </div>
+    </div>
+    <div class="conn"></div>
+
+    <div class="layer d2" id="L3">
+      <div class="lhead"><span class="num">3</span><span class="ltitle">TACTICAL ENGINE</span>
+        <span class="ltag">style vectors</span></div>
+      <div class="ldesc">Style-vs-style as vectors: <b>press, line-height, directness, width, transition</b>.
+        Morocco's low block + counter vs Brazil's possession → a cagier game.</div>
+    </div>
+    <div class="conn"></div>
+
+    <div class="layer d3" id="L4">
+      <div class="lhead"><span class="num">4</span><span class="ltitle">PLAYER / FLANK LANES</span>
+        <span class="ltag">duels</span></div>
+      <div class="ldesc">Position-by-position duels down each channel —
+        <b>Vinícius (LW) vs Hakimi (RB)</b>: pace vs an attacking full-back left exposed.</div>
+    </div>
+    <div class="conn"></div>
+
+    <div class="layer d4" id="L4b">
+      <div class="lhead"><span class="num">4b</span><span class="ltitle">FORMATION + CHEMISTRY</span>
+        <span class="ltag">shape</span></div>
+      <div class="ldesc">Midfield numbers, wing-backs, low-block geometry + squad cohesion
+        (Morocco <b>88</b> chem — tight, drilled unit).</div>
+    </div>
+    <div class="conn"></div>
+
+    <div class="layer d5" id="L5">
+      <div class="lhead"><span class="num">5</span><span class="ltitle">BLEND</span>
+        <span class="ltag">final λ</span></div>
+      <div class="ldesc"><b>70%</b> data+panel · <b>30%</b> player-layer → final expected goals.</div>
+      <div class="xg"><span class="chip">🇧🇷 <span class="v">1.38</span></span>
+        <span class="chip">🇲🇦 <span class="v">1.02</span></span></div>
+    </div>
+    <div class="conn"></div>
+
+    <div class="layer d6" id="L6">
+      <div class="lhead"><span class="num">6</span><span class="ltitle">GAME-STATE</span>
+        <span class="ltag">behaviour</span></div>
+      <div class="ldesc">How each side reacts to the score — <b>park the bus</b> when ahead,
+        <b>chase</b> when behind, counter-threat in transition.</div>
+    </div>
+    <div class="conn"></div>
+
+    <div class="layer d7" id="L7">
+      <div class="lhead"><span class="num">7</span><span class="ltitle">EVENT SIM</span>
+        <span class="ltag">19 phases</span></div>
+      <div class="ldesc">Minute-by-minute sim (incl. <b>stoppage time</b> — late goals are real),
+        run <b>20,000×</b> → outcome split + scoreline cloud.</div>
+
+      <div class="bars">
+        <div class="bar"><span class="lab">🇧🇷 Brazil</span>
+          <div class="track"><div class="fill f-home" data-w="41"></div></div><span class="pct">41%</span></div>
+        <div class="bar"><span class="lab">Draw</span>
+          <div class="track"><div class="fill f-draw" data-w="30"></div></div><span class="pct">30%</span></div>
+        <div class="bar"><span class="lab">🇲🇦 Morocco</span>
+          <div class="track"><div class="fill f-away" data-w="29"></div></div><span class="pct">29%</span></div>
+      </div>
+
+      <div class="scores">
+        <div class="sc top"><b>1–1</b> 14%</div>
+        <div class="sc"><b>1–0</b> 11%</div>
+        <div class="sc"><b>2–1</b> 9%</div>
+        <div class="sc"><b>0–0</b> 8%</div>
+        <div class="sc"><b>2–0</b> 7%</div>
+      </div>
+    </div>
+
+    <div class="pulse" id="pulse"></div>
+  </div>
+
+  <div class="verdict">
+    <div class="k">single most-likely scoreline</div>
+    <div class="big">🇧🇷 1 — 1 🇲🇦</div>
+    <div class="note">modal outcome · favourite edge too thin to call a winner → it's a toss-up</div>
+  </div>
+
+  <div class="foot">
+    <span>@gobi_automates</span>
+    <span>DIXON-COLES · ELO · MONTE CARLO</span>
+  </div>
+</div>
+
+<script>
+  // light each layer as it rises, fire the connector pulse, fill the bars on loop
+  const delays=[200,700,1200,1700,2200,2700,3200,3700];
+  const ids=['L1','L2','L3','L4','L4b','L5','L6','L7'];
+  function runCycle(){
+    ids.forEach((id,i)=>{
+      const el=document.getElementById(id);
+      setTimeout(()=>{
+        el.classList.add('lit');
+        setTimeout(()=>el.classList.remove('lit'),900);
+      },delays[i]+150);
+    });
+    // agents cascade
+    setTimeout(()=>{
+      document.querySelectorAll('.ag').forEach((a,i)=>{
+        setTimeout(()=>{a.classList.add('on');setTimeout(()=>a.classList.remove('on'),700);},i*70);
+      });
+    },800);
+    // fill result bars near the end
+    setTimeout(()=>{
+      document.querySelectorAll('.fill').forEach(f=>f.style.width=f.dataset.w+'%');
+    },4200);
+    setTimeout(()=>{
+      document.querySelectorAll('.fill').forEach(f=>f.style.width='0');
+    },7600);
+  }
+  document.getElementById('pulse').classList.add('run');
+  runCycle();
+  setInterval(runCycle,6200); // loop in lockstep with the traveling pulse
+</script>
+</body>
+</html>
