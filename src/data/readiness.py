@@ -28,10 +28,20 @@ import json
 import os
 from typing import Optional
 
-_OVERRIDES_PATH = os.path.join(
+_DATA_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-    "data", "mappings", "readiness.json",
+    "data", "mappings",
 )
+_OVERRIDES_PATH = os.path.join(_DATA_DIR, "readiness.json")
+_LINEUPS_PATH = os.path.join(_DATA_DIR, "lineups.json")
+
+# Severity of a publicly reported availability concern, by headline language.
+_OUT_KEYWORDS = ("ruled out", "out of", "withdrawn", "withdraws", "miss the",
+                 "will miss", "sidelined", "suspended", "ban", "surgery", "torn")
+_DOUBT_KEYWORDS = ("doubt", "doubtful", "fitness test", "race against time",
+                   "assessed", "knock", "limped", "scan")
+_INJURY_KEYWORDS = ("injury", "injured", "hamstring", "knee", "ankle", "muscle",
+                    "calf", "groin", "fracture", "strain", "illness", "ill")
 
 # Multiplier band. A fully fresh / no-concern squad is neutral (1.0); a
 # depleted or fixture-congested squad is penalised toward _MULT_MIN. Readiness
@@ -47,6 +57,87 @@ def _load_overrides() -> dict:
         return {k.lower(): v for k, v in data.items() if not k.startswith("_")}
     except (FileNotFoundError, json.JSONDecodeError):
         return {}
+
+
+def _load_lineups() -> dict:
+    try:
+        with open(_LINEUPS_PATH, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return {k.lower(): v for k, v in data.items()
+                if not k.startswith("_") and isinstance(v, list)}
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+
+def _name_in_headline(player: str, headline: str) -> bool:
+    """Match a player by full name or surname within a headline."""
+    h = headline.lower()
+    full = player.lower()
+    if full in h:
+        return True
+    surname = full.split()[-1] if full.split() else full
+    return len(surname) >= 4 and surname in h
+
+
+def _severity(headline: str) -> float:
+    """How much a publicly reported concern dents availability (0 = none)."""
+    h = headline.lower()
+    if not any(k in h for k in _INJURY_KEYWORDS + _OUT_KEYWORDS + _DOUBT_KEYWORDS):
+        return 0.0
+    if any(k in h for k in _OUT_KEYWORDS):
+        return 1.0
+    if any(k in h for k in _DOUBT_KEYWORDS):
+        return 0.5
+    return 0.3  # generic injury mention
+
+
+def get_squad_availability(team: str, news_sentiment: Optional[dict] = None,
+                           manual_out: Optional[list] = None) -> dict:
+    """Importance-weighted squad availability from PUBLIC injury/availability news.
+
+    Scans the team's public roster (lineups.json) against publicly reported
+    news headlines for each key player, weighting any concern by that player's
+    importance. Uses NO private biometric/tracker data.
+
+    Args:
+        team: team name.
+        news_sentiment: dict from ``news.get_sentiment`` (uses its headlines).
+        manual_out: optional list of player names the user marks as out.
+
+    Returns:
+        {"availability" (0-1), "flagged": [{player, importance, severity, note}]}.
+    """
+    roster = _load_lineups().get(team.lower(), [])
+    if not roster:
+        return {"availability": 1.0, "flagged": []}
+
+    headlines = (news_sentiment or {}).get("headlines", []) or \
+        (news_sentiment or {}).get("flags", [])
+    manual_out = {m.lower() for m in (manual_out or [])}
+
+    total_importance = sum(p.get("importance", 0.5) for p in roster) or 1.0
+    lost = 0.0
+    flagged = []
+    for p in roster:
+        name = p.get("name", "")
+        imp = p.get("importance", 0.5)
+        sev = 0.0
+        note = ""
+        if name.lower() in manual_out:
+            sev, note = 1.0, "marked out (manual)"
+        else:
+            for hl in headlines:
+                if _name_in_headline(name, hl):
+                    s = _severity(hl)
+                    if s > sev:
+                        sev, note = s, hl[:80]
+        if sev > 0:
+            lost += imp * sev
+            flagged.append({"player": name, "importance": imp,
+                            "severity": sev, "note": note})
+
+    availability = max(0.0, 1.0 - lost / total_importance)
+    return {"availability": round(availability, 4), "flagged": flagged}
 
 
 def _rest_component(days_rest: int) -> float:
@@ -79,6 +170,7 @@ def get_readiness(
     days_rest: int = 7,
     manual: Optional[float] = None,
     news_sentiment: Optional[dict] = None,
+    manual_out: Optional[list] = None,
 ) -> dict:
     """Return a readiness assessment for a team.
 
@@ -115,17 +207,22 @@ def get_readiness(
     else:
         score = rest_score
 
-    # Small nudge from publicly reported availability news (capped, optional).
-    if news_sentiment and news_sentiment.get("flags"):
-        n = min(len(news_sentiment["flags"]), 3)
-        score -= 0.03 * n
-        sources.append("Public injury/availability news")
-        notes.append(f"{n} fitness/availability headline(s) flagged")
+    # Importance-weighted squad availability from PUBLIC injury news + roster.
+    avail = get_squad_availability(team, news_sentiment, manual_out)
+    if avail["flagged"]:
+        # Availability directly scales the score: losing key players hurts most.
+        score *= avail["availability"]
+        sources.append("Public injury/availability news (player-weighted)")
+        for fp in avail["flagged"]:
+            tag = {1.0: "OUT", 0.5: "doubt", 0.3: "injury"}.get(fp["severity"], "concern")
+            notes.append(f"{fp['player']} {tag} (imp {fp['importance']:.2f})")
 
     score = max(0.0, min(1.0, score))
     return {
         "score": round(score, 4),
         "multiplier": readiness_to_multiplier(score),
+        "availability": avail["availability"],
+        "flagged": avail["flagged"],
         "sources": sources,
         "notes": notes,
     }

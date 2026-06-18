@@ -1,0 +1,23 @@
+{
+  "_comment": "PUBLIC squad/lineup info: key players, position, and an importance weight (0-1) reflecting how much the team's strength depends on them. This is public roster data (names/positions only) plus your own importance judgement. It contains NO private health/biometric data. Availability is inferred at runtime from PUBLIC injury/availability news, never from personal trackers. Edit freely; teams with no entry simply skip player-weighting.",
+  "_schema": {"team": [{"name": "str", "pos": "GK|DEF|MID|FWD", "importance": "0-1 float"}]},
+  "england": [
+    {"name": "Jude Bellingham", "pos": "MID", "importance": 0.95},
+    {"name": "Harry Kane", "pos": "FWD", "importance": 0.95},
+    {"name": "Bukayo Saka", "pos": "FWD", "importance": 0.85},
+    {"name": "Declan Rice", "pos": "MID", "importance": 0.80},
+    {"name": "Phil Foden", "pos": "MID", "importance": 0.80},
+    {"name": "Jordan Pickford", "pos": "GK", "importance": 0.70},
+    {"name": "John Stones", "pos": "DEF", "importance": 0.65},
+    {"name": "Kyle Walker", "pos": "DEF", "importance": 0.60}
+  ],
+  "croatia": [
+    {"name": "Luka Modric", "pos": "MID", "importance": 0.95},
+    {"name": "Josko Gvardiol", "pos": "DEF", "importance": 0.85},
+    {"name": "Mateo Kovacic", "pos": "MID", "importance": 0.80},
+    {"name": "Marcelo Brozovic", "pos": "MID", "importance": 0.75},
+    {"name": "Ivan Perisic", "pos": "FWD", "importance": 0.70},
+    {"name": "Andrej Kramaric", "pos": "FWD", "importance": 0.70},
+    {"name": "Dominik Livakovic", "pos": "GK", "importance": 0.65}
+  ]
+}
