@@ -1,10 +1,30 @@
 """Football/Soccer prediction handler."""
 from src.sports.base import AbstractSport, PredictionResult
 from src.data.scrapers import fbref
-from src.data import news, market, readiness
+from src.data import news, market, readiness, momentum
 from src.models import dixon_coles, elo as elo_module, calibrator, ml_ensemble
 from src.market import edge as edge_mod, kelly as kelly_mod, odds as odds_mod
+import json
+import os
 import numpy as np
+
+_RECENT_ELO_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+    "data", "historical", "elo_ratings.json",
+)
+_RECENT_ELO_CACHE = None
+
+
+def _recent_elo() -> dict:
+    """Data-derived Elo from the last ~5 years (built by src.models.train)."""
+    global _RECENT_ELO_CACHE
+    if _RECENT_ELO_CACHE is None:
+        try:
+            with open(_RECENT_ELO_PATH, encoding="utf-8") as f:
+                _RECENT_ELO_CACHE = {k.lower(): v for k, v in json.load(f).items()}
+        except (FileNotFoundError, json.JSONDecodeError):
+            _RECENT_ELO_CACHE = {}
+    return _RECENT_ELO_CACHE
 
 
 COMPETITION_WEIGHTS = {
@@ -61,11 +81,17 @@ class FootballPredictor(AbstractSport):
         elo_predictor = elo_module.EloPredictor(default_elo=1700)
         for name, elo in self.TEAM_ELO.items():
             elo_predictor.set(name, elo)
-        # Also set from team data if available
+        # Static-seed / fbref override first...
         if home_data.get("elo"):
             elo_predictor.set(entity1.lower(), home_data["elo"])
         if away_data.get("elo"):
             elo_predictor.set(entity2.lower(), away_data["elo"])
+        # ...then overlay data-derived recent (last ~5y) Elo so it WINS.
+        recent_elo = _recent_elo()
+        for name, elo in recent_elo.items():
+            elo_predictor.set(name, elo)
+        if entity1.lower() in recent_elo or entity2.lower() in recent_elo:
+            sources.append("Recent Elo (last 5y, data-derived)")
 
         home_adv = 0 if is_neutral else HOME_ADVANTAGE_ELO
         elo_probs = elo_predictor.predict(entity1.lower(), entity2.lower(), home_advantage=home_adv)
@@ -106,6 +132,12 @@ class FootballPredictor(AbstractSport):
             injury_adj_away=injury_adj_away,
         )
 
+        # 4b. Momentum: winning/losing streaks + response to dropped points.
+        home_mom = momentum.get_momentum(entity1)
+        away_mom = momentum.get_momentum(entity2)
+        if entity1.lower() in momentum._load() or entity2.lower() in momentum._load():
+            sources.append("Momentum (streaks / bounce-back)")
+
         # 5. ML ensemble
         ctx_dict = {
             "h2h_home_win_rate": h2h.get("team1_win_rate", 0.35),
@@ -115,6 +147,10 @@ class FootballPredictor(AbstractSport):
             "away_days_rest": context.get("away_days_rest", 7),
             "competition_weight": comp_weight,
             "is_neutral": int(is_neutral),
+            "home_streak_norm": home_mom["streak_norm"],
+            "away_streak_norm": away_mom["streak_norm"],
+            "home_bounceback": home_mom["bounceback"],
+            "away_bounceback": away_mom["bounceback"],
         }
         features = ml_ensemble.build_football_features(home_data, away_data, ctx_dict)
         ml_model = ml_ensemble.MLEnsemble(sport="football", n_classes=3)
@@ -165,6 +201,7 @@ class FootballPredictor(AbstractSport):
         # 11. Key factors
         factors = _build_factors(home_data, away_data, h2h, entity1, entity2, competition)
         factors.extend(_readiness_factors(entity1, home_ready, entity2, away_ready))
+        factors.extend(_momentum_factors(entity1, home_mom, entity2, away_mom))
 
         return PredictionResult(
             sport="Football",
@@ -198,6 +235,23 @@ def _get_comp_weight(comp: str) -> float:
         if k in comp_lower:
             return v
     return 0.80
+
+
+def _momentum_factors(team1: str, m1: dict, team2: str, m2: dict) -> list:
+    """Describe streaks and bounce-back, only when notable."""
+    out = []
+    for team, m in ((team1, m1), (team2, m2)):
+        s = m.get("streak", 0)
+        if s >= 3:
+            out.append(f"{team} on a {s}-game winning streak")
+        elif s <= -3:
+            out.append(f"{team} on a {abs(s)}-game losing streak")
+        bb = m.get("bounceback", 0.5)
+        if bb >= 0.6:
+            out.append(f"{team} responds well after dropped points ({bb*100:.0f}% bounce-back)")
+        elif bb <= 0.3 and bb > 0:
+            out.append(f"{team} tends to spiral after dropped points ({bb*100:.0f}% bounce-back)")
+    return out
 
 
 def _readiness_factors(team1: str, r1: dict, team2: str, r2: dict) -> list:

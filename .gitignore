@@ -1,10 +1,11 @@
 # Runtime cache and user data (auto-created, not for version control)
 data/cache/
-data/historical/
 data/elo/
-data/models/
 data/trades.json
 data/watchlist.json
+# Note: data/historical/ (real openfootball dataset) and data/models/
+# (trained ensemble) ARE committed so predictions work out of the box.
+# Rebuild with: python -m src.data.build_dataset && python -m src.models.train
 
 # Python
 __pycache__/

@@ -157,6 +157,10 @@ def build_football_features(home_data: dict, away_data: dict, context: dict = No
         safe(home_data, "ranking", 50) / 100.0,         # 17: home ranking (normalized)
         safe(away_data, "ranking", 50) / 100.0,         # 18: away ranking
         float(ctx.get("is_neutral", 0)),                # 19: neutral venue
+        safe(ctx, "home_streak_norm", 0.0),             # 20: home win/loss streak (signed)
+        safe(ctx, "away_streak_norm", 0.0),             # 21: away win/loss streak
+        safe(ctx, "home_bounceback", 0.5),              # 22: home win rate after dropped pts
+        safe(ctx, "away_bounceback", 0.5),              # 23: away win rate after dropped pts
     ], dtype=np.float32)
 
     return features
