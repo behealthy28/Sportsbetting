@@ -1,7 +1,5 @@
 requests>=2.31.0
 rich>=13.7.0
-scikit-learn>=1.4.0
-xgboost>=2.0.0
 numpy>=1.26.0
 pandas>=2.2.0
 scipy>=1.12.0
@@ -16,3 +14,9 @@ feedparser>=6.0.0; python_version >= "3.9"
 py-clob-client>=0.17.0
 eth-account>=0.11.0
 anthropic>=0.92.0
+
+# Optional — only needed for the experimental ML ensemble (`train.py --ml`).
+# The shipped model is Dixon-Coles + Elo, which beats the ensemble on
+# international data, so these are NOT required for predictions.
+# scikit-learn>=1.4.0
+# xgboost>=2.0.0

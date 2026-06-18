@@ -21,30 +21,54 @@ import numpy as np
 from src.models.ml_ensemble import MLEnsemble, build_football_features, ML_AVAILABLE
 from src.models import backtest
 from src.data.momentum import streak_features
-from src.data.scrapers.elo_db import NATIONAL_TEAM_ELO
+from src.data.scrapers.elo_db import NATIONAL_TEAM_ELO, get_national_elo
 
 HIST_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
     "data", "historical",
 )
 COMPETITION_WEIGHTS = {
-    "world cup": 1.0, "euro": 0.95, "premier league": 0.85, "la liga": 0.85,
-    "serie a": 0.83, "bundesliga": 0.83, "ligue 1": 0.80, "league": 0.75,
+    "world cup": 1.0, "copa america": 0.95, "euro": 0.95, "afcon": 0.90,
+    "asian cup": 0.88, "nations league": 0.85, "world cup qualifier": 0.85,
+    "international": 0.75, "friendly": 0.50,
 }
 LABEL = {"away_win": 0, "draw": 1, "home_win": 2}
 MIN_HISTORY = 5         # games each team needs before we use a match
-RECENCY_YEARS = 5       # only train/rate on the last N years (current squad)
-CLUB_SEED = 1550.0      # warm-start for clubs not in the national seed table
+RECENCY_YEARS = 6       # only train/rate on the last N years (current squad)
 ELO_K = 24
 ELO_HA = 65
 
 
+# Dataset spellings -> seed-table keys.
+_ALIAS = {
+    "united states": "usa", "czechia": "czech republic",
+    "china pr": "china", "korea republic": "south korea",
+    "bosnia and herzegovina": "bosnia", "cape verde islands": "cape verde",
+    "côte d'ivoire": "ivory coast", "türkiye": "turkey",
+}
+DEFAULT_INTL = 1700.0   # neutral start for an international team with no seed
+
+
 def _seed_elo(team: str) -> float:
-    return float(NATIONAL_TEAM_ELO.get(team.lower(), CLUB_SEED))
+    key = _ALIAS.get(team.lower(), team.lower())
+    if key in NATIONAL_TEAM_ELO:
+        return float(NATIONAL_TEAM_ELO[key])
+    fuzzy = get_national_elo(key)
+    return float(fuzzy) if fuzzy is not None else DEFAULT_INTL
 
 
 def _expected(elo_a, elo_b):
     return 1.0 / (1.0 + 10 ** ((elo_b - elo_a) / 400.0))
+
+
+def _elo_only_probs(eh, ea, neutral):
+    """Simple Elo -> {away_win, draw, home_win} for a baseline comparison."""
+    diff = eh + (0 if neutral else ELO_HA) - ea
+    p_home_excl = 1.0 / (1.0 + 10 ** (-diff / 400.0))
+    draw = max(0.18, min(0.30, 0.29 - abs(diff) / 5000.0))
+    return {"away_win": (1 - p_home_excl) * (1 - draw),
+            "draw": draw,
+            "home_win": p_home_excl * (1 - draw)}
 
 
 def _team_features(hist, elo, team):
@@ -72,7 +96,7 @@ def _team_features(hist, elo, team):
 
 def build_training_matrix(matches):
     hist = defaultdict(lambda: deque(maxlen=15))
-    elo = defaultdict(lambda: CLUB_SEED)
+    elo = defaultdict(lambda: DEFAULT_INTL)
     # Warm-start every team that appears, from the seed table.
     for m in matches:
         for t in (m["home"], m["away"]):
@@ -84,7 +108,7 @@ def build_training_matrix(matches):
 
     for m in matches:
         home, away = m["home"], m["away"]
-        neutral = bool(m.get("international"))
+        neutral = bool(m.get("neutral"))   # real venue flag from the dataset
         comp_w = COMPETITION_WEIGHTS.get(m["competition"], 0.75)
 
         hd = _team_features(hist, elo, home)
@@ -110,8 +134,10 @@ def build_training_matrix(matches):
             feats = build_football_features(hd, ad, ctx)
             X.append(feats)
             y.append(LABEL[m["result"]])
-            # Hold out a chronological tail for honest evaluation.
-            eval_records.append({"feats": feats, "result": m["result"]})
+            # Hold out a chronological tail for honest evaluation; keep Elo
+            # inputs so we can compare ML vs an Elo-only baseline.
+            eval_records.append({"feats": feats, "result": m["result"],
+                                 "eh": elo[home], "ea": elo[away], "neutral": neutral})
 
         # ---- update state AFTER using the match (no leakage) ----
         hs, as_ = m["hs"], m["as"]
@@ -128,10 +154,13 @@ def build_training_matrix(matches):
     return np.array(X, dtype=np.float32), np.array(y), eval_records, dict(elo)
 
 
-def main():
-    if not ML_AVAILABLE:
-        print("xgboost/sklearn not available — cannot train.")
-        return
+def main(train_ml: bool = False):
+    """Compute the recent Elo ratings (always) and optionally evaluate ML.
+
+    The shipped model is Dixon-Coles + Elo: on international data Elo alone
+    beats the XGBoost+RF ensemble, so ML training is off by default. Pass
+    train_ml=True (or `--ml`) to fit/persist the ensemble for experimentation.
+    """
     with open(os.path.join(HIST_DIR, "matches.json"), encoding="utf-8") as f:
         matches = json.load(f)
     matches.sort(key=lambda x: x["date"])
@@ -142,35 +171,43 @@ def main():
           f"{RECENCY_YEARS}y (since {cutoff})")
 
     X, y, eval_records, final_elo = build_training_matrix(recent)
-    print(f"Training rows: {len(X)} (features={X.shape[1]})")
+    print(f"Training rows: {len(X)} (features={X.shape[1] if len(X) else 0})")
 
-    # Chronological split: train on first 85%, evaluate on the most recent 15%.
     split = int(len(X) * 0.85)
-    model = MLEnsemble(sport="football", n_classes=3)
-    model.fit(X[:split], y[:split])
-    print("Trained & persisted RF + XGBoost to data/models/")
-
-    # Honest out-of-sample calibration check (vectorised batch prediction).
     labels = ["away_win", "draw", "home_win"]
-    X_eval = np.array([r["feats"] for r in eval_records[split:]], dtype=np.float32)
-    recs = []
-    if len(X_eval):
+
+    # Elo-only out-of-sample baseline — always available, no ML deps needed.
+    base = [{"probs": _elo_only_probs(r["eh"], r["ea"], r["neutral"]),
+             "outcome": r["result"]} for r in eval_records[split:]]
+    brep = backtest.evaluate(base)
+    print(f"\nOut-of-sample ({len(base)} matches):")
+    print(f"  Elo-only    : Brier={brep['brier']} LogLoss={brep['log_loss']} ECE={brep['ece']}")
+
+    if train_ml and ML_AVAILABLE and len(X):
+        model = MLEnsemble(sport="football", n_classes=3)
+        model.fit(X[:split], y[:split])
+        X_eval = np.array([r["feats"] for r in eval_records[split:]], dtype=np.float32)
         Xs = model.scaler.transform(X_eval)
         proba = 0.55 * model.xgb_model.predict_proba(Xs) + 0.45 * model.rf.predict_proba(Xs)
         proba /= proba.sum(axis=1, keepdims=True)
-        for r, p in zip(eval_records[split:], proba):
-            recs.append({"probs": {labels[i]: float(p[i]) for i in range(3)},
-                         "outcome": r["result"]})
-    report = backtest.evaluate(recs)
-    print(f"\nOut-of-sample ({len(recs)} matches): "
-          f"Brier={report['brier']} LogLoss={report['log_loss']} ECE={report['ece']}")
+        recs = [{"probs": {labels[i]: float(p[i]) for i in range(3)}, "outcome": r["result"]}
+                for r, p in zip(eval_records[split:], proba)]
+        report = backtest.evaluate(recs)
+        d_brier = brep["brier"] - report["brier"]
+        verdict = ("ML helps" if d_brier > 0.002 else
+                   "ML ~ Elo (marginal)" if abs(d_brier) <= 0.002 else "Elo alone is better")
+        print(f"  ML ensemble : Brier={report['brier']} LogLoss={report['log_loss']} ECE={report['ece']}")
+        print(f"  Verdict     : {verdict} (Brier delta {d_brier:+.4f})")
+    elif train_ml and not ML_AVAILABLE:
+        print("  (ML requested but xgboost/sklearn unavailable — skipped)")
 
-    # Persist final running Elo as a real, data-derived seed table.
+    # Persist final running Elo as a real, data-derived rating table.
     elo_sorted = dict(sorted(final_elo.items(), key=lambda kv: -kv[1]))
     with open(os.path.join(HIST_DIR, "elo_ratings.json"), "w", encoding="utf-8") as f:
         json.dump({k: round(v, 1) for k, v in elo_sorted.items()}, f, indent=1)
-    print("Saved data-derived Elo ratings to data/historical/elo_ratings.json")
+    print(f"Saved {len(elo_sorted)} data-derived Elo ratings to data/historical/elo_ratings.json")
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    main(train_ml="--ml" in sys.argv)

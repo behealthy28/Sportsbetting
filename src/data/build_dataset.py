@@ -1,26 +1,34 @@
-"""Build a REAL historical match + player dataset from open-source data.
+"""Build a REAL international-only dataset for the current World Cup teams.
 
-Source: openfootball (https://github.com/openfootball), pulled via
-raw.githubusercontent.com. These are real, community-maintained results — no
-fabricated/synthetic data. Anything unreachable is simply skipped, so the
-dataset reflects exactly what was actually downloaded.
+Source: martj42/international_results (https://github.com/martj42/international_results),
+the canonical open dataset of every men's international since 1872, pulled via
+raw.githubusercontent.com. Real data only — no clubs, no fabrication.
+
+Scope (per user spec):
+  - INTERNATIONAL teams only (no club football).
+  - Restricted to teams in the CURRENT World Cup (auto-detected from the file's
+    2026 'FIFA World Cup' fixtures).
+  - Each team's most recent <=N_PER_TEAM played internationals.
 
 Outputs (under data/historical/):
-  matches.json       — every real match: date, competition, teams, score, result
-  team_last50.json   — per team, their most recent <=50 matches + rolling stats
-  player_goals.json  — real goal-scorer tallies (from World Cup/Euro goal feeds)
-  manifest.json      — what was fetched, counts, and provenance
+  matches.json       — real played internationals (date, comp, teams, score,
+                       result, neutral flag) involving current WC teams
+  team_last50.json   — per WC team, last <=N_PER_TEAM matches + rolling stats
+  player_goals.json  — real goal-scorer tallies (recent, WC teams)
+  wc_teams.json      — the detected current-WC participant list
+  manifest.json      — provenance + counts
 
 Run:  python -m src.data.build_dataset
 """
+import csv
+import io
 import json
 import os
-import time
 from collections import defaultdict
 
 import requests
 
-RAW = "https://raw.githubusercontent.com"
+RAW = "https://raw.githubusercontent.com/martj42/international_results/master"
 HEADERS = {"User-Agent": "Mozilla/5.0 (SportsBettingPredictor dataset builder)"}
 
 OUT_DIR = os.path.join(
@@ -28,138 +36,142 @@ OUT_DIR = os.path.join(
     "data", "historical",
 )
 
-# Competition weight mirrors the model's COMPETITION_WEIGHTS (importance).
-LEAGUES = ["en.1", "es.1", "de.1", "it.1", "fr.1", "en.2", "es.2", "pt.1", "nl.1"]
-LEAGUE_SEASONS = [f"{y}-{str(y + 1)[2:]}" for y in range(2011, 2025)]  # 2011-12 .. 2024-25
+N_PER_TEAM = 50          # most recent N internationals per team
+RECENCY_FROM = "2018-01-01"   # don't go further back than this
 
-WORLDCUP_YEARS = ["2010", "2014", "2018", "2022"]
-EURO_YEARS = ["2020", "2024"]
-
-
-def _get(url: str):
-    try:
-        r = requests.get(url, headers=HEADERS, timeout=15)
-        if r.status_code == 200:
-            return r.json()
-    except Exception:
-        pass
-    return None
-
-
-def _sources():
-    """Yield (url, competition, is_international)."""
-    for y in WORLDCUP_YEARS:
-        yield f"{RAW}/openfootball/worldcup.json/master/{y}/worldcup.json", "world cup", True
-    for y in EURO_YEARS:
-        yield f"{RAW}/openfootball/euro.json/master/{y}/euro.json", "euro", True
-    for season in LEAGUE_SEASONS:
-        for lg in LEAGUES:
-            comp = {"en.1": "premier league", "es.1": "la liga", "de.1": "bundesliga",
-                    "it.1": "serie a", "fr.1": "ligue 1"}.get(lg, "league")
-            yield f"{RAW}/openfootball/football.json/master/{season}/{lg}.json", comp, False
+# Tournament -> competition label used by the model's COMPETITION_WEIGHTS.
+def _competition(tournament: str) -> str:
+    t = tournament.lower()
+    if "world cup" in t and "qual" not in t:
+        return "world cup"
+    if "world cup qual" in t:
+        return "world cup qualifier"
+    if "euro" in t and "qual" not in t:
+        return "euro"
+    if "copa am" in t or "copa amé" in t:
+        return "copa america"
+    if "nations league" in t:
+        return "nations league"
+    if "african cup" in t and "qual" not in t:
+        return "afcon"
+    if "asian cup" in t and "qual" not in t:
+        return "asian cup"
+    if "friendly" in t:
+        return "friendly"
+    return "international"
 
 
-def _clean(team: str) -> str:
-    """Normalise team names to match the rest of the app (lower, drop FC/CF...)."""
-    t = team.strip()
-    for suffix in (" FC", " CF", " AFC", " SC", " BK", " FK"):
-        if t.endswith(suffix):
-            t = t[: -len(suffix)]
-    return t.strip()
+def _get_csv(name: str) -> list:
+    r = requests.get(f"{RAW}/{name}", headers=HEADERS, timeout=30)
+    r.raise_for_status()
+    return list(csv.DictReader(io.StringIO(r.text)))
 
 
 def _result(hs: int, as_: int) -> str:
     return "home_win" if hs > as_ else ("away_win" if as_ > hs else "draw")
 
 
+def _detect_wc_teams(rows: list) -> set:
+    """Teams appearing in the current (latest-year) FIFA World Cup fixtures."""
+    wc_years = sorted({r["date"][:4] for r in rows
+                       if r["tournament"] == "FIFA World Cup"})
+    if not wc_years:
+        return set()
+    latest = wc_years[-1]
+    teams = set()
+    for r in rows:
+        if r["tournament"] == "FIFA World Cup" and r["date"].startswith(latest):
+            teams.add(r["home_team"])
+            teams.add(r["away_team"])
+    return teams
+
+
 def build():
     os.makedirs(OUT_DIR, exist_ok=True)
-    matches = []
-    player_goals = defaultdict(lambda: {"goals": 0, "matches_scored_in": 0, "teams": set()})
-    fetched, missed = [], []
+    rows = _get_csv("results.csv")
+    wc_teams = _detect_wc_teams(rows)
 
-    for url, comp, is_intl in _sources():
-        data = _get(url)
-        if not data or "matches" not in data:
-            missed.append(url.replace(RAW, ""))
+    # Played matches involving a current WC team, within the recency window.
+    played = []
+    for r in rows:
+        if r["date"] < RECENCY_FROM:
             continue
-        n_before = len(matches)
-        for m in data["matches"]:
-            score = (m.get("score") or {}).get("ft")
-            if not score or len(score) != 2:
-                continue
-            try:
-                hs, as_ = int(score[0]), int(score[1])
-            except (TypeError, ValueError):
-                continue
-            home, away = _clean(m.get("team1", "")), _clean(m.get("team2", ""))
-            if not home or not away:
-                continue
-            matches.append({
-                "date": m.get("date", ""),
-                "competition": comp,
-                "international": is_intl,
-                "home": home, "away": away,
-                "hs": hs, "as": as_,
-                "result": _result(hs, as_),
-            })
-            # Real player goals (present in international tournament feeds).
-            for side, team in (("goals1", home), ("goals2", away)):
-                scorers = m.get(side) or []
-                seen = set()
-                for g in scorers:
-                    nm = (g.get("name") or "").strip()
-                    if not nm:
-                        continue
-                    player_goals[nm]["goals"] += 1
-                    player_goals[nm]["teams"].add(team)
-                    seen.add(nm)
-                for nm in seen:
-                    player_goals[nm]["matches_scored_in"] += 1
-        fetched.append({"src": url.replace(RAW, ""), "matches": len(matches) - n_before})
-        time.sleep(0.05)
+        if r["home_team"] not in wc_teams and r["away_team"] not in wc_teams:
+            continue
+        try:
+            hs, as_ = int(r["home_score"]), int(r["away_score"])
+        except (ValueError, KeyError):
+            continue  # NA = upcoming/unplayed
+        played.append({
+            "date": r["date"],
+            "competition": _competition(r["tournament"]),
+            "international": True,
+            "neutral": r.get("neutral", "").upper() == "TRUE",
+            "home": r["home_team"], "away": r["away_team"],
+            "hs": hs, "as": as_,
+            "result": _result(hs, as_),
+        })
+    played.sort(key=lambda x: x["date"])
 
-    matches.sort(key=lambda x: x["date"])
+    # Keep only each WC team's most recent N matches (union -> match set).
+    per_team = defaultdict(list)
+    for m in played:
+        per_team[m["home"]].append(m)
+        per_team[m["away"]].append(m)
+    keep_ids = set()
+    for team in wc_teams:
+        for m in per_team.get(team, [])[-N_PER_TEAM:]:
+            keep_ids.add(id(m))
+    matches = [m for m in played if id(m) in keep_ids]
     _write("matches.json", matches)
 
-    # Per-team last 50 + rolling stats.
-    by_team = defaultdict(list)
-    for m in matches:
-        by_team[m["home"]].append(m)
-        by_team[m["away"]].append(m)
+    # Per-team last-N + rolling stats (WC teams only).
     team_last50 = {}
-    for team, ms in by_team.items():
-        recent = sorted(ms, key=lambda x: x["date"])[-50:]
-        team_last50[team] = {
-            "n": len(recent),
-            "stats": _team_stats(team, recent),
-            "matches": recent,
-        }
+    for team in sorted(wc_teams):
+        recent = per_team.get(team, [])[-N_PER_TEAM:]
+        if recent:
+            team_last50[team] = {"n": len(recent),
+                                 "stats": _team_stats(team, recent),
+                                 "matches": recent}
     _write("team_last50.json", team_last50)
 
-    pg = {k: {"goals": v["goals"], "matches_scored_in": v["matches_scored_in"],
-              "teams": sorted(v["teams"])}
+    # Real goal scorers (recent, WC teams).
+    player_goals = defaultdict(lambda: {"goals": 0, "teams": set()})
+    try:
+        for g in _get_csv("goalscorers.csv"):
+            if g["date"] < RECENCY_FROM or g.get("own_goal", "").upper() == "TRUE":
+                continue
+            team = g.get("team", "")
+            if team not in wc_teams:
+                continue
+            nm = (g.get("scorer") or "").strip()
+            if nm:
+                player_goals[nm]["goals"] += 1
+                player_goals[nm]["teams"].add(team)
+    except Exception:
+        pass
+    pg = {k: {"goals": v["goals"], "teams": sorted(v["teams"])}
           for k, v in sorted(player_goals.items(), key=lambda kv: -kv[1]["goals"])}
     _write("player_goals.json", pg)
+    _write("wc_teams.json", sorted(wc_teams))
 
     manifest = {
-        "source": "openfootball via raw.githubusercontent.com (real data)",
+        "source": "martj42/international_results via raw.githubusercontent (real data)",
+        "scope": "international only · current World Cup teams · no clubs",
+        "wc_teams": len(wc_teams),
+        "n_per_team": N_PER_TEAM,
         "total_matches": len(matches),
-        "total_teams": len(team_last50),
         "total_scorers": len(pg),
-        "files_fetched": [f for f in fetched if f["matches"] > 0],
-        "files_missed": len(missed),
         "date_range": [matches[0]["date"], matches[-1]["date"]] if matches else [],
     }
     _write("manifest.json", manifest)
-    print(f"Built: {len(matches)} matches | {len(team_last50)} teams | {len(pg)} scorers")
+    print(f"WC teams detected: {len(wc_teams)}")
+    print(f"Built: {len(matches)} real international matches | {len(pg)} scorers")
     print(f"Date range: {manifest['date_range']}")
     return manifest
 
 
 def _team_stats(team: str, recent: list) -> dict:
-    if not recent:
-        return {}
     gf = ga = wins = draws = 0
     for m in recent:
         if m["home"] == team:

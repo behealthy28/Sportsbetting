@@ -1,3553 +1,7887 @@
 {
- "Kane": {
-  "goals": 12,
-  "matches_scored_in": 8,
+ "Harry Kane": {
+  "goals": 63,
   "teams": [
    "England"
   ]
  },
- "Lionel Messi": {
-  "goals": 11,
-  "matches_scored_in": 9,
-  "teams": [
-   "Argentina"
-  ]
- },
- "Ronaldo": {
-  "goals": 9,
-  "matches_scored_in": 5,
+ "Cristiano Ronaldo": {
+  "goals": 57,
   "teams": [
    "Portugal"
   ]
  },
- "Kylian Mbappé": {
-  "goals": 8,
-  "matches_scored_in": 4,
-  "teams": [
-   "France"
-  ]
- },
- "Neymar": {
-  "goals": 7,
-  "matches_scored_in": 5,
-  "teams": [
-   "Brazil"
-  ]
- },
- "Enner Valencia": {
-  "goals": 6,
-  "matches_scored_in": 4,
-  "teams": [
-   "Ecuador"
-  ]
- },
- "Lukaku": {
-  "goals": 6,
-  "matches_scored_in": 4,
+ "Romelu Lukaku": {
+  "goals": 48,
   "teams": [
    "Belgium"
   ]
  },
- "Schick": {
-  "goals": 6,
-  "matches_scored_in": 5,
+ "Erling Haaland": {
+  "goals": 48,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Kylian Mbappé": {
+  "goals": 46,
+  "teams": [
+   "France"
+  ]
+ },
+ "Memphis Depay": {
+  "goals": 39,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Almoez Ali": {
+  "goals": 34,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Lionel Messi": {
+  "goals": 32,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Marko Arnautović": {
+  "goals": 28,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Mehdi Taremi": {
+  "goals": 25,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Sardar Azmoun": {
+  "goals": 24,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Andrej Kramarić": {
+  "goals": 23,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Son Heung-min": {
+  "goals": 22,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Lautaro Martínez": {
+  "goals": 22,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Patrik Schick": {
+  "goals": 21,
   "teams": [
    "Czech Republic"
   ]
  },
- "James Rodríguez": {
-  "goals": 5,
-  "matches_scored_in": 4,
+ "Álvaro Morata": {
+  "goals": 21,
   "teams": [
-   "Colombia"
+   "Spain"
   ]
  },
- "Olivier Giroud": {
-  "goals": 5,
-  "matches_scored_in": 4,
+ "Alexander Sørloth": {
+  "goals": 21,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Ferran Torres": {
+  "goals": 21,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Mohamed Salah": {
+  "goals": 20,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Kevin De Bruyne": {
+  "goals": 20,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Edin Džeko": {
+  "goals": 20,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Antoine Griezmann": {
+  "goals": 19,
   "teams": [
    "France"
   ]
  },
- "Thomas Müller": {
-  "goals": 5,
-  "matches_scored_in": 3,
+ "Georginio Wijnaldum": {
+  "goals": 19,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Akram Afif": {
+  "goals": 19,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Jonathan David": {
+  "goals": 19,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "John McGinn": {
+  "goals": 19,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Bruno Fernandes": {
+  "goals": 19,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Cody Gakpo": {
+  "goals": 19,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Aymen Hussein": {
+  "goals": 19,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Luis Suárez": {
+  "goals": 18,
+  "teams": [
+   "Colombia",
+   "Uruguay"
+  ]
+ },
+ "Sadio Mané": {
+  "goals": 18,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Olivier Giroud": {
+  "goals": 18,
+  "teams": [
+   "France"
+  ]
+ },
+ "Serge Gnabry": {
+  "goals": 18,
   "teams": [
    "Germany"
   ]
  },
- "Mbappé": {
-  "goals": 5,
-  "matches_scored_in": 4,
+ "Mikel Oyarzabal": {
+  "goals": 18,
   "teams": [
-   "France"
+   "Spain"
   ]
  },
- "Shaqiri": {
-  "goals": 5,
-  "matches_scored_in": 4,
+ "Cyle Larin": {
+  "goals": 18,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Viktor Gyökeres": {
+  "goals": 18,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Ivan Perišić": {
+  "goals": 17,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Raheem Sterling": {
+  "goals": 17,
+  "teams": [
+   "England"
+  ]
+ },
+ "Takumi Minamino": {
+  "goals": 17,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Marcel Sabitzer": {
+  "goals": 17,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Luis Díaz": {
+  "goals": 17,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Neymar": {
+  "goals": 16,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Eldor Shomurodov": {
+  "goals": 16,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Breel Embolo": {
+  "goals": 16,
   "teams": [
    "Switzerland"
   ]
  },
- "Ivan Perišić": {
-  "goals": 4,
-  "matches_scored_in": 4,
+ "Michael Gregoritsch": {
+  "goals": 16,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Kai Havertz": {
+  "goals": 16,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Yuya Osako": {
+  "goals": 15,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Luka Modrić": {
+  "goals": 14,
   "teams": [
    "Croatia"
   ]
  },
- "Mario Mandžukić": {
-  "goals": 4,
-  "matches_scored_in": 3,
+ "Michy Batshuayi": {
+  "goals": 14,
   "teams": [
-   "Croatia"
+   "Belgium"
   ]
  },
- "Robin Van Persie": {
-  "goals": 4,
-  "matches_scored_in": 3,
+ "Marcus Rashford": {
+  "goals": 14,
+  "teams": [
+   "England"
+  ]
+ },
+ "Timo Werner": {
+  "goals": 14,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Enner Valencia": {
+  "goals": 14,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "Kerem Aktürkoğlu": {
+  "goals": 14,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Scott McTominay": {
+  "goals": 14,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Chris Wood": {
+  "goals": 14,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Salem Al-Dawsari": {
+  "goals": 13,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Emil Forsberg": {
+  "goals": 13,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Alexander Isak": {
+  "goals": 13,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "İlkay Gündoğan": {
+  "goals": 13,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Duckens Nazon": {
+  "goals": 13,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Christoph Baumgartner": {
+  "goals": 13,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Saleh Al-Shehri": {
+  "goals": 13,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Haris Seferovic": {
+  "goals": 12,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Hakan Çalhanoğlu": {
+  "goals": 12,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Bernardo Silva": {
+  "goals": 12,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Leroy Sané": {
+  "goals": 12,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Raúl Jiménez": {
+  "goals": 12,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Riyad Mahrez": {
+  "goals": 12,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Tomáš Souček": {
+  "goals": 12,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Diogo Jota": {
+  "goals": 12,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Bukayo Saka": {
+  "goals": 12,
+  "teams": [
+   "England"
+  ]
+ },
+ "Ayoub El Kaabi": {
+  "goals": 12,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Ismael Díaz": {
+  "goals": 12,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Ayase Ueda": {
+  "goals": 12,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Yazan Al-Naimat": {
+  "goals": 12,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Viktor Claesson": {
+  "goals": 11,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Mohanad Ali": {
+  "goals": 11,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Musa Al-Taamari": {
+  "goals": 11,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Jamie Maclaren": {
+  "goals": 11,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Lucas Cavallini": {
+  "goals": 11,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Jordan Ayew": {
+  "goals": 11,
+  "teams": [
+   "Ghana"
+  ]
+ },
+ "Richarlison": {
+  "goals": 11,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Donyell Malen": {
+  "goals": 11,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Denzel Dumfries": {
+  "goals": 11,
   "teams": [
    "Netherlands"
   ]
  },
  "Xherdan Shaqiri": {
-  "goals": 4,
-  "matches_scored_in": 2,
+  "goals": 10,
   "teams": [
    "Switzerland"
   ]
  },
- "Cheryshev": {
-  "goals": 4,
-  "matches_scored_in": 3,
-  "teams": [
-   "Russia",
-   "Uruguay"
-  ]
- },
- "Modrić": {
-  "goals": 4,
-  "matches_scored_in": 4,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Perišić": {
-  "goals": 4,
-  "matches_scored_in": 4,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Julián Álvarez": {
-  "goals": 4,
-  "matches_scored_in": 3,
-  "teams": [
-   "Argentina"
-  ]
- },
- "Forsberg": {
-  "goals": 4,
-  "matches_scored_in": 3,
-  "teams": [
-   "Sweden"
-  ]
- },
- "Morata": {
-  "goals": 4,
-  "matches_scored_in": 4,
-  "teams": [
-   "Spain"
-  ]
- },
- "Lewandowski": {
-  "goals": 4,
-  "matches_scored_in": 3,
-  "teams": [
-   "Poland"
-  ]
- },
- "Havertz": {
-  "goals": 4,
-  "matches_scored_in": 4,
-  "teams": [
-   "Germany"
-  ]
- },
- "Benzema": {
-  "goals": 4,
-  "matches_scored_in": 2,
-  "teams": [
-   "France"
-  ]
- },
- "Arjen Robben": {
-  "goals": 3,
-  "matches_scored_in": 2,
-  "teams": [
-   "Netherlands"
-  ]
- },
- "Memphis Depay": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "Netherlands"
-  ]
- },
- "Edinson Cavani": {
-  "goals": 3,
-  "matches_scored_in": 2,
-  "teams": [
-   "Uruguay"
-  ]
- },
- "Karim Benzema": {
-  "goals": 3,
-  "matches_scored_in": 2,
-  "teams": [
-   "France"
-  ]
- },
- "André Ayew": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "Ghana"
-  ]
- },
- "Dzyuba": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "Russia"
-  ]
- },
- "Griezmann": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "France"
-  ]
- },
- "Poulsen": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "Denmark"
-  ]
- },
- "Harry Kane": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "England"
-  ]
- },
- "Andrej Kramarić": {
-  "goals": 3,
-  "matches_scored_in": 2,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Cody Gakpo": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "Netherlands"
-  ]
- },
- "Bukayo Saka": {
-  "goals": 3,
-  "matches_scored_in": 2,
-  "teams": [
-   "England"
-  ]
- },
- "Álvaro Morata": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "Spain"
-  ]
- },
- "Richarlison": {
-  "goals": 3,
-  "matches_scored_in": 2,
-  "teams": [
-   "Brazil"
-  ]
- },
- "Gonçalo Ramos": {
-  "goals": 3,
-  "matches_scored_in": 1,
-  "teams": [
-   "Portugal"
-  ]
- },
- "Demiral": {
-  "goals": 3,
-  "matches_scored_in": 2,
-  "teams": [
-   "Italy",
-   "Turkey"
-  ]
- },
- "Embolo": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "Switzerland"
-  ]
- },
- "Seferovic": {
-  "goals": 3,
-  "matches_scored_in": 2,
-  "teams": [
-   "Switzerland"
-  ]
- },
- "Wijnaldum": {
-  "goals": 3,
-  "matches_scored_in": 2,
-  "teams": [
-   "Netherlands"
-  ]
- },
- "Yaremchuk": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "Ukraine"
-  ]
- },
- "Depay": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "Netherlands"
-  ]
- },
- "Sterling": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "England"
-  ]
- },
- "Dolberg": {
-  "goals": 3,
-  "matches_scored_in": 2,
-  "teams": [
-   "Denmark"
-  ]
- },
- "Musiala": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "Germany"
-  ]
- },
- "Gakpo": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "Netherlands"
-  ]
- },
- "Malen": {
-  "goals": 3,
-  "matches_scored_in": 2,
-  "teams": [
-   "Austria",
-   "Netherlands"
-  ]
- },
- "Schranz": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "Slovakia"
-  ]
- },
- "Mikautadze": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "Georgia"
-  ]
- },
- "Olmo": {
-  "goals": 3,
-  "matches_scored_in": 3,
-  "teams": [
-   "Spain"
-  ]
- },
- "Oscar": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Brazil"
-  ]
- },
- "Fernandinho": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Belgium",
-   "Brazil"
-  ]
- },
- "Alexis Sánchez": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Chile"
-  ]
- },
- "Wilfried Bony": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Côte d'Ivoire"
-  ]
- },
- "Gervinho": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Côte d'Ivoire"
-  ]
- },
- "Jackson Martínez": {
-  "goals": 2,
-  "matches_scored_in": 1,
-  "teams": [
-   "Colombia"
-  ]
- },
- "Luis Suárez": {
-  "goals": 2,
-  "matches_scored_in": 1,
-  "teams": [
-   "Uruguay"
-  ]
- },
- "Bryan Ruiz": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Costa Rica"
-  ]
- },
- "Ahmed Musa": {
-  "goals": 2,
-  "matches_scored_in": 1,
-  "teams": [
-   "Nigeria"
-  ]
- },
- "Marcos Rojo": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Argentina"
-  ]
- },
- "Mats Hummels": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Germany"
-  ]
- },
- "Clint Dempsey": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "USA"
-  ]
- },
- "Mario Götze": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Germany"
-  ]
- },
- "Miroslav Klose": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Germany"
-  ]
- },
- "Asamoah Gyan": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Ghana"
-  ]
- },
- "Cristiano Ronaldo": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Portugal"
-  ]
- },
- "Marouane Fellaini": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Eden Hazard": {
+  "goals": 10,
   "teams": [
    "Belgium"
   ]
  },
- "Islam Slimani": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Algeria"
-  ]
- },
- "Abdelmoumene Djabou": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Algeria"
-  ]
- },
- "Jan Vertonghen": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Belgium"
-  ]
- },
- "David Luiz": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Brazil"
-  ]
- },
- "Kevin De Bruyne": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Belgium"
-  ]
- },
- "Thiago Silva": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Brazil"
-  ]
- },
- "Toni Kroos": {
-  "goals": 2,
-  "matches_scored_in": 1,
-  "teams": [
-   "Germany"
-  ]
- },
- "Andre Schürrle": {
-  "goals": 2,
-  "matches_scored_in": 1,
-  "teams": [
-   "Germany"
-  ]
- },
- "Daley Blind": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Netherlands"
-  ]
- },
- "M. Salah": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Egypt"
-  ]
- },
- "L. Suárez": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Uruguay"
-  ]
- },
- "Costa": {
-  "goals": 2,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Jedinak": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Australia"
-  ]
- },
- "Eriksen": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Denmark"
-  ]
- },
- "Musa": {
-  "goals": 2,
-  "matches_scored_in": 1,
-  "teams": [
-   "Nigeria"
-  ]
- },
- "Granqvist": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Sweden"
-  ]
- },
- "Son Heung-min": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "South Korea"
-  ]
- },
- "Kim Young-gwon": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "South Korea"
-  ]
- },
- "E. Hazard": {
-  "goals": 2,
-  "matches_scored_in": 1,
-  "teams": [
-   "Belgium"
-  ]
- },
- "R. Lukaku": {
-  "goals": 2,
-  "matches_scored_in": 1,
-  "teams": [
-   "Belgium"
-  ]
- },
- "Stones": {
-  "goals": 2,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Wahbi Khazri": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Tunisia"
-  ]
- },
- "Y. Mina": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Colombia"
-  ]
- },
- "Antoine Griezmann": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "France"
-  ]
- },
- "Ángel Di María": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Argentina"
-  ]
- },
- "Pepe": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Portugal"
-  ]
- },
- "Mandžukić": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Croatia",
-   "France"
-  ]
- },
- "Pogba": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "France"
-  ]
- },
- "Mehdi Taremi": {
-  "goals": 2,
-  "matches_scored_in": 1,
+ "Karim Ansarifard": {
+  "goals": 10,
   "teams": [
    "Iran"
   ]
  },
- "Rashford": {
-  "goals": 2,
-  "matches_scored_in": 1,
+ "Hwang Hee-chan": {
+  "goals": 10,
   "teams": [
-   "England"
+   "South Korea"
   ]
  },
- "Robert Lewandowski": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Youri Tielemans": {
+  "goals": 10,
   "teams": [
-   "Poland"
+   "Belgium"
   ]
  },
- "Enzo Fernández": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Robin Quaison": {
+  "goals": 10,
   "teams": [
-   "Argentina",
-   "Australia"
+   "Sweden"
   ]
  },
- "Ferran Torres": {
-  "goals": 2,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Niclas Füllkrug": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Germany"
-  ]
- },
- "Kai Lukas Havertz": {
-  "goals": 2,
-  "matches_scored_in": 1,
-  "teams": [
-   "Germany"
-  ]
- },
- "Youssef En-Nesyri": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Morocco"
-  ]
- },
- "Breel Embolo": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Remo Freuler": {
+  "goals": 10,
   "teams": [
    "Switzerland"
   ]
  },
- "Vincent Aboubakar": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Frantzdy Pierrot": {
+  "goals": 10,
   "teams": [
-   "Cameroon"
+   "Haiti"
   ]
  },
- "Aleksandar Mitrović": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Christian Pulisic": {
+  "goals": 10,
   "teams": [
-   "Serbia"
+   "United States"
   ]
  },
- "Freuler": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Baghdad Bounedjah": {
+  "goals": 10,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Ismaïla Sarr": {
+  "goals": 10,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Islam Slimani": {
+  "goals": 10,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Dani Olmo": {
+  "goals": 10,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Lyndon Dykes": {
+  "goals": 10,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Wout Weghorst": {
+  "goals": 10,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Karim Benzema": {
+  "goals": 10,
+  "teams": [
+   "France"
+  ]
+ },
+ "Mikel Merino": {
+  "goals": 10,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Ali Olwan": {
+  "goals": 10,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Wahbi Khazri": {
+  "goals": 9,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Edinson Cavani": {
+  "goals": 9,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Youssef En-Nesyri": {
+  "goals": 9,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Sergio Ramos": {
+  "goals": 9,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Virgil van Dijk": {
+  "goals": 9,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Cenk Tosun": {
+  "goals": 9,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Nikola Vlašić": {
+  "goals": 9,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Bruno Petković": {
+  "goals": 9,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Harry Souttar": {
+  "goals": 9,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Mohammad Mohebi": {
+  "goals": 9,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Daichi Kamada": {
+  "goals": 9,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Jackson Irvine": {
+  "goals": 9,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "João Félix": {
+  "goals": 9,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Mario Pašalić": {
+  "goals": 9,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Cecilio Waterman": {
+  "goals": 9,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Giorgian de Arrascaeta": {
+  "goals": 9,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Firas Al-Buraikan": {
+  "goals": 9,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Raphinha": {
+  "goals": 9,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Zeki Amdouni": {
+  "goals": 9,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Ritsu Dōan": {
+  "goals": 8,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Alireza Jahanbakhsh": {
+  "goals": 8,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Hassan Al-Haydos": {
+  "goals": 8,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Leon Goretzka": {
+  "goals": 8,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Junior Hoilett": {
+  "goals": 8,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Trézéguet": {
+  "goals": 8,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Ryan Christie": {
+  "goals": 8,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "João Cancelo": {
+  "goals": 8,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Darwin Núñez": {
+  "goals": 8,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "José Fajardo": {
+  "goals": 8,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Leandro Trossard": {
+  "goals": 8,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Mitchell Duke": {
+  "goals": 8,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Lucas Paquetá": {
+  "goals": 8,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Jamal Musiala": {
+  "goals": 8,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Elijah Just": {
+  "goals": 8,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Jesús Ferreira": {
+  "goals": 8,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Gonçalo Ramos": {
+  "goals": 8,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Lee Kang-in": {
+  "goals": 8,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Mohamed Amoura": {
+  "goals": 8,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Philippe Coutinho": {
+  "goals": 7,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Granit Xhaka": {
+  "goals": 7,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Ángel Di María": {
+  "goals": 7,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Roberto Firmino": {
+  "goals": 7,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Thorgan Hazard": {
+  "goals": 7,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Abdulaziz Hatem": {
+  "goals": 7,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Burak Yılmaz": {
+  "goals": 7,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Cengiz Ünder": {
+  "goals": 7,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Eric Davis": {
+  "goals": 7,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Cédric Bakambu": {
+  "goals": 7,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Thomas Partey": {
+  "goals": 7,
+  "teams": [
+   "Ghana"
+  ]
+ },
+ "Konrad Laimer": {
+  "goals": 7,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Pablo Sarabia": {
+  "goals": 7,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Jérémy Doku": {
+  "goals": 7,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Martin Boyle": {
+  "goals": 7,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Tajon Buchanan": {
+  "goals": 7,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Mostafa Mohamed": {
+  "goals": 7,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Sébastien Haller": {
+  "goals": 7,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Mohammed Kudus": {
+  "goals": 7,
+  "teams": [
+   "Ghana"
+  ]
+ },
+ "Adrien Rabiot": {
+  "goals": 7,
+  "teams": [
+   "France"
+  ]
+ },
+ "Craig Goodwin": {
+  "goals": 7,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Ben Waine": {
+  "goals": 7,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Vinícius Júnior": {
+  "goals": 7,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Yoane Wissa": {
+  "goals": 7,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Julián Álvarez": {
+  "goals": 7,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Randal Kolo Muani": {
+  "goals": 7,
+  "teams": [
+   "France"
+  ]
+ },
+ "Abbosbek Fayzullaev": {
+  "goals": 7,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Florian Wirtz": {
+  "goals": 7,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Dries Mertens": {
+  "goals": 6,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Marco Reus": {
+  "goals": 6,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Harry Maguire": {
+  "goals": 6,
+  "teams": [
+   "England"
+  ]
+ },
+ "Rodrigo": {
+  "goals": 6,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Mario Gavranović": {
+  "goals": 6,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Mohamed Elyounoussi": {
+  "goals": 6,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Fahad Al-Muwallad": {
+  "goals": 6,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Miralem Pjanić": {
+  "goals": 6,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Gabriel Torres": {
+  "goals": 6,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "André Ayew": {
+  "goals": 6,
+  "teams": [
+   "Ghana"
+  ]
+ },
+ "Baha' Faisal": {
+  "goals": 6,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Kingsley Coman": {
+  "goals": 6,
+  "teams": [
+   "France"
+  ]
+ },
+ "Kim Shin-wook": {
+  "goals": 6,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Ruben Vargas": {
+  "goals": 6,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Ángel Romero": {
+  "goals": 6,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Michael Estrada": {
+  "goals": 6,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "Gonzalo Plata": {
+  "goals": 6,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "James Rodríguez": {
+  "goals": 6,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Declan Rice": {
+  "goals": 6,
+  "teams": [
+   "England"
+  ]
+ },
+ "Davy Klaassen": {
+  "goals": 6,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Alphonso Davies": {
+  "goals": 6,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Hidemasa Morita": {
+  "goals": 6,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Junya Ito": {
+  "goals": 6,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Miguel Borja": {
+  "goals": 6,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Mehdi Ghayedi": {
+  "goals": 6,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Rolando Blackburn": {
+  "goals": 6,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Orbelín Pineda": {
+  "goals": 6,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Famara Diédhiou": {
+  "goals": 6,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Franck Kessié": {
+  "goals": 6,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Serdar Dursun": {
+  "goals": 6,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Habib Diallo": {
+  "goals": 6,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Merih Demiral": {
+  "goals": 6,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Lee Jae-sung": {
+  "goals": 6,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Joshua Kimmich": {
+  "goals": 6,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Joselu": {
+  "goals": 6,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Lamine Yamal": {
+  "goals": 6,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Kusini Yengi": {
+  "goals": 6,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Brahim Díaz": {
+  "goals": 6,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Steven Zuber": {
+  "goals": 5,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Toni Kroos": {
+  "goals": 5,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Yerry Mina": {
+  "goals": 5,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Salman Al-Faraj": {
+  "goals": 5,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Thomas Meunier": {
+  "goals": 5,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "André Silva": {
+  "goals": 5,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "James Forrest": {
+  "goals": 5,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Hwang Ui-jo": {
+  "goals": 5,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Jaloliddin Masharipov": {
+  "goals": 5,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Joshua King": {
+  "goals": 5,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Uriel Antuna": {
+  "goals": 5,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Gyasi Zardes": {
+  "goals": 5,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Ángel Mena": {
+  "goals": 5,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "Youssef Msakni": {
+  "goals": 5,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Mathew Leckie": {
+  "goals": 5,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Christian Benteke": {
+  "goals": 5,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Gerard Moreno": {
+  "goals": 5,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Cedric Itten": {
+  "goals": 5,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Mason Mount": {
+  "goals": 5,
+  "teams": [
+   "England"
+  ]
+ },
+ "Fabián Ruiz": {
+  "goals": 5,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Steven Bergwijn": {
+  "goals": 5,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Nicolás González": {
+  "goals": 5,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Dejan Kulusevski": {
+  "goals": 5,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Smail Prevljak": {
+  "goals": 5,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Juninho Bacuna": {
+  "goals": 5,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Hans Vanaken": {
+  "goals": 5,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Kenji Gorré": {
+  "goals": 5,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "José Luis Rodríguez": {
+  "goals": 5,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Henry Martín": {
+  "goals": 5,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Halil Dervişoğlu": {
+  "goals": 5,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Antonio Sanabria": {
+  "goals": 5,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Federico Valverde": {
+  "goals": 5,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Achraf Hakimi": {
+  "goals": 5,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Omar Marmoush": {
+  "goals": 5,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Lovro Majer": {
+  "goals": 5,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Cho Gue-sung": {
+  "goals": 5,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Azzedine Ounahi": {
+  "goals": 5,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Jude Bellingham": {
+  "goals": 5,
+  "teams": [
+   "England"
+  ]
+ },
+ "Niclas Füllkrug": {
+  "goals": 5,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Ladislav Krejčí": {
+  "goals": 5,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Václav Černý": {
+  "goals": 5,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Arda Güler": {
+  "goals": 5,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Nico Williams": {
+  "goals": 5,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Takefusa Kubo": {
+  "goals": 5,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Gervane Kastaneer": {
+  "goals": 5,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Kosta Barbarouses": {
+  "goals": 5,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Xavi Simons": {
+  "goals": 5,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Tijjani Reijnders": {
+  "goals": 5,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Pavel Šulc": {
+  "goals": 5,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Oh Hyeon-gyu": {
+  "goals": 5,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Antonio Nusa": {
+  "goals": 5,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Ismael Saibari": {
+  "goals": 5,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Thelo Aasgaard": {
+  "goals": 5,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Amad Diallo": {
+  "goals": 5,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Sergio Agüero": {
+  "goals": 4,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Ferjani Sassi": {
+  "goals": 4,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Jesse Lingard": {
+  "goals": 4,
+  "teams": [
+   "England"
+  ]
+ },
+ "Kim Young-gwon": {
+  "goals": 4,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Genki Haraguchi": {
+  "goals": 4,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Paco Alcácer": {
+  "goals": 4,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Bjørn Maars Johnsen": {
+  "goals": 4,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Ryan Fraser": {
+  "goals": 4,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Marcus Berg": {
+  "goals": 4,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Awer Mabil": {
+  "goals": 4,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Boualem Khoukhi": {
+  "goals": 4,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Rade Krunić": {
+  "goals": 4,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Ross Barkley": {
+  "goals": 4,
+  "teams": [
+   "England"
+  ]
+ },
+ "Kaan Ayhan": {
+  "goals": 4,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Gonçalo Guedes": {
+  "goals": 4,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Alexis Vega": {
+  "goals": 4,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Yoel Bárcenas": {
+  "goals": 4,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Leandro Bacuna": {
+  "goals": 4,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Casemiro": {
+  "goals": 4,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Weston McKennie": {
+  "goals": 4,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Max Gradel": {
+  "goals": 4,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Sofiane Feghouli": {
+  "goals": 4,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Amer Gojak": {
+  "goals": 4,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Ozan Tufan": {
+  "goals": 4,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Luuk de Jong": {
+  "goals": 4,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Kwon Chang-hoon": {
+  "goals": 4,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Igor Sergeev": {
+  "goals": 4,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Stuart Armstrong": {
+  "goals": 4,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Stefan Posch": {
+  "goals": 4,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Adam Taggart": {
+  "goals": 4,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Takuma Asano": {
+  "goals": 4,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Otabek Shukurov": {
+  "goals": 4,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Yannick Carrasco": {
+  "goals": 4,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Silvan Widmer": {
+  "goals": 4,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Marquinhos": {
+  "goals": 4,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Kenan Karaman": {
+  "goals": 4,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Mateo Kovačić": {
+  "goals": 4,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Saša Kalajdžić": {
+  "goals": 4,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Ousmane Dembélé": {
+  "goals": 4,
+  "teams": [
+   "France"
+  ]
+ },
+ "Ché Adams": {
+  "goals": 4,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Ajdin Hrustic": {
+  "goals": 4,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Carnejy Antoine": {
+  "goals": 4,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Rangelo Janga": {
+  "goals": 4,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "İrfan Kahveci": {
+  "goals": 4,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Rogelio Funes Mori": {
+  "goals": 4,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "César Yanis": {
+  "goals": 4,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Dieumerci Mbokani": {
+  "goals": 4,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Félix Torres": {
+  "goals": 4,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "Carlos Soler": {
+  "goals": 4,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Jonas Hofmann": {
+  "goals": 4,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Marko Livaja": {
+  "goals": 4,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Jamiro Monteiro": {
+  "goals": 4,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Joško Gvardiol": {
+  "goals": 4,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Thomas Müller": {
+  "goals": 4,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Ibrahim Sangaré": {
+  "goals": 4,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Jack Grealish": {
+  "goals": 4,
+  "teams": [
+   "England"
+  ]
+ },
+ "Teboho Mokoena": {
+  "goals": 4,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Evidence Makgopa": {
+  "goals": 4,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Ryan Mendes": {
+  "goals": 4,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Charles De Ketelaere": {
+  "goals": 4,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Renato Steffen": {
+  "goals": 4,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Sofiane Boufal": {
+  "goals": 4,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Ryan Mmaee": {
+  "goals": 4,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Alexander Djiku": {
+  "goals": 4,
+  "teams": [
+   "Ghana"
+  ]
+ },
+ "Rodrygo": {
+  "goals": 4,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Ricardo Horta": {
+  "goals": 4,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Gavi": {
+  "goals": 4,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Anthony Elanga": {
+  "goals": 4,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Ermedin Demirović": {
+  "goals": 4,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Manuel Akanji": {
+  "goals": 4,
   "teams": [
    "Switzerland"
   ]
  },
  "Rafael Leão": {
-  "goals": 2,
-  "matches_scored_in": 2,
+  "goals": 4,
   "teams": [
    "Portugal"
   ]
  },
- "Cho Gue-sung": {
-  "goals": 2,
-  "matches_scored_in": 1,
+ "Ramin Rezaeian": {
+  "goals": 4,
   "teams": [
-   "South Korea"
+   "Iran"
   ]
  },
- "Mohammed Kudus": {
-  "goals": 2,
-  "matches_scored_in": 1,
+ "Hakim Ziyech": {
+  "goals": 4,
   "teams": [
-   "Ghana"
+   "Morocco"
   ]
  },
- "Bruno Fernandes": {
-  "goals": 2,
-  "matches_scored_in": 1,
+ "Seko Fofana": {
+  "goals": 4,
   "teams": [
-   "Portugal"
+   "Ivory Coast"
   ]
  },
- "Giorgian De Arrascaeta": {
-  "goals": 2,
-  "matches_scored_in": 1,
+ "Pape Matar Sarr": {
+  "goals": 4,
   "teams": [
-   "Uruguay"
+   "Senegal"
   ]
  },
- "Wout Werghost": {
-  "goals": 2,
-  "matches_scored_in": 1,
+ "Tomáš Chorý": {
+  "goals": 4,
   "teams": [
-   "Netherlands"
+   "Czech Republic"
   ]
  },
- "Kolo Muani": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Ante Budimir": {
+  "goals": 4,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Oston Urunov": {
+  "goals": 4,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Keito Nakamura": {
+  "goals": 4,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Pape Gueye": {
+  "goals": 4,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Mohamed Ali Ben Romdhane": {
+  "goals": 4,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Folarin Balogun": {
+  "goals": 4,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Julio Enciso": {
+  "goals": 4,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Romano Schmid": {
+  "goals": 4,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Jhon Córdoba": {
+  "goals": 4,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Julián Alvarez": {
+  "goals": 4,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Bradley Barcola": {
+  "goals": 4,
   "teams": [
    "France"
   ]
  },
- "Immobile": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Deniz Undav": {
+  "goals": 4,
   "teams": [
-   "Italy"
+   "Germany"
   ]
  },
- "Insigne": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Italy"
-  ]
- },
- "Locatelli": {
-  "goals": 2,
-  "matches_scored_in": 1,
-  "teams": [
-   "Italy"
-  ]
- },
- "Pessina": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Italy"
-  ]
- },
- "T. Hazard": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Maxim De Cuyper": {
+  "goals": 4,
   "teams": [
    "Belgium"
   ]
  },
- "De Bruyne": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Yasin Ayari": {
+  "goals": 4,
   "teams": [
-   "Belgium"
+   "Sweden"
   ]
  },
- "Damsgaard": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Tim Kleindienst": {
+  "goals": 4,
   "teams": [
-   "Denmark"
+   "Germany"
   ]
  },
- "Mæhle": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Kenan Yıldız": {
+  "goals": 4,
   "teams": [
-   "Denmark"
+   "Turkey"
   ]
  },
- "Gregoritsch": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Michael Olise": {
+  "goals": 4,
   "teams": [
-   "Austria"
+   "France"
   ]
  },
- "Arnautović": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Dailon Livramento": {
+  "goals": 4,
   "teams": [
-   "Austria"
+   "Cape Verde"
   ]
  },
- "Weghorst": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Lyle Foster": {
+  "goals": 4,
   "teams": [
-   "Netherlands"
+   "South Africa"
   ]
  },
- "Dumfries": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Oswin Appollis": {
+  "goals": 4,
   "teams": [
-   "Netherlands"
+   "South Africa"
   ]
  },
- "Yarmolenko": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Nicolas Jackson": {
+  "goals": 4,
   "teams": [
-   "Ukraine"
+   "Senegal"
   ]
  },
- "Baumgartner": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Nick Woltemade": {
+  "goals": 4,
   "teams": [
-   "Austria"
+   "Germany"
   ]
  },
- "Sarabia": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "João Neves": {
+  "goals": 4,
   "teams": [
-   "Spain"
-  ]
- },
- "F. Torres": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Spain"
-  ]
- },
- "Guerreiro": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Germany",
    "Portugal"
   ]
  },
- "Chiesa": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Italy"
-  ]
- },
- "Oyarzabal": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Diego Costa": {
+  "goals": 3,
   "teams": [
    "Spain"
   ]
  },
- "Barella": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Andreas Granqvist": {
+  "goals": 3,
   "teams": [
-   "Italy"
+   "Sweden"
   ]
  },
- "Wirtz": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Juan Fernando Quintero": {
+  "goals": 3,
   "teams": [
-   "Germany"
+   "Colombia"
   ]
  },
- "Füllkrug": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Germany"
-  ]
- },
- "Gjasula": {
-  "goals": 2,
-  "matches_scored_in": 2,
-  "teams": [
-   "Albania",
-   "Croatia"
-  ]
- },
- "Bellingham": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "John Stones": {
+  "goals": 3,
   "teams": [
    "England"
   ]
  },
- "R. Marin": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Juan Cuadrado": {
+  "goals": 3,
   "teams": [
-   "Romania"
+   "Colombia"
   ]
  },
- "Müldür": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Benjamin Pavard": {
+  "goals": 3,
   "teams": [
-   "Netherlands",
-   "Turkey"
+   "France"
   ]
  },
- "Williams": {
-  "goals": 2,
-  "matches_scored_in": 2,
+ "Mario Mandžukić": {
+  "goals": 3,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Nacer Chadli": {
+  "goals": 3,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Raphaël Varane": {
+  "goals": 3,
+  "teams": [
+   "France"
+  ]
+ },
+ "Stefan Johansen": {
+  "goals": 3,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Saúl Ñíguez": {
+  "goals": 3,
   "teams": [
    "Spain"
   ]
  },
- "Marcelo": {
-  "goals": 1,
-  "matches_scored_in": 1,
+ "Denis Zakaria": {
+  "goals": 3,
   "teams": [
-   "Croatia"
+   "Switzerland"
   ]
  },
- "Oribe Peralta": {
-  "goals": 1,
-  "matches_scored_in": 1,
+ "Ryan Babel": {
+  "goals": 3,
   "teams": [
-   "Mexico"
+   "Netherlands"
   ]
  },
- "Ivica Olić": {
-  "goals": 1,
-  "matches_scored_in": 1,
+ "Valentino Lazaro": {
+  "goals": 3,
   "teams": [
-   "Croatia"
+   "Austria"
   ]
  },
- "Joel Matip": {
-  "goals": 1,
-  "matches_scored_in": 1,
+ "Ricardo Rodríguez": {
+  "goals": 3,
   "teams": [
-   "Cameroon"
+   "Switzerland"
   ]
  },
- "Fred": {
-  "goals": 1,
-  "matches_scored_in": 1,
+ "Ola Kamara": {
+  "goals": 3,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Ali Adnan Kadhim": {
+  "goals": 3,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Odil Ahmedov": {
+  "goals": 3,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Bashar Resan": {
+  "goals": 3,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Kenny McLean": {
+  "goals": 3,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Martin Ødegaard": {
+  "goals": 3,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Everton Soares": {
+  "goals": 3,
   "teams": [
    "Brazil"
   ]
  },
- "Rafael Márquez": {
-  "goals": 1,
-  "matches_scored_in": 1,
+ "Duván Zapata": {
+  "goals": 3,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Paul Arriola": {
+  "goals": 3,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Youcef Belaïli": {
+  "goals": 3,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Adam Ounas": {
+  "goals": 3,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Paulo Dybala": {
+  "goals": 3,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Chancel Mbemba": {
+  "goals": 3,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Idrissa Gueye": {
+  "goals": 3,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Dejan Lovren": {
+  "goals": 3,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "William Carvalho": {
+  "goals": 3,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Yusuf Yazıcı": {
+  "goals": 3,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Yusuf Abdurisag": {
+  "goals": 3,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Ahmad Nourollahi": {
+  "goals": 3,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Hossein Kanaanizadegan": {
+  "goals": 3,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Armin Hodžić": {
+  "goals": 3,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Sebastian Larsson": {
+  "goals": 3,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Lawrence Shankland": {
+  "goals": 3,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Ibrahim Bayesh": {
+  "goals": 3,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Tammy Abraham": {
+  "goals": 3,
+  "teams": [
+   "England"
+  ]
+ },
+ "Nathan Aké": {
+  "goals": 3,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Jakub Pešek": {
+  "goals": 3,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Axel Witsel": {
+  "goals": 3,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Luis Muriel": {
+  "goals": 3,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Jefferson Lerma": {
+  "goals": 3,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Moisés Caicedo": {
+  "goals": 3,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "Louis Schaub": {
+  "goals": 3,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Alejandro Romero Gamarra": {
+  "goals": 3,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Phil Foden": {
+  "goals": 3,
+  "teams": [
+   "England"
+  ]
+ },
+ "Kristian Thorstvedt": {
+  "goals": 3,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Ollie Watkins": {
+  "goals": 3,
+  "teams": [
+   "England"
+  ]
+ },
+ "Charlison Benschop": {
+  "goals": 3,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Kyogo Furuhashi": {
+  "goals": 3,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Ali Gholizadeh": {
+  "goals": 3,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Mateus Uribe": {
+  "goals": 3,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Alberto Quintero": {
+  "goals": 3,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Yazan Al-Arab": {
+  "goals": 3,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Aníbal Godoy": {
+  "goals": 3,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Gabriel Barbosa": {
+  "goals": 3,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Ado Onaiwu": {
+  "goals": 3,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Éverton Ribeiro": {
+  "goals": 3,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Callum McGregor": {
+  "goals": 3,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Miguel Almirón": {
+  "goals": 3,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Jordan Henderson": {
+  "goals": 3,
+  "teams": [
+   "England"
+  ]
+ },
+ "Jonathan Osorio": {
+  "goals": 3,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Stephen Eustáquio": {
+  "goals": 3,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Júlio Tavares": {
+  "goals": 3,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Ellyes Skhiri": {
+  "goals": 3,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Brenden Aaronson": {
+  "goals": 3,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Luka Menalo": {
+  "goals": 3,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Boulaye Dia": {
+  "goals": 3,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Ricardo Pepi": {
+  "goals": 3,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Garry Rodrigues": {
+  "goals": 3,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Hwang In-beom": {
+  "goals": 3,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Seifeddine Jaziri": {
+  "goals": 3,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Adam Hložek": {
+  "goals": 3,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Nicolas Pépé": {
+  "goals": 3,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Ao Tanaka": {
+  "goals": 3,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Selim Amallah": {
+  "goals": 3,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Amir Al-Ammari": {
+  "goals": 3,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Gaël Kakuta": {
+  "goals": 3,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Ben Malango": {
+  "goals": 3,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Stopira": {
+  "goals": 3,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Mert Müldür": {
+  "goals": 3,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Orkun Kökçü": {
+  "goals": 3,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Rodrigo Bentancur": {
+  "goals": 3,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Kaoru Mitoma": {
+  "goals": 3,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Bill Tuiloma": {
+  "goals": 3,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Edson Álvarez": {
+  "goals": 3,
   "teams": [
    "Mexico"
   ]
  },
- "Andres Guardado": {
+ "Jan Kuchta": {
+  "goals": 3,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Yunus Akgün": {
+  "goals": 3,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Teun Koopmeiners": {
+  "goals": 3,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Noa Lang": {
+  "goals": 3,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Diogo Dalot": {
+  "goals": 3,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Enzo Fernández": {
+  "goals": 3,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Mohammed Salisu": {
+  "goals": 3,
+  "teams": [
+   "Ghana"
+  ]
+ },
+ "Alexis Mac Allister": {
+  "goals": 3,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Luis Chávez": {
+  "goals": 3,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Brandon Vázquez": {
+  "goals": 3,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Danley Jean Jacques": {
+  "goals": 3,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Jacob Shaffelburg": {
+  "goals": 3,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Nicolás de la Cruz": {
+  "goals": 3,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Nicolás Otamendi": {
+  "goals": 3,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Théo Bongonda": {
+  "goals": 3,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Philipp Lienhart": {
+  "goals": 3,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Ali Al-Hamadi": {
+  "goals": 3,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Simon Adingra": {
+  "goals": 3,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Jean-Philippe Krasso": {
+  "goals": 3,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Lamine Camara": {
+  "goals": 3,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Calvin Stengs": {
+  "goals": 3,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Themba Zwane": {
+  "goals": 3,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Azizbek Turgunboev": {
+  "goals": 3,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Iliman Ndiaye": {
+  "goals": 3,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Meschak Elia": {
+  "goals": 3,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Ahmed Al-Rawi": {
+  "goals": 3,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Koki Ogawa": {
+  "goals": 3,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Musab Al-Juwayr": {
+  "goals": 3,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Francisco Conceição": {
+  "goals": 3,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Dan Ndoye": {
+  "goals": 3,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Maximiliano Araújo": {
+  "goals": 3,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Daniel Muñoz": {
+  "goals": 3,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Omar Alderete": {
+  "goals": 3,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Eduardo Guerrero": {
+  "goals": 3,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Nishan Velupillay": {
+  "goals": 3,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Kōki Ogawa": {
+  "goals": 3,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Thiago Almada": {
+  "goals": 3,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Rodrigo Aguirre": {
+  "goals": 3,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Evann Guessand": {
+  "goals": 3,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Eberechi Eze": {
+  "goals": 3,
+  "teams": [
+   "England"
+  ]
+ },
+ "Elias Achouri": {
+  "goals": 3,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Pedri": {
+  "goals": 3,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "César Montes": {
+  "goals": 3,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Malik Tillman": {
+  "goals": 3,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Tomás Rodríguez": {
+  "goals": 3,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Don Deedson Louicius": {
+  "goals": 3,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Diego Luna": {
+  "goals": 3,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Elias Saad": {
+  "goals": 3,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Yan Diomande": {
+  "goals": 3,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Cherif Ndiaye": {
+  "goals": 3,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Haris Tabaković": {
+  "goals": 3,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "José María Giménez": {
+  "goals": 2,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Mile Jedinak": {
+  "goals": 2,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Hirving Lozano": {
+  "goals": 2,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Ante Rebić": {
+  "goals": 2,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Dylan Bronn": {
+  "goals": 2,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Takashi Inui": {
+  "goals": 2,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Radamel Falcao": {
+  "goals": 2,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Isco": {
+  "goals": 2,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Ludwig Augustinsson": {
+  "goals": 2,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Pepe": {
+  "goals": 2,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Jan Vertonghen": {
+  "goals": 2,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Samuel Umtiti": {
+  "goals": 2,
+  "teams": [
+   "France"
+  ]
+ },
+ "Paul Pogba": {
+  "goals": 2,
+  "teams": [
+   "France"
+  ]
+ },
+ "Admir Mehmedi": {
+  "goals": 2,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Steven Naismith": {
+  "goals": 2,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Emre Akbaba": {
+  "goals": 2,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Marco Asensio": {
+  "goals": 2,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Michael Krmenčík": {
+  "goals": 2,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Tin Jedvaj": {
+  "goals": 2,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Xaver Schlager": {
+  "goals": 2,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Nico Elvedi": {
+  "goals": 2,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Quincy Promes": {
+  "goals": 2,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Victor Lindelöf": {
+  "goals": 2,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Ashkan Dejagah": {
+  "goals": 2,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Hattan Bahebri": {
+  "goals": 2,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Bassam Al-Rawi": {
+  "goals": 2,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Kim Min-jae": {
+  "goals": 2,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Alaa Abbas": {
+  "goals": 2,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Abdelkarim Hassan": {
+  "goals": 2,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Tom Rogic": {
+  "goals": 2,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Kim Jin-su": {
+  "goals": 2,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Matthijs de Ligt": {
+  "goals": 2,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Edin Višća": {
+  "goals": 2,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Jesús Navas": {
+  "goals": 2,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Timothy Castagne": {
+  "goals": 2,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Jakub Jankto": {
+  "goals": 2,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Wissam Ben Yedder": {
+  "goals": 2,
+  "teams": [
+   "France"
+  ]
+ },
+ "Florian Thauvin": {
+  "goals": 2,
+  "teams": [
+   "France"
+  ]
+ },
+ "Roger Martínez": {
+  "goals": 2,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Armando Cooper": {
+  "goals": 2,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Tyler Boyd": {
+  "goals": 2,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Roberto Alvarado": {
+  "goals": 2,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Andrés Guardado": {
+  "goals": 2,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Koji Miyoshi": {
+  "goals": 2,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Aaron Long": {
+  "goals": 2,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Keita Baldé": {
+  "goals": 2,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Shoya Nakajima": {
+  "goals": 2,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Jonathan Kodjia": {
+  "goals": 2,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Ahmed Elmohamady": {
+  "goals": 2,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Bongani Zungu": {
+  "goals": 2,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Wilfried Zaha": {
+  "goals": 2,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Maxwel Cornet": {
+  "goals": 2,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Gabriel Jesus": {
+  "goals": 2,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Jonathan dos Santos": {
+  "goals": 2,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Frenkie de Jong": {
+  "goals": 2,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Toby Alderweireld": {
+  "goals": 2,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Jadon Sancho": {
+  "goals": 2,
+  "teams": [
+   "England"
+  ]
+ },
+ "Aaron Mooy": {
+  "goals": 2,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Vladimír Darida": {
+  "goals": 2,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Maya Yoshida": {
+  "goals": 2,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Wataru Endō": {
+  "goals": 2,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Abdulfattah Asiri": {
+  "goals": 2,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Jakub Brabec": {
+  "goals": 2,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Zdeněk Ondrášek": {
+  "goals": 2,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Marcus Danielson": {
+  "goals": 2,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Ahmad Ersan": {
+  "goals": 2,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Stefan Lainer": {
+  "goals": 2,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Matthias Ginter": {
+  "goals": 2,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Enes Ünal": {
+  "goals": 2,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Christian Fassnacht": {
+  "goals": 2,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Mattias Svanberg": {
+  "goals": 2,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "José Gayà": {
+  "goals": 2,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Vladimír Coufal": {
+  "goals": 2,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Haris Hajradinović": {
+  "goals": 2,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Josip Brekalo": {
+  "goals": 2,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Dayot Upamecano": {
+  "goals": 2,
+  "teams": [
+   "France"
+  ]
+ },
+ "Joaquín Correa": {
+  "goals": 2,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Donny van de Beek": {
+  "goals": 2,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Adrian Grbić": {
+  "goals": 2,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Rúben Dias": {
+  "goals": 2,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Pervis Estupiñán": {
+  "goals": 2,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "Rodri": {
+  "goals": 2,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Antonín Barák": {
+  "goals": 2,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Miroslav Stevanović": {
+  "goals": 2,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Theo Corbeanu": {
+  "goals": 2,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "James Ward-Prowse": {
+  "goals": 2,
+  "teams": [
+   "England"
+  ]
+ },
+ "Dominic Calvert-Lewin": {
+  "goals": 2,
+  "teams": [
+   "England"
+  ]
+ },
+ "Ricardo Adé": {
+  "goals": 2,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Jair Catuy": {
+  "goals": 2,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Lukáš Provod": {
+  "goals": 2,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Steven Berghuis": {
+  "goals": 2,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Mark-Anthony Kaye": {
+  "goals": 2,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Dennis Praet": {
+  "goals": 2,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Sho Inagaki": {
+  "goals": 2,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "João Palhinha": {
+  "goals": 2,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Yasser Al-Shahrani": {
+  "goals": 2,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Ko Itakura": {
+  "goals": 2,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Michaël Maria": {
+  "goals": 2,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Shojae Khalilzadeh": {
+  "goals": 2,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Kaveh Rezaei": {
+  "goals": 2,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Raphaël Guerreiro": {
+  "goals": 2,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Ayrton Preciado": {
+  "goals": 2,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "Papu Gómez": {
+  "goals": 2,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Aymeric Laporte": {
+  "goals": 2,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Mislav Oršić": {
+  "goals": 2,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Júnior Alonso": {
+  "goals": 2,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Rodrigo De Paul": {
+  "goals": 2,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Luke Shaw": {
+  "goals": 2,
+  "teams": [
+   "England"
+  ]
+ },
+ "Daryl Dike": {
+  "goals": 2,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Miles Robinson": {
+  "goals": 2,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Mohammed Muntari": {
+  "goals": 2,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Héctor Herrera": {
+  "goals": 2,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Mohamed Magdy": {
+  "goals": 2,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Abdou Diallo": {
+  "goals": 2,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Ramiz Zerrouki": {
+  "goals": 2,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Nayef Aguerd": {
+  "goals": 2,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Alexis Saelemaekers": {
+  "goals": 2,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Atiba Hutchinson": {
+  "goals": 2,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Antonee Robinson": {
+  "goals": 2,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Imran Louza": {
+  "goals": 2,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Théo Hernandez": {
+  "goals": 2,
+  "teams": [
+   "France"
+  ]
+ },
+ "Antony": {
+  "goals": 2,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Aïssa Mandi": {
+  "goals": 2,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Sami Al-Najei": {
+  "goals": 2,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Ridle Baku": {
+  "goals": 2,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Noah Okafor": {
+  "goals": 2,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Jeong Woo-yeong": {
+  "goals": 2,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Timothy Weah": {
+  "goals": 2,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Zakaria Aboukhlal": {
+  "goals": 2,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Bamba Dieng": {
+  "goals": 2,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Alex Greive": {
+  "goals": 2,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Otávio": {
+  "goals": 2,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Tarik Tissoudali": {
+  "goals": 2,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Bruno Guimarães": {
+  "goals": 2,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Matthew Garbett": {
+  "goals": 2,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Doğukan Sinik": {
+  "goals": 2,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Loïs Openda": {
+  "goals": 2,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Borna Sosa": {
+  "goals": 2,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Romain Saïss": {
+  "goals": 2,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Kalidou Koulibaly": {
+  "goals": 2,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Haji Wright": {
+  "goals": 2,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Daizen Maeda": {
+  "goals": 2,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Aurélien Tchouaméni": {
+  "goals": 2,
+  "teams": [
+   "France"
+  ]
+ },
+ "Yeremy Pino": {
+  "goals": 2,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Abdülkerim Bardakcı": {
+  "goals": 2,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Trent Alexander-Arnold": {
+  "goals": 2,
+  "teams": [
+   "England"
+  ]
+ },
+ "Luis Romo": {
+  "goals": 2,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Djordje Mihailovic": {
+  "goals": 2,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Santiago Giménez": {
+  "goals": 2,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Tameem Al-Abdullah": {
+  "goals": 2,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Michael Amir Murillo": {
+  "goals": 2,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Fidel Escobar": {
+  "goals": 2,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Rafael Santos Borré": {
+  "goals": 2,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Marcus Thuram": {
+  "goals": 2,
+  "teams": [
+   "France"
+  ]
+ },
+ "Gonçalo Inácio": {
+  "goals": 2,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Álex Baena": {
+  "goals": 2,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Kendry Páez": {
+  "goals": 2,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "Kevin Rodríguez": {
+  "goals": 2,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "Mathías Olivera": {
+  "goals": 2,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Dodi Lukebakio": {
+  "goals": 2,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Osama Rashid": {
+  "goals": 2,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Youssef Amyn": {
+  "goals": 2,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Mostafa Meshaal": {
+  "goals": 2,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Ahmed Alaaeldin": {
+  "goals": 2,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Abdulrahman Ghareeb": {
+  "goals": 2,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Abdullah Radif": {
+  "goals": 2,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Iñaki Williams": {
+  "goals": 2,
+  "teams": [
+   "Ghana"
+  ]
+ },
+ "Karim Konaté": {
+  "goals": 2,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Hamed Traorè": {
+  "goals": 2,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Hamza Rafia": {
+  "goals": 2,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Youssouf Fofana": {
+  "goals": 2,
+  "teams": [
+   "France"
+  ]
+ },
+ "Percy Tau": {
+  "goals": 2,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Farès Chaïbi": {
+  "goals": 2,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Aron Dønnum": {
+  "goals": 2,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Jørgen Strand Larsen": {
+  "goals": 2,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "David Douděra": {
+  "goals": 2,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Yukinari Sugawara": {
+  "goals": 2,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Mao Hosoya": {
+  "goals": 2,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Mahmoud Al-Mardi": {
+  "goals": 2,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Sherzod Nasrullaev": {
+  "goals": 2,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Abdoulaye Seck": {
+  "goals": 2,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Oumar Diakité": {
+  "goals": 2,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Zidane Iqbal": {
+  "goals": 2,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Khojimat Erkinov": {
+  "goals": 2,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Ali Jasim": {
+  "goals": 2,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Ernest Nuamah": {
+  "goals": 2,
+  "teams": [
+   "Ghana"
+  ]
+ },
+ "Cristian Martínez": {
+  "goals": 2,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Fiston Mayele": {
+  "goals": 2,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Joo Min-kyu": {
+  "goals": 2,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Bae Jun-ho": {
+  "goals": 2,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Husniddin Aliqulov": {
+  "goals": 2,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Louicius Don Deedson": {
+  "goals": 2,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Nestory Irankunda": {
+  "goals": 2,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Diney": {
+  "goals": 2,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Noor Al-Rawabdeh": {
+  "goals": 2,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Thapelo Morena": {
+  "goals": 2,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Max Mata": {
+  "goals": 2,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Alan Minda": {
+  "goals": 2,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "César Blackman": {
+  "goals": 2,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Davinson Sánchez": {
+  "goals": 2,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Ibrahim Al-Hassan": {
+  "goals": 2,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Felix Horn Myhre": {
+  "goals": 2,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Hassan Kadesh": {
+  "goals": 2,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Lewis Miller": {
+  "goals": 2,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Luiz Henrique": {
+  "goals": 2,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Christopher Nkunku": {
+  "goals": 2,
+  "teams": [
+   "France"
+  ]
+ },
+ "Martin Zubimendi": {
+  "goals": 2,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Sebastian Nanasi": {
+  "goals": 2,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Lukáš Červ": {
+  "goals": 2,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Jhon Durán": {
+  "goals": 2,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Martin Baturina": {
+  "goals": 2,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Oh Se-hun": {
+  "goals": 2,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Lucas Mendes": {
+  "goals": 2,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Tyler Bindon": {
+  "goals": 2,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Sarpreet Singh": {
+  "goals": 2,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Callum McCowatt": {
+  "goals": 2,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Anthony Gordon": {
+  "goals": 2,
+  "teams": [
+   "England"
+  ]
+ },
+ "Felix Nmecha": {
+  "goals": 2,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Hazem Mastouri": {
+  "goals": 2,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "İrfan Can Kahveci": {
+  "goals": 2,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Mohamed El Amine Amoura": {
+  "goals": 2,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Ahmed Sayed": {
+  "goals": 2,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Francisco Trincão": {
+  "goals": 2,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Abdulrahman Al-Aboud": {
+  "goals": 2,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Matías Galarza": {
+  "goals": 2,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Franjo Ivanović": {
+  "goals": 2,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Ruben Providence": {
+  "goals": 2,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Jeremy Antonisse": {
+  "goals": 2,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Connor Metcalfe": {
+  "goals": 2,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Patrick Agyemang": {
+  "goals": 2,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Nathan Saliba": {
+  "goals": 2,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Chris Richards": {
+  "goals": 2,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Hamza Igamane": {
+  "goals": 2,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Nathanaël Mbuku": {
+  "goals": 2,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Che Adams": {
+  "goals": 2,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Kristijan Jakić": {
+  "goals": 2,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Tahith Chong": {
+  "goals": 2,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Willy Semedo": {
+  "goals": 2,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Livano Comenencia": {
+  "goals": 2,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Johan Manzambi": {
+  "goals": 2,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Firas Chaouat": {
+  "goals": 2,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Ismaël Gharbi": {
+  "goals": 2,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Adam Karabec": {
+  "goals": 2,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Jean-Philippe Mateta": {
+  "goals": 2,
+  "teams": [
+   "France"
+  ]
+ },
+ "Ali Abdi": {
+  "goals": 2,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Jordi Paulina": {
+  "goals": 2,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Petar Musa": {
+  "goals": 2,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Ibrahim Maza": {
+  "goals": 2,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Bazoumana Touré": {
+  "goals": 2,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Ibrahim Mbaye": {
+  "goals": 2,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Nacho": {
   "goals": 1,
-  "matches_scored_in": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Shinji Kagawa": {
+  "goals": 1,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "M'Baye Niang": {
+  "goals": 1,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Ivan Rakitić": {
+  "goals": 1,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Ola Toivonen": {
+  "goals": 1,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Carlos Vela": {
+  "goals": 1,
   "teams": [
    "Mexico"
   ]
  },
  "Javier Hernández": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Mexico"
   ]
  },
- "Xabi Alonso": {
+ "Felipe Baloy": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Spain"
+   "Panama"
   ]
  },
- "Stefan De Vrij": {
+ "Moussa Wagué": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Netherlands"
-  ]
- },
- "Jorge Valdívia": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Chile"
-  ]
- },
- "Jean Beausejour": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Chile"
-  ]
- },
- "Cahill": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Australia"
-  ]
- },
- "Tim Cahill": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Australia"
-  ]
- },
- "Mile Jedinak": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Australia"
-  ]
- },
- "Eduardo Vargas": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Chile"
-  ]
- },
- "Charles Aránguiz": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Chile"
-  ]
- },
- "David Villa": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Fernando Torres": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Juan Mata": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Leroy Fer": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Netherlands"
-  ]
- },
- "Pablo Armero": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Colombia"
-  ]
- },
- "Teofilo Gutiérrez": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Colombia"
+   "Senegal"
   ]
  },
  "Keisuke Honda": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Japan"
   ]
  },
- "Juan Quintero": {
+ "Ricardo Quaresma": {
   "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Colombia"
-  ]
- },
- "Shinji Okazaki": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Japan"
-  ]
- },
- "Juan Cuadrado": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Colombia"
-  ]
- },
- "Andreas Samaris": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Greece"
-  ]
- },
- "Georgios Samaras": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Greece"
-  ]
- },
- "Joel Campbell": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Costa Rica"
-  ]
- },
- "Oscar Duarte": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Costa Rica"
-  ]
- },
- "Marcos Ureña": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Costa Rica"
-  ]
- },
- "Daniel Sturridge": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Claudio Marchisio": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Italy"
-  ]
- },
- "Mario Balotelli": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Italy"
-  ]
- },
- "Wayne Rooney": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Diego Godín": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Uruguay"
-  ]
- },
- "Admir Mehmedi": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Switzerland"
-  ]
- },
- "Haris Seferović": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Switzerland"
-  ]
- },
- "Noel Valladares": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "France"
-  ]
- },
- "Blerim Džemaili": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Switzerland"
-  ]
- },
- "Granit Xhaka": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Switzerland"
-  ]
- },
- "Blaise Matuidi": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "France"
-  ]
- },
- "Mathieu Valbuena": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "France"
-  ]
- },
- "Moussa Sissoko": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "France"
-  ]
- },
- "Carlo Costly": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Honduras"
-  ]
- },
- "Sead Kolašinac": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Argentina"
-  ]
- },
- "Vedad Ibišević": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Bosnia-Herzegovina"
-  ]
- },
- "Peter Odemwingie": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Nigeria"
-  ]
- },
- "Edin Džeko": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Bosnia-Herzegovina"
-  ]
- },
- "Miralem Pjanić": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Bosnia-Herzegovina"
-  ]
- },
- "Avdija Vršajević": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Bosnia-Herzegovina"
-  ]
- },
- "Reza Ghoochannejhad": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Iran"
-  ]
- },
- "John Brooks": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "USA"
-  ]
- },
- "Jermaine Jones": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "USA"
-  ]
- },
- "Nani": {
-  "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Portugal"
   ]
  },
- "Varela": {
+ "Khalid Boutaïb": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Portugal"
-  ]
- },
- "John Boye": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Portugal"
-  ]
- },
- "Dries Mertens": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Belgium"
-  ]
- },
- "Sofiane Feghouli": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Algeria"
-  ]
- },
- "Alexander Kerzhakov": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Russia"
-  ]
- },
- "Lee Keunho": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "South Korea"
-  ]
- },
- "Divock Origi": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Belgium"
-  ]
- },
- "Son Heung Min": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "South Korea"
-  ]
- },
- "Koo Jacheol": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "South Korea"
-  ]
- },
- "Rafik Halliche": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Algeria"
-  ]
- },
- "Yacine Brahimi": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Algeria"
-  ]
- },
- "Alexander Kokorin": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Russia"
-  ]
- },
- "Wesley Sneijder": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Netherlands"
-  ]
- },
- "Klaas Jan Huntelaar": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Netherlands"
-  ]
- },
- "Giovani dos Santos": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Mexico"
-  ]
- },
- "Socratis Papastathopoulos": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Greece"
-  ]
- },
- "Paul Pogba": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "France"
-  ]
- },
- "Joseph Yobo": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "France"
-  ]
- },
- "André Schürrle": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Germany"
-  ]
- },
- "Mesut Özil": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Germany"
-  ]
- },
- "Ángel di María": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Argentina"
-  ]
- },
- "Romelu Lukaku": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Belgium"
-  ]
- },
- "Julian Green": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "USA"
-  ]
- },
- "Rodríguez": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Colombia"
-  ]
- },
- "Gonzalo Higuaín": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Argentina"
-  ]
- },
- "Sami Khedira": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Germany"
-  ]
- },
- "Georginio Wijnaldum": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Netherlands"
-  ]
- },
- "Gazinsky": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Russia"
-  ]
- },
- "Golovin": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Russia"
-  ]
- },
- "Giménez": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Uruguay"
-  ]
- },
- "A. Fathi": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Russia"
-  ]
- },
- "E. Cavani": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Uruguay"
-  ]
- },
- "Salman Al-Faraj": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Saudi Arabia"
-  ]
- },
- "Salem Al-Dawsari": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Saudi Arabia"
-  ]
- },
- "Bouhaddouz": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Iran"
-  ]
- },
- "Nacho": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Diego Costa": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Karim Ansarifard": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Iran"
-  ]
- },
- "Quaresma": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Portugal"
-  ]
- },
- "Isco": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
+   "Morocco"
   ]
  },
  "Iago Aspas": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Spain"
   ]
  },
- "Boutaib": {
+ "Milan Badelj": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Morocco"
+   "Croatia"
   ]
  },
- "En-Nesyri": {
+ "Marcos Rojo": {
   "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Morocco"
-  ]
- },
- "Behich": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "France"
-  ]
- },
- "Carrillo": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Peru"
-  ]
- },
- "Guerrero": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Peru"
-  ]
- },
- "Agüero": {
-  "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Argentina"
-  ]
- },
- "Finnbogason": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Iceland"
-  ]
- },
- "Etebo": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Rebić": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Rakitić": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Moses": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Nigeria"
-  ]
- },
- "Messi": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Argentina"
-  ]
- },
- "G. Sigurðsson": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Iceland"
-  ]
- },
- "Badelj": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Kolarov": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Serbia"
-  ]
- },
- "Coutinho": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Brazil"
-  ]
- },
- "Zuber": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Switzerland"
-  ]
- },
- "P. Coutinho": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Brazil"
-  ]
- },
- "Neymar Jr": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Brazil"
-  ]
- },
- "Mitrović": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Serbia"
-  ]
- },
- "Xhaka": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Switzerland"
   ]
  },
  "Paulinho": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Brazil"
   ]
  },
- "Džemaili": {
+ "Thiago Silva": {
   "goals": 1,
-  "matches_scored_in": 1,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Blerim Džemaili": {
+  "goals": 1,
   "teams": [
    "Switzerland"
   ]
  },
- "Drmić": {
+ "Josip Drmić": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Switzerland"
-  ]
- },
- "Waston": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Costa Rica"
-  ]
- },
- "Sommer": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Costa Rica"
-  ]
- },
- "Lozano": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Mexico"
-  ]
- },
- "Carlos Vela": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Mexico"
-  ]
- },
- "J. Hernández": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Mexico"
-  ]
- },
- "Reus": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Germany"
-  ]
- },
- "Kroos": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Germany"
-  ]
- },
- "Toivonen": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Sweden"
-  ]
- },
- "Augustinsson": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Sweden"
-  ]
- },
- "Álvarez": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Sweden"
-  ]
- },
- "Mertens": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Belgium"
-  ]
- },
- "Sassi": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Tunisia"
-  ]
- },
- "Batshuayi": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Belgium"
-  ]
- },
- "Bronn": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Tunisia"
-  ]
- },
- "Khazri": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Tunisia"
-  ]
- },
- "Lingard": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Baloy": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Panama"
   ]
  },
  "Adnan Januzaj": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Belgium"
   ]
  },
- "Yassine Meriah": {
+ "Fakhreddine Ben Youssef": {
   "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Panama"
-  ]
- },
- "Fakhereedine Ben Youssef": {
-  "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Tunisia"
   ]
  },
- "J. Quintero": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Colombia"
-  ]
- },
- "Kagawa": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Japan"
-  ]
- },
- "Osako": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Japan"
-  ]
- },
- "Krychowiak": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Poland"
-  ]
- },
- "Cionek": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Senegal"
-  ]
- },
- "Niang": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Senegal"
-  ]
- },
- "Inui": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Japan"
-  ]
- },
- "Honda": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Japan"
-  ]
- },
- "Mané": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Senegal"
-  ]
- },
- "M. Wagué": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Senegal"
-  ]
- },
- "Falcao": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Colombia"
-  ]
- },
- "Cuadrado": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Colombia"
-  ]
- },
- "Bednarek": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Poland"
-  ]
- },
- "Benjamin Pavard": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "France"
-  ]
- },
  "Gabriel Mercado": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Argentina"
   ]
  },
- "Sergio Agüero": {
+ "Marouane Fellaini": {
   "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Argentina"
-  ]
- },
- "Sergei Ignashevich": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Artem Dzyuba": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Russia"
-  ]
- },
- "Mathias Jørgensen": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Denmark"
-  ]
- },
- "Roberto Firmino": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Brazil"
-  ]
- },
- "Nacer Chadli": {
-  "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Belgium"
-  ]
- },
- "Genki Haraguchi": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Japan"
-  ]
- },
- "Takashi Inui": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Japan"
-  ]
- },
- "Emil Forsberg": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Sweden"
-  ]
- },
- "Yerry Mina": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Colombia"
-  ]
- },
- "Raphaël Varane": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "France"
   ]
  },
  "Renato Augusto": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Brazil"
-  ]
- },
- "Harry Maguire": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Dele Alli": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Denis Cheryshev": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Russia"
-  ]
- },
- "Mário Figueira Fernandes": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Russia"
   ]
  },
  "Domagoj Vida": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Croatia"
   ]
  },
- "Samuel Umtiti": {
+ "Dele Alli": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "France"
+   "England"
   ]
  },
  "Kieran Trippier": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "England"
   ]
  },
- "Thomas Meunier": {
+ "Serdar Aziz": {
   "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Belgium"
-  ]
- },
- "Eden Hazard": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Belgium"
-  ]
- },
- "Davy Klaassen": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Netherlands"
-  ]
- },
- "Mohammed Muntari": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Qatar"
-  ]
- },
- "Boulaye Dia": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Senegal"
-  ]
- },
- "Famara Diédhiou": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Senegal"
-  ]
- },
- "Bamba Dieng": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Senegal"
-  ]
- },
- "Moisés Caicedo": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Ecuador"
-  ]
- },
- "Ismaila Sarr": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Senegal"
-  ]
- },
- "Koulibaly": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Senegal"
-  ]
- },
- "Frenkie de Jong": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Netherlands"
-  ]
- },
- "Jude Bellingham": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Raheem Sterling": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Marcus Rashford": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Jack Grealish": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Timothy Weah": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "USA"
-  ]
- },
- "Gareth Bale": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Wales"
-  ]
- },
- "Roozbeh Cheshmi": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Iran"
-  ]
- },
- "Ramin Rezaeian": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Iran"
-  ]
- },
- "Foden": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Pulisic": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "USA"
-  ]
- },
- "Saleh Al Shehri": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Saudi Arabia"
-  ]
- },
- "Salem Al Dawsari": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Saudi Arabia"
-  ]
- },
- "Piotr Zielinski": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Poland"
-  ]
- },
- "Mac Allister": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Argentina"
-  ]
- },
- "Salem Al Dawasari": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Saudi Arabia"
-  ]
- },
- "Henry Martín": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Mexico"
-  ]
- },
- "Luis Chávez": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Mexico"
-  ]
- },
- "Adrien Rabiot": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "France"
-  ]
- },
- "Craig Goodwin": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Australia"
-  ]
- },
- "Mitchell Duke": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Australia"
-  ]
- },
- "Andreas Christensen": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Denmark"
-  ]
- },
- "Mathew Leckie": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Australia"
-  ]
- },
- "Ilkay Gündogan": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Germany"
-  ]
- },
- "Ritsu Doan": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Japan"
-  ]
- },
- "Takuma Asano": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Japan"
-  ]
- },
- "Dani Olmo": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Marco Asensio": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Gavi": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Carlos Soler": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Keysher Fuller": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Costa Rica"
-  ]
- },
- "Ritsu Dōan": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Japan"
-  ]
- },
- "Ao Tanaka": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Japan"
-  ]
- },
- "Yeltsin Tejeda": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Costa Rica"
-  ]
- },
- "Juan Vargas": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Costa Rica"
-  ]
- },
- "Serge Gnabry": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Germany"
-  ]
- },
- "Michy Batshuayi": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Belgium"
-  ]
- },
- "Romain Saïss": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Morocco"
-  ]
- },
- "Zakaria Aboukhlal": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Morocco"
-  ]
- },
- "Marko Livaja": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Lovro Majer": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Alphonso Davies": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Canada"
-  ]
- },
- "Nayef Aguerd": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Canada"
-  ]
- },
- "Hakim Zyiech": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Morocco"
-  ]
- },
- "Jean-Charles Castelletto": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Cameroon"
-  ]
- },
- "Jean-Eric Choupo-Moting": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Cameroon"
-  ]
- },
- "Strahinja Pavlović": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Serbia"
-  ]
- },
- "Sergej Milinković-Savić": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Serbia"
-  ]
- },
- "Casemiro": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Brazil"
-  ]
- },
- "Dušan Vlahović": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Serbia"
-  ]
- },
- "João Félix": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Portugal"
-  ]
- },
- "Osman Bukari": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Ghana"
-  ]
- },
- "Mohammed Salisu": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Ghana"
-  ]
- },
- "Hwang Hee-chan": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "South Korea"
-  ]
- },
- "Ricardo Horta": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Portugal"
-  ]
- },
- "Denzel Dumfries": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Netherlands"
-  ]
- },
- "Haji Wright": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "USA"
-  ]
- },
- "Jordan Henderson": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Daizen Maeda": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Japan"
-  ]
- },
- "Vinícius Jr.": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Brazil"
-  ]
- },
- "Lucas Paquetá": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Brazil"
-  ]
- },
- "Paik Seung-ho": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "South Korea"
-  ]
- },
- "Raphaël Guerreiro": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Portugal"
-  ]
- },
- "Manuel Akanji": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Switzerland"
-  ]
- },
- "Bruno Petković": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Nahuel Molina": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Argentina"
-  ]
- },
- "Aurelién Tchouaméni": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "France"
-  ]
- },
- "Théo Hernandez": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "France"
-  ]
- },
- "Joško Gvardiol": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Mislav Oršić": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Achraf Dari": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Morocco"
-  ]
- },
- "Moore": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Wales"
-  ]
- },
- "Ramsey": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Wales"
-  ]
- },
- "C. Roberts": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Wales"
-  ]
- },
- "Kahveci": {
-  "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Turkey"
   ]
  },
- "Pohjanpalo": {
+ "Haris Duljević": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Finland"
+   "Bosnia and Herzegovina"
   ]
  },
- "Meunier": {
+ "Elvis Sarić": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Belgium"
+   "Bosnia and Herzegovina"
   ]
  },
- "Miranchuk": {
+ "Albian Ajeti": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Russia"
+   "Switzerland"
   ]
  },
- "Christensen": {
+ "Isaac Kiese Thelin": {
   "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Denmark"
-  ]
- },
- "Hradecky": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Belgium"
-  ]
- },
- "Lainer": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Austria"
-  ]
- },
- "Pandev": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "North Macedonia"
-  ]
- },
- "Alioski": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "North Macedonia"
-  ]
- },
- "Vlašić": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Croatia"
-  ]
- },
- "McGregor": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Scotland"
-  ]
- },
- "Linetty": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Poland"
-  ]
- },
- "Szczęsny": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Slovakia"
-  ]
- },
- "Škriniar": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Slovakia"
-  ]
- },
- "Dúbravka": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Laporte": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Kucka": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Claesson": {
-  "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Sweden"
   ]
  },
- "Hummels": {
+ "Charlie Mulgrew": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "France"
+   "Scotland"
   ]
  },
- "Fiola": {
+ "Ole Selnæs": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Hungary"
+   "Norway"
   ]
  },
- "Jota": {
+ "Michael Lang": {
   "goals": 1,
-  "matches_scored_in": 1,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Dani Ceballos": {
+  "goals": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Steven Fletcher": {
+  "goals": 1,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Anas Bani Yaseen": {
+  "goals": 1,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Saman Ghoddos": {
+  "goals": 1,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Humam Tariq": {
+  "goals": 1,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Mohammed Al-Fatil": {
+  "goals": 1,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Tareq Khattab": {
+  "goals": 1,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Apostolos Giannou": {
+  "goals": 1,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Housain Al-Mogahwi": {
+  "goals": 1,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Javokhir Sidikov": {
+  "goals": 1,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Chris Ikonomidis": {
+  "goals": 1,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Yoshinori Muto": {
+  "goals": 1,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Tsukasa Shiotani": {
+  "goals": 1,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Baha' Abdel-Rahman": {
+  "goals": 1,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Takehiro Tomiyasu": {
+  "goals": 1,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Hamid Ismail": {
+  "goals": 1,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Borna Barišić": {
+  "goals": 1,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Deni Milošević": {
+  "goals": 1,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Nico Schulz": {
+  "goals": 1,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Johnny Russell": {
+  "goals": 1,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Michael Keane": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Danilo Pereira": {
+  "goals": 1,
   "teams": [
    "Portugal"
   ]
  },
- "Dias": {
+ "Hasan Ali Kaldırım": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Germany"
+   "Turkey"
   ]
  },
- "Gosens": {
+ "Guido Burgstaller": {
   "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Germany"
-  ]
- },
- "Goretzka": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Germany"
-  ]
- },
- "Ád. Szalai": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Hungary"
-  ]
- },
- "Schäfer": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Hungary"
-  ]
- },
- "Braithwaite": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Denmark"
-  ]
- },
- "Kalajdžić": {
-  "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Austria"
   ]
  },
- "Holeš": {
+ "José Luis Gayà": {
   "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Czech Republic"
-  ]
- },
- "Pedri": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Oršić": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Pašalić": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Azpilicueta": {
-  "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Spain"
   ]
  },
- "Gavranović": {
+ "Tarik Elyounoussi": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Switzerland"
+   "Norway"
   ]
  },
- "Zinchenko": {
+ "Andrew Robertson": {
   "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Ukraine"
-  ]
- },
- "Dovbyk": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Ukraine"
-  ]
- },
- "Zakaria": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Delaney": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Denmark"
-  ]
- },
- "Maguire": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "J. Henderson": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Kjær": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Bonucci": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Italy"
-  ]
- },
- "Shaw": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Can": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Germany"
-  ]
- },
- "Rüdiger": {
-  "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Scotland"
   ]
  },
- "Varga": {
+ "Oliver Burke": {
   "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Hungary"
-  ]
- },
- "Duah": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Switzerland"
-  ]
- },
- "Aebischer": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Switzerland"
-  ]
- },
- "Gündoğan": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Germany"
-  ]
- },
- "McTominay": {
-  "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Scotland"
   ]
  },
- "Ndoye": {
+ "Kurt Zouma": {
   "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Switzerland"
-  ]
- },
- "Csoboth": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Hungary"
-  ]
- },
- "Fabián": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Carvajal": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Bastoni": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Italy"
-  ]
- },
- "Bajrami": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Albania"
-  ]
- },
- "Kramarić": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Croatia"
-  ]
- },
- "Laçi": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Albania"
-  ]
- },
- "Calafiori": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Torres": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Zaccagni": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Italy"
-  ]
- },
- "Janža": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Slovenia"
-  ]
- },
- "Karničnik": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Slovenia"
-  ]
- },
- "Jović": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Serbia"
-  ]
- },
- "Hjulmand": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Denmark"
-  ]
- },
- "Buksa": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Poland"
-  ]
- },
- "Wöber": {
-  "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "France"
   ]
  },
- "Piątek": {
+ "Dorukhan Toköz": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Poland"
+   "Turkey"
   ]
  },
- "Trauner": {
+ "Scott Arfield": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Austria"
+   "Canada"
   ]
  },
- "Schmid": {
+ "Diego Antonio Reyes": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Austria"
+   "Mexico"
   ]
  },
- "Sabitzer": {
+ "Óscar Cardozo": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Austria"
+   "Paraguay"
   ]
  },
- "Stanciu": {
+ "Derlis González": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Romania"
+   "Paraguay"
   ]
  },
- "Drăguș": {
+ "Nicolás Lodeiro": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Romania"
+   "Uruguay"
   ]
  },
- "Shaparenko": {
+ "Richard Sánchez": {
   "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
-   "Ukraine"
+   "Paraguay"
   ]
  },
- "Tielemans": {
+ "Steeven Saba": {
   "goals": 1,
-  "matches_scored_in": 1,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Dani Alves": {
+  "goals": 1,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Willian": {
+  "goals": 1,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Abdiel Arroyo": {
+  "goals": 1,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Gustavo Cuéllar": {
+  "goals": 1,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Fernando Navarro Morán": {
+  "goals": 1,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Krépin Diatta": {
+  "goals": 1,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Djimy Alexis": {
+  "goals": 1,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Juriën Gaari": {
+  "goals": 1,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Jozy Altidore": {
+  "goals": 1,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Giovani Lo Celso": {
+  "goals": 1,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Hervé Bazile": {
+  "goals": 1,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Wilde-Donald Guerrier": {
+  "goals": 1,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Jonathan Bolingi": {
+  "goals": 1,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Britt Assombalonga": {
+  "goals": 1,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Serey Dié": {
+  "goals": 1,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Mbark Boussoufa": {
+  "goals": 1,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Thembinkosi Lorch": {
+  "goals": 1,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Taha Yassine Khenissi": {
+  "goals": 1,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Naïm Sliti": {
+  "goals": 1,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Sander Berge": {
+  "goals": 1,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Fabian Schär": {
+  "goals": 1,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Ahmed Samir": {
+  "goals": 1,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Jonathan Ikoné": {
+  "goals": 1,
+  "teams": [
+   "France"
+  ]
+ },
+ "Marcel Halstenberg": {
+  "goals": 1,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Thomas Vermaelen": {
+  "goals": 1,
   "teams": [
    "Belgium"
   ]
  },
- "Duda": {
+ "Clément Lenglet": {
   "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Slovakia"
-  ]
- },
- "Güler": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Turkey"
-  ]
- },
- "Aktürkoğlu": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Turkey"
-  ]
- },
- "Hranáč": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Portugal"
-  ]
- },
- "Conceição": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Portugal"
-  ]
- },
- "Provod": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Czech Republic"
-  ]
- },
- "Silva": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Portugal"
-  ]
- },
- "Akaydian": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Portugal"
-  ]
- },
- "Fernandes": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Portugal"
-  ]
- },
- "Kvaratskhelia": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Georgia"
-  ]
- },
- "Souček": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Czech Republic"
-  ]
- },
- "Çalhanoğlu": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Turkey"
-  ]
- },
- "Tosun": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Turkey"
-  ]
- },
- "Vargas": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Switzerland"
-  ]
- },
- "Rodri": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Ruiz": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Le Normand": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Georgia"
-  ]
- },
- "Vertonghen": {
-  "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "France"
   ]
  },
- "Merino": {
+ "Deniz Türüç": {
   "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Spain"
-  ]
- },
- "Saka": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "England"
-  ]
- },
- "Vrij": {
-  "goals": 1,
-  "matches_scored_in": 1,
-  "teams": [
-   "Netherlands"
-  ]
- },
- "Akaydin": {
-  "goals": 1,
-  "matches_scored_in": 1,
   "teams": [
    "Turkey"
   ]
  },
- "Yamal": {
+ "Lukáš Masopust": {
   "goals": 1,
-  "matches_scored_in": 1,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Na Sang-ho": {
+  "goals": 1,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Jung Woo-young": {
+  "goals": 1,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Martin Hinteregger": {
+  "goals": 1,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Karim Boudiaf": {
+  "goals": 1,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Yari Verschaeren": {
+  "goals": 1,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Mehrdad Mohammadi": {
+  "goals": 1,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Yuto Nagatomo": {
+  "goals": 1,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Kensuke Nagai": {
+  "goals": 1,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Abdullah Al-Hamdan": {
+  "goals": 1,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Sanjar Kodirkulov": {
+  "goals": 1,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Jamshid Iskanderov": {
+  "goals": 1,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Islom Tukhtakhujaev": {
+  "goals": 1,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Izet Hajrović": {
+  "goals": 1,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Stuart Findlay": {
+  "goals": 1,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Amjad Attwan": {
+  "goals": 1,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Ahmad Ibrahim Khalaf": {
+  "goals": 1,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Feras Shelbaieh": {
+  "goals": 1,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Edimilson Fernandes": {
+  "goals": 1,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Alex Král": {
+  "goals": 1,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Ondřej Čelůstka": {
+  "goals": 1,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Alex Oxlade-Chamberlain": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Pizzi": {
+  "goals": 1,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Gonçalo Paciência": {
+  "goals": 1,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Tore Reginiussen": {
+  "goals": 1,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Iver Fossum": {
+  "goals": 1,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Santi Cazorla": {
+  "goals": 1,
   "teams": [
    "Spain"
   ]
  },
- "Simons": {
+ "Pau Torres": {
   "goals": 1,
-  "matches_scored_in": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "David Alaba": {
+  "goals": 1,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Corentin Tolisso": {
+  "goals": 1,
+  "teams": [
+   "France"
+  ]
+ },
+ "Harry Winks": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Loris Benito": {
+  "goals": 1,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Eldar Ćivić": {
+  "goals": 1,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Sebastian Andersson": {
+  "goals": 1,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "John Guidetti": {
+  "goals": 1,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Julian Brandt": {
+  "goals": 1,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Salem Al-Ajalin": {
+  "goals": 1,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Hamza Al-Dardour": {
+  "goals": 1,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Myron Boadu": {
+  "goals": 1,
   "teams": [
    "Netherlands"
   ]
  },
- "Watkins": {
+ "Bořek Dočkal": {
   "goals": 1,
-  "matches_scored_in": 1,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Jason Denayer": {
+  "goals": 1,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Ansu Fati": {
+  "goals": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Karim Onisiwo": {
+  "goals": 1,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Mathias Normann": {
+  "goals": 1,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Maxi Gómez": {
+  "goals": 1,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Matěj Vydra": {
+  "goals": 1,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Gastón Giménez": {
+  "goals": 1,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Alessandro Schöpf": {
+  "goals": 1,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Beder Caicedo": {
+  "goals": 1,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "Carlos Gruezo": {
+  "goals": 1,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "N'Golo Kanté": {
+  "goals": 1,
+  "teams": [
+   "France"
+  ]
+ },
+ "Robert Arboleda": {
+  "goals": 1,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "Xavier Arreaga": {
+  "goals": 1,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "Arthur Melo": {
+  "goals": 1,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Ghayas Zahid": {
+  "goals": 1,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Jonas Svensson": {
+  "goals": 1,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Richie Laryea": {
+  "goals": 1,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Anthony van den Hurk": {
+  "goals": 1,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Jarchinio Antonia": {
+  "goals": 1,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Elson Hooi": {
+  "goals": 1,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Steven Séance": {
+  "goals": 1,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Grant Hanley": {
+  "goals": 1,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Çağlar Söyüncü": {
+  "goals": 1,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Aleksandar Dragović": {
+  "goals": 1,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Frank Sturing": {
+  "goals": 1,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "David Wotherspoon": {
+  "goals": 1,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Alistair Johnston": {
+  "goals": 1,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Vahid Amiri": {
+  "goals": 1,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Zachary Brault-Guillard": {
+  "goals": 1,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Brandley Kuwas": {
+  "goals": 1,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Jorman Aguilar": {
+  "goals": 1,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Miguel Camargo": {
+  "goals": 1,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Francisco Palacios": {
+  "goals": 1,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Nam Tae-hee": {
+  "goals": 1,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Trent Sainsbury": {
+  "goals": 1,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Safaa Hadi": {
+  "goals": 1,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Kento Hashimoto": {
+  "goals": 1,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Hayao Kawabe": {
+  "goals": 1,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Cristian Romero": {
+  "goals": 1,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Leandro Paredes": {
+  "goals": 1,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Derrick Etienne": {
+  "goals": 1,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Lee Dong-gyeong": {
+  "goals": 1,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Jeong Sang-bin": {
+  "goals": 1,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Milad Mohammadi": {
+  "goals": 1,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Morteza Pouraliganji": {
+  "goals": 1,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Fran Karačić": {
+  "goals": 1,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Edwin Cardona": {
+  "goals": 1,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Sho Sasaki": {
+  "goals": 1,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Ali Al-Hassan": {
+  "goals": 1,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Alex Sandro": {
+  "goals": 1,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Guido Rodríguez": {
+  "goals": 1,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Robin Gosens": {
+  "goals": 1,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Braian Samudio": {
+  "goals": 1,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Éder Militão": {
+  "goals": 1,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Tomáš Holeš": {
+  "goals": 1,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "César Azpilicueta": {
+  "goals": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Gustavo Gómez": {
+  "goals": 1,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Gabriel Ávalos": {
+  "goals": 1,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Sam Vines": {
+  "goals": 1,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Stéphane Lambese": {
+  "goals": 1,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Nicholas Gioacchini": {
+  "goals": 1,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Luis Alfonso Rodríguez": {
+  "goals": 1,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Shaq Moore": {
+  "goals": 1,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Homam Ahmed": {
+  "goals": 1,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Matthew Hoppe": {
+  "goals": 1,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Ramy Bensebaini": {
+  "goals": 1,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Thomas Foket": {
+  "goals": 1,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Ángel Correa": {
+  "goals": 1,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Mubarak Wakaso": {
+  "goals": 1,
+  "teams": [
+   "Ghana"
+  ]
+ },
+ "Marcelo Brozović": {
+  "goals": 1,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Anthony Martial": {
+  "goals": 1,
+  "teams": [
+   "France"
+  ]
+ },
+ "Karim Adeyemi": {
+  "goals": 1,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Andrés Andrade": {
+  "goals": 1,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Agustín Álvarez": {
+  "goals": 1,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Bongokuhle Hlongwane": {
+  "goals": 1,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Dylan Tavares": {
+  "goals": 1,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Guus Til": {
+  "goals": 1,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Rhyan Grant": {
+  "goals": 1,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Anis Ben Slimane": {
+  "goals": 1,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Sebastian Lletget": {
+  "goals": 1,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Antonio Rüdiger": {
+  "goals": 1,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Pablo Fornals": {
+  "goals": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Jesús Manuel Corona": {
+  "goals": 1,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "David Martínez": {
+  "goals": 1,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Gastón Pereiro": {
+  "goals": 1,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Ilias Chair": {
+  "goals": 1,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Munir El Haddadi": {
+  "goals": 1,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Chadrac Akolo": {
+  "goals": 1,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Jorge Sánchez": {
+  "goals": 1,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Jérémie Boga": {
+  "goals": 1,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Ben Chilwell": {
+  "goals": 1,
   "teams": [
    "England"
   ]
  },
- "Palmer": {
+ "Mothobi Mvala": {
   "goals": 1,
-  "matches_scored_in": 1,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Aymen Barkok": {
+  "goals": 1,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Sebastián Córdova": {
+  "goals": 1,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Ahmed Abou El Fotouh": {
+  "goals": 1,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Ramadan Sobhi": {
+  "goals": 1,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Arnaut Danjuma": {
+  "goals": 1,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Ismaël Bennacer": {
+  "goals": 1,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Anel Ahmedhodžić": {
+  "goals": 1,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Héctor Moreno": {
+  "goals": 1,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Sergiño Dest": {
+  "goals": 1,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Piero Hincapié": {
+  "goals": 1,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "Duje Ćaleta-Car": {
+  "goals": 1,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Nathan Fasika": {
+  "goals": 1,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Mohamed Elneny": {
+  "goals": 1,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Akram Tawfik": {
+  "goals": 1,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Saïd Benrahma": {
+  "goals": 1,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Nathan Patterson": {
+  "goals": 1,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Jean Michaël Seri": {
+  "goals": 1,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Renato Sanches": {
+  "goals": 1,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Christopher Trimmel": {
+  "goals": 1,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Dejan Ljubičić": {
+  "goals": 1,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Emile Smith Rowe": {
+  "goals": 1,
   "teams": [
    "England"
+  ]
+ },
+ "Tyrone Mings": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "John Souttar": {
+  "goals": 1,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Jan Sýkora": {
+  "goals": 1,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Freddy Góndola": {
+  "goals": 1,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Ehsan Hajsafi": {
+  "goals": 1,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Aïssa Laïdouni": {
+  "goals": 1,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Mohamed Dräger": {
+  "goals": 1,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Ali Maâloul": {
+  "goals": 1,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Hamza Mathlouthi": {
+  "goals": 1,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Richmond Boakye": {
+  "goals": 1,
+  "teams": [
+   "Ghana"
+  ]
+ },
+ "Mohamed Abdelmonem": {
+  "goals": 1,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Sofiane Bendebka": {
+  "goals": 1,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Riley McGree": {
+  "goals": 1,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Sam Adekugbe": {
+  "goals": 1,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Azmahar Ariano": {
+  "goals": 1,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Cheikhou Kouyaté": {
+  "goals": 1,
+  "teams": [
+   "Senegal"
+  ]
+ },
+ "Walker Zimmerman": {
+  "goals": 1,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Clayton Lewis": {
+  "goals": 1,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Hussein Ali Al-Saedi": {
+  "goals": 1,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Logan Rogerson": {
+  "goals": 1,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Andre de Jong": {
+  "goals": 1,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Robert Morales": {
+  "goals": 1,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Jordy Caicedo": {
+  "goals": 1,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "Matheus Nunes": {
+  "goals": 1,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Liberato Cacace": {
+  "goals": 1,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Ahmed Touba": {
+  "goals": 1,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Joe Bell": {
+  "goals": 1,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Iñigo Martínez": {
+  "goals": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Leander Dendoncker": {
+  "goals": 1,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Anthony Ralston": {
+  "goals": 1,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Scott McKenna": {
+  "goals": 1,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Andreas Weimann": {
+  "goals": 1,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "İsmail Yüksek": {
+  "goals": 1,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Jack Hendry": {
+  "goals": 1,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Jordi Alba": {
+  "goals": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Serdar Gürler": {
+  "goals": 1,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Osman Bukari": {
+  "goals": 1,
+  "teams": [
+   "Ghana"
+  ]
+ },
+ "Rouzbeh Cheshmi": {
+  "goals": 1,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Daley Blind": {
+  "goals": 1,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Paik Seung-ho": {
+  "goals": 1,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Nahuel Molina": {
+  "goals": 1,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Achraf Dari": {
+  "goals": 1,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Amar Dedić": {
+  "goals": 1,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Tomáš Čvančara": {
+  "goals": 1,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Florian Kainz": {
+  "goals": 1,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Jesper Karlsson": {
+  "goals": 1,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Callum Wilson": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Kalvin Phillips": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Umut Nayir": {
+  "goals": 1,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Johan Bakayoko": {
+  "goals": 1,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Ola Solbakken": {
+  "goals": 1,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Bryan Reynolds": {
+  "goals": 1,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Hazem Shehata": {
+  "goals": 1,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Cade Cowell": {
+  "goals": 1,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Gianluca Busio": {
+  "goals": 1,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Jayden Nelson": {
+  "goals": 1,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Liam Millar": {
+  "goals": 1,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Érick Sánchez": {
+  "goals": 1,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Steven Vitória": {
+  "goals": 1,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Iván Anderson": {
+  "goals": 1,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Marten de Roon": {
+  "goals": 1,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Luka Ivanušec": {
+  "goals": 1,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Ryan Porteous": {
+  "goals": 1,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Bertuğ Yıldırım": {
+  "goals": 1,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Kyle Walker": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Nicolás Tagliafico": {
+  "goals": 1,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Agustín Canobbio": {
+  "goals": 1,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Emil Holm": {
+  "goals": 1,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Gabriel Magalhães": {
+  "goals": 1,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Barış Alper Yılmaz": {
+  "goals": 1,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Fredrik Aursnes": {
+  "goals": 1,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Oihan Sancet": {
+  "goals": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Amar Rahmanović": {
+  "goals": 1,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Quilindschy Hartman": {
+  "goals": 1,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Ronald Araújo": {
+  "goals": 1,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Brandon Borrello": {
+  "goals": 1,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Gabriel Martinelli": {
+  "goals": 1,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Renato Gojković": {
+  "goals": 1,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Yassine Meriah": {
+  "goals": 1,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Firas Ben Larbi": {
+  "goals": 1,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Warren Zaïre-Emery": {
+  "goals": 1,
+  "teams": [
+   "France"
+  ]
+ },
+ "Jonathan Clauss": {
+  "goals": 1,
+  "teams": [
+   "France"
+  ]
+ },
+ "Khuliso Mudau": {
+  "goals": 1,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Robin Le Normand": {
+  "goals": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Christian Kouamé": {
+  "goals": 1,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Jung Seung-hyun": {
+  "goals": 1,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Mats Wieffer": {
+  "goals": 1,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Jordan Bos": {
+  "goals": 1,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Ali Al-Bulaihi": {
+  "goals": 1,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Bebé": {
+  "goals": 1,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Kevin Pina": {
+  "goals": 1,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Mohamed Kanno": {
+  "goals": 1,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Faisal Al-Ghamdi": {
+  "goals": 1,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Silas Katompa Mvumpa": {
+  "goals": 1,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Thapelo Maseko": {
+  "goals": 1,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Gilson Tavares": {
+  "goals": 1,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Bryan Teixeira": {
+  "goals": 1,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Rebin Sulaka": {
+  "goals": 1,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Saad Natiq": {
+  "goals": 1,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Nizar Al-Rashdan": {
+  "goals": 1,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Arthur Masuaku": {
+  "goals": 1,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Odiljon Hamrobekov": {
+  "goals": 1,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Jassem Gaber": {
+  "goals": 1,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Keanu Baccus": {
+  "goals": 1,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Kye Rowles": {
+  "goals": 1,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Rustam Ashurmatov": {
+  "goals": 1,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Omid Noorafkan": {
+  "goals": 1,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "John Iredale": {
+  "goals": 1,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Saed Al-Rosan": {
+  "goals": 1,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Mohammad Abu Zrayq": {
+  "goals": 1,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Zaid Tahseen": {
+  "goals": 1,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Park Jin-seob": {
+  "goals": 1,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Jean-Kévin Duverne": {
+  "goals": 1,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Ibrahim Sadeh": {
+  "goals": 1,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Eliesse Ben Seghir": {
+  "goals": 1,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Xander Severina": {
+  "goals": 1,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Duke Lacroix": {
+  "goals": 1,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Bryan Labissiere": {
+  "goals": 1,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Jovani Welch": {
+  "goals": 1,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Abdul Fatawu": {
+  "goals": 1,
+  "teams": [
+   "Ghana"
+  ]
+ },
+ "Houssem Aouar": {
+  "goals": 1,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Said Benrahma": {
+  "goals": 1,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Hussein Ali": {
+  "goals": 1,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Yuki Soma": {
+  "goals": 1,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Chadi Riad": {
+  "goals": 1,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Soufiane Rahimi": {
+  "goals": 1,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Yousef Aymen": {
+  "goals": 1,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Ali Lajami": {
+  "goals": 1,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Iqraam Rayners": {
+  "goals": 1,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Emre Can": {
+  "goals": 1,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Kwadwo Duah": {
+  "goals": 1,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Michel Aebischer": {
+  "goals": 1,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Dani Carvajal": {
+  "goals": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Gernot Trauner": {
+  "goals": 1,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Ben Old": {
+  "goals": 1,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Jeremy Sarmiento": {
+  "goals": 1,
+  "teams": [
+   "Ecuador"
+  ]
+ },
+ "Gerardo Arteaga": {
+  "goals": 1,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Matías Viña": {
+  "goals": 1,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Finn Surman": {
+  "goals": 1,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Facundo Pellistri": {
+  "goals": 1,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Sávio": {
+  "goals": 1,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Cameron Howieson": {
+  "goals": 1,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Jesse Randall": {
+  "goals": 1,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Ramón Sosa": {
+  "goals": 1,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Lisandro Martínez": {
+  "goals": 1,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Richard Ríos": {
+  "goals": 1,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Samet Akaydin": {
+  "goals": 1,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Stefan de Vrij": {
+  "goals": 1,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Ismaël Koné": {
+  "goals": 1,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Cole Palmer": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Wataru Endo": {
+  "goals": 1,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Junya Itō": {
+  "goals": 1,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Billy Gilmour": {
+  "goals": 1,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Lukáš Kalvach": {
+  "goals": 1,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Aleksandar Pavlović": {
+  "goals": 1,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Joshua Zirkzee": {
+  "goals": 1,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Yerson Mosquera": {
+  "goals": 1,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Diego Gómez": {
+  "goals": 1,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Matthias Seidl": {
+  "goals": 1,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Igor Jesus": {
+  "goals": 1,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Eduardo Camavinga": {
+  "goals": 1,
+  "teams": [
+   "France"
+  ]
+ },
+ "Mattéo Guendouzi": {
+  "goals": 1,
+  "teams": [
+   "France"
+  ]
+ },
+ "Ken Sema": {
+  "goals": 1,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Igor Matanović": {
+  "goals": 1,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Jamie Leweling": {
+  "goals": 1,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Andreas Pereira": {
+  "goals": 1,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Luis Sinisterra": {
+  "goals": 1,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Petar Sučić": {
+  "goals": 1,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Curtis Jones": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Jens Petter Hauge": {
+  "goals": 1,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Ayoze Pérez": {
+  "goals": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Pedro Neto": {
+  "goals": 1,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Manuel Ugarte": {
+  "goals": 1,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Andrés Gómez": {
+  "goals": 1,
+  "teams": [
+   "Colombia"
+  ]
+ },
+ "Conor Gallagher": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Jarrod Bowen": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Taylor Harwood-Bellis": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Marko Stamenić": {
+  "goals": 1,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Francis de Vries": {
+  "goals": 1,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Andy Robertson": {
+  "goals": 1,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Joël Monteiro": {
+  "goals": 1,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Bryan Gil": {
+  "goals": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Andi Zeqiri": {
+  "goals": 1,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Bryan Zaragoza": {
+  "goals": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Brian Brobbey": {
+  "goals": 1,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Gerson": {
+  "goals": 1,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Saleh Hardani": {
+  "goals": 1,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Yannick Semedo": {
+  "goals": 1,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Akam Hashim": {
+  "goals": 1,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Abdallah Nasib": {
+  "goals": 1,
+  "teams": [
+   "Jordan"
+  ]
+ },
+ "Ahmed Al Ganehi": {
+  "goals": 1,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Khojiakbar Alijonov": {
+  "goals": 1,
+  "teams": [
+   "Uzbekistan"
+  ]
+ },
+ "Amine Gouiri": {
+  "goals": 1,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Myles Lewis-Skelly": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Antoine Semenyo": {
+  "goals": 1,
+  "teams": [
+   "Ghana"
+  ]
+ },
+ "Bilal El Khannouss": {
+  "goals": 1,
+  "teams": [
+   "Morocco"
+  ]
+ },
+ "Tim Payne": {
+  "goals": 1,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Armin Gigović": {
+  "goals": 1,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Julian Ryerson": {
+  "goals": 1,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Ian Maatsen": {
+  "goals": 1,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Reece James": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Michael Boxall": {
+  "goals": 1,
+  "teams": [
+   "New Zealand"
+  ]
+ },
+ "Jaouen Hadjam": {
+  "goals": 1,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Matheus Cunha": {
+  "goals": 1,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Giuliano Simeone": {
+  "goals": 1,
+  "teams": [
+   "Argentina"
+  ]
+ },
+ "Jayden Adams": {
+  "goals": 1,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Jan Kliment": {
+  "goals": 1,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "David Møller Wolfe": {
+  "goals": 1,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Kristoffer Ajer": {
+  "goals": 1,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Charles Pickel": {
+  "goals": 1,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Aziz Behich": {
+  "goals": 1,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Kim Jin-gyu": {
+  "goals": 1,
+  "teams": [
+   "South Korea"
+  ]
+ },
+ "Ró-Ró": {
+  "goals": 1,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Rayan Cherki": {
+  "goals": 1,
+  "teams": [
+   "France"
+  ]
+ },
+ "Mondy Prunier": {
+  "goals": 1,
+  "teams": [
+   "Haiti"
+  ]
+ },
+ "Martín Zubimendi": {
+  "goals": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Nuno Mendes": {
+  "goals": 1,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Jearl Margaritha": {
+  "goals": 1,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Kevin Felida": {
+  "goals": 1,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Mohammad Mehdi Mohebi": {
+  "goals": 1,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Amirhossein Hosseinzadeh": {
+  "goals": 1,
+  "teams": [
+   "Iran"
+  ]
+ },
+ "Ryōya Morishita": {
+  "goals": 1,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Shūto Machino": {
+  "goals": 1,
+  "teams": [
+   "Japan"
+  ]
+ },
+ "Sajjad Jassim": {
+  "goals": 1,
+  "teams": [
+   "Iraq"
+  ]
+ },
+ "Micky van de Ven": {
+  "goals": 1,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Mitch Duke": {
+  "goals": 1,
+  "teams": [
+   "Australia"
+  ]
+ },
+ "Niko Sigur": {
+  "goals": 1,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Tani Oluwaseyi": {
+  "goals": 1,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Promise David": {
+  "goals": 1,
+  "teams": [
+   "Canada"
+  ]
+ },
+ "Maximilian Arfsten": {
+  "goals": 1,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Estêvão Willian": {
+  "goals": 1,
+  "teams": [
+   "Brazil"
+  ]
+ },
+ "Marc Cucurella": {
+  "goals": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Arthur Theate": {
+  "goals": 1,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Malick Fofana": {
+  "goals": 1,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Jovane Cabral": {
+  "goals": 1,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Federico Viñas": {
+  "goals": 1,
+  "teams": [
+   "Uruguay"
+  ]
+ },
+ "Vakoun Issouf Bayo": {
+  "goals": 1,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Mohau Nkota": {
+  "goals": 1,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Benjamin Tahirović": {
+  "goals": 1,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Samed Baždar": {
+  "goals": 1,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Kerim Alajbegović": {
+  "goals": 1,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Nihad Mujakić": {
+  "goals": 1,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Nicolas Raskin": {
+  "goals": 1,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Nadiem Amiri": {
+  "goals": 1,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Quinten Timber": {
+  "goals": 1,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Carlos Harvey": {
+  "goals": 1,
+  "teams": [
+   "Panama"
+  ]
+ },
+ "Tyrese Noslin": {
+  "goals": 1,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Noni Madueke": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Ezri Konsa": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Marc Guéhi": {
+  "goals": 1,
+  "teams": [
+   "England"
+  ]
+ },
+ "Kamaldeen Sulemana": {
+  "goals": 1,
+  "teams": [
+   "Ghana"
+  ]
+ },
+ "Ibrahim Adel": {
+  "goals": 1,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Telmo Arcanjo": {
+  "goals": 1,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Sidny Lopes Cabral": {
+  "goals": 1,
+  "teams": [
+   "Cape Verde"
+  ]
+ },
+ "Saleh Abu Al-Shamat": {
+  "goals": 1,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Nikolaus Wurmbrand": {
+  "goals": 1,
+  "teams": [
+   "Austria"
+  ]
+ },
+ "Nikola Katić": {
+  "goals": 1,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Lewis Ferguson": {
+  "goals": 1,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "David Raum": {
+  "goals": 1,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Emmanuel Agbadou": {
+  "goals": 1,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Cedric Bakambu": {
+  "goals": 1,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Zeki Çelik": {
+  "goals": 1,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Rúben Neves": {
+  "goals": 1,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Yéremy Pino": {
+  "goals": 1,
+  "teams": [
+   "Spain"
+  ]
+ },
+ "Toni Fruk": {
+  "goals": 1,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Luka Sučić": {
+  "goals": 1,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Martin Erlić": {
+  "goals": 1,
+  "teams": [
+   "Croatia"
+  ]
+ },
+ "Mohamed Hamdy": {
+  "goals": 1,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Hannibal Mejbri": {
+  "goals": 1,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Theo Bongonda": {
+  "goals": 1,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Pedro Miguel": {
+  "goals": 1,
+  "teams": [
+   "Qatar"
+  ]
+ },
+ "Thalente Mbatha": {
+  "goals": 1,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Sontje Hansen": {
+  "goals": 1,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Ar'jany Martha": {
+  "goals": 1,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Roshon van Eijma": {
+  "goals": 1,
+  "teams": [
+   "Curaçao"
+  ]
+ },
+ "Hugo Ekitike": {
+  "goals": 1,
+  "teams": [
+   "France"
+  ]
+ },
+ "Esmir Bajraktarević": {
+  "goals": 1,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Ben Gannon-Doak": {
+  "goals": 1,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Benjamin Nygren": {
+  "goals": 1,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Maghnes Akliouche": {
+  "goals": 1,
+  "teams": [
+   "France"
+  ]
+ },
+ "Renato Veiga": {
+  "goals": 1,
+  "teams": [
+   "Portugal"
+  ]
+ },
+ "Robin Hranáč": {
+  "goals": 1,
+  "teams": [
+   "Czech Republic"
+  ]
+ },
+ "Assan Ouédraogo": {
+  "goals": 1,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Brandon Mechele": {
+  "goals": 1,
+  "teams": [
+   "Belgium"
+  ]
+ },
+ "Rubén Vargas": {
+  "goals": 1,
+  "teams": [
+   "Switzerland"
+  ]
+ },
+ "Kieran Tierney": {
+  "goals": 1,
+  "teams": [
+   "Scotland"
+  ]
+ },
+ "Deniz Gül": {
+  "goals": 1,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Salih Özcan": {
+  "goals": 1,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Gustav Lundgren": {
+  "goals": 1,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Montassar Talbi": {
+  "goals": 1,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Tshepang Moremi": {
+  "goals": 1,
+  "teams": [
+   "South Africa"
+  ]
+ },
+ "Zineddine Belaïd": {
+  "goals": 1,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Marwan Attia": {
+  "goals": 1,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Yasser Ibrahim": {
+  "goals": 1,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Adil Boulbina": {
+  "goals": 1,
+  "teams": [
+   "Algeria"
+  ]
+ },
+ "Ramy Rabia": {
+  "goals": 1,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Guéla Doué": {
+  "goals": 1,
+  "teams": [
+   "Ivory Coast"
+  ]
+ },
+ "Ferdi Kadıoğlu": {
+  "goals": 1,
+  "teams": [
+   "Turkey"
+  ]
+ },
+ "Axel Tuanzebe": {
+  "goals": 1,
+  "teams": [
+   "DR Congo"
+  ]
+ },
+ "Gustaf Lagerbielke": {
+  "goals": 1,
+  "teams": [
+   "Sweden"
+  ]
+ },
+ "Julián Quiñones": {
+  "goals": 1,
+  "teams": [
+   "Mexico"
+  ]
+ },
+ "Jovo Lukić": {
+  "goals": 1,
+  "teams": [
+   "Bosnia and Herzegovina"
+  ]
+ },
+ "Maurício": {
+  "goals": 1,
+  "teams": [
+   "Paraguay"
+  ]
+ },
+ "Giovanni Reyna": {
+  "goals": 1,
+  "teams": [
+   "United States"
+  ]
+ },
+ "Nico Schlotterbeck": {
+  "goals": 1,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Nathaniel Brown": {
+  "goals": 1,
+  "teams": [
+   "Germany"
+  ]
+ },
+ "Crysencio Summerville": {
+  "goals": 1,
+  "teams": [
+   "Netherlands"
+  ]
+ },
+ "Omar Rekik": {
+  "goals": 1,
+  "teams": [
+   "Tunisia"
+  ]
+ },
+ "Emam Ashour": {
+  "goals": 1,
+  "teams": [
+   "Egypt"
+  ]
+ },
+ "Abdulelah Al-Amri": {
+  "goals": 1,
+  "teams": [
+   "Saudi Arabia"
+  ]
+ },
+ "Leo Østigård": {
+  "goals": 1,
+  "teams": [
+   "Norway"
+  ]
+ },
+ "Caleb Yirenkyi": {
+  "goals": 1,
+  "teams": [
+   "Ghana"
+  ]
+ },
+ "Jaminton Campaz": {
+  "goals": 1,
+  "teams": [
+   "Colombia"
   ]
  }
 }

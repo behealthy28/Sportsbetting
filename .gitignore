@@ -3,9 +3,13 @@ data/cache/
 data/elo/
 data/trades.json
 data/watchlist.json
-# Note: data/historical/ (real openfootball dataset) and data/models/
-# (trained ensemble) ARE committed so predictions work out of the box.
-# Rebuild with: python -m src.data.build_dataset && python -m src.models.train
+# data/models/ holds the OPTIONAL experimental ML ensemble. It is not shipped:
+# on international data Elo+Dixon-Coles beats it, so the model isn't committed.
+data/models/
+# Note: data/historical/ (real international dataset + recent Elo ratings) IS
+# committed so predictions work out of the box. Rebuild with:
+#   python -m src.data.build_dataset && python -m src.models.train
+# Add the experimental ML ensemble with: python -m src.models.train --ml
 
 # Python
 __pycache__/
