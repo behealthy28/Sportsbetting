@@ -1,7 +1,7 @@
 """Football/Soccer prediction handler."""
 from src.sports.base import AbstractSport, PredictionResult
 from src.data.scrapers import fbref
-from src.data import news, market
+from src.data import news, market, readiness
 from src.models import dixon_coles, elo as elo_module, calibrator, ml_ensemble
 from src.market import edge as edge_mod, kelly as kelly_mod, odds as odds_mod
 import numpy as np
@@ -70,6 +70,26 @@ class FootballPredictor(AbstractSport):
         home_adv = 0 if is_neutral else HOME_ADVANTAGE_ELO
         elo_probs = elo_predictor.predict(entity1.lower(), entity2.lower(), home_advantage=home_adv)
         elo_result = {"home_win": elo_probs["a_win"], "draw": elo_probs["draw"], "away_win": elo_probs["b_win"]}
+
+        # 3b. Squad readiness / recovery factor (privacy-safe — see readiness.py).
+        #     Maps days-rest + optional manual estimates to a strength multiplier.
+        #     Explicit context values still win, so callers can override.
+        home_ready = readiness.get_readiness(
+            entity1,
+            days_rest=context.get("home_days_rest", 7),
+            news_sentiment=home_news,
+        )
+        away_ready = readiness.get_readiness(
+            entity2,
+            days_rest=context.get("away_days_rest", 7),
+            news_sentiment=away_news,
+        )
+        if "home_key_players" not in context:
+            context["home_key_players"] = home_ready["multiplier"]
+        if "away_key_players" not in context:
+            context["away_key_players"] = away_ready["multiplier"]
+        if "Squad readiness model" not in sources:
+            sources.append("Squad readiness model")
 
         # 4. Dixon-Coles prediction
         injury_adj_home = context.get("home_key_players", 1.0)
@@ -144,6 +164,7 @@ class FootballPredictor(AbstractSport):
 
         # 11. Key factors
         factors = _build_factors(home_data, away_data, h2h, entity1, entity2, competition)
+        factors.extend(_readiness_factors(entity1, home_ready, entity2, away_ready))
 
         return PredictionResult(
             sport="Football",
@@ -177,6 +198,24 @@ def _get_comp_weight(comp: str) -> float:
         if k in comp_lower:
             return v
     return 0.80
+
+
+def _readiness_factors(team1: str, r1: dict, team2: str, r2: dict) -> list:
+    """Describe the squad-readiness adjustment, only when it is non-neutral."""
+    out = []
+    for team, r in ((team1, r1), (team2, r2)):
+        mult = r.get("multiplier", 1.0)
+        # Surface whenever readiness carries information (estimate/news/penalty).
+        if abs(mult - 1.0) < 0.001 and not r.get("notes"):
+            continue
+        direction = "boost" if mult > 1.0 else "penalty"
+        detail = f" ({'; '.join(r['notes'])})" if r.get("notes") else ""
+        out.append(
+            f"{team} squad readiness {direction}: x{mult:.3f}{detail}"
+        )
+    if out:
+        out.append("Readiness = days-rest + manual estimates only (no biometric data harvested)")
+    return out
 
 
 def _build_factors(home: dict, away: dict, h2h: dict, team1: str, team2: str, comp: str) -> list:

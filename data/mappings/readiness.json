@@ -1,0 +1,12 @@
+{
+  "_comment": "Manual squad-readiness ESTIMATES for what-if analysis. Each value is a 0-1 readiness score TYPED IN BY THE USER, not harvested data. This file intentionally contains NO scraped personal biometric data (WHOOP/Oura/Garmin/Apple Health/etc.). 1.0 = fully fresh/available squad, 0.5 = average, lower = depleted/congested. Edit freely to model scenarios; delete an entry to fall back to the days-rest model.",
+  "_schema": {"team": {"readiness": "0-1 float", "note": "optional free-text rationale"}},
+  "england": {
+    "readiness": 0.97,
+    "note": "user estimate — squad reported near full strength, rotated in qualifying"
+  },
+  "croatia": {
+    "readiness": 0.90,
+    "note": "user estimate — ageing core, heavier domestic-season minutes assumed"
+  }
+}
