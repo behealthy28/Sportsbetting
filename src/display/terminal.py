@@ -236,10 +236,86 @@ def render(result) -> None:
             )
         )
 
+    # Monte Carlo simulation
+    sim = getattr(result, "simulation", None)
+    if sim:
+        _render_simulation(sim, result.entity1, result.entity2)
+
     # Data sources
     sources_str = " · ".join(result.data_sources) if result.data_sources else "Seeded data"
     console.print(Padding(Text(f"  Data: {sources_str}", style="dim"), (0, 1)))
     console.print()
+
+
+def _render_simulation(sim: dict, entity1: str, entity2: str) -> None:
+    """Render the Monte Carlo breakdown: scorelines, total & first-half goals."""
+    n = sim.get("n_sims", 0)
+
+    # Most frequent exact scorelines
+    score_table = Table(
+        box=box.SIMPLE, show_header=True, header_style="bold dim",
+        padding=(0, 1), expand=True,
+    )
+    score_table.add_column("Scoreline", style="white", min_width=10)
+    score_table.add_column("Frequency", min_width=20)
+    score_table.add_column("Times", justify="right", min_width=7)
+    score_table.add_column("%", justify="right", min_width=6)
+
+    scorelines = sim.get("scorelines", [])
+    top_pct = scorelines[0]["pct"] if scorelines else 1
+    for s in scorelines:
+        bar_w = int(round((s["pct"] / top_pct) * 18)) if top_pct else 0
+        bar = "█" * bar_w + "░" * (18 - bar_w)
+        is_top = s is scorelines[0]
+        score_table.add_row(
+            Text(("★ " if is_top else "  ") + s["score"],
+                 style="bright_yellow" if is_top else "white"),
+            Text(bar, style="bright_blue"),
+            Text(f"{s['count']:,}", style="bright_white"),
+            Text(f"{s['pct']}%", style="dim"),
+        )
+
+    # Total goals + first-half goals side by side
+    def _goal_table(title: str, rows: list) -> Table:
+        t = Table(box=box.SIMPLE, show_header=True, header_style="bold dim",
+                  padding=(0, 1), title=title, title_style="dim")
+        t.add_column("Goals", style="white", justify="center", min_width=6)
+        t.add_column("Bar", min_width=14)
+        t.add_column("%", justify="right", min_width=6)
+        peak = max((r[2] for r in rows), default=1) or 1
+        for label, count, pct in rows:
+            bw = int(round((pct / peak) * 12))
+            t.add_row(label, Text("█" * bw + "░" * (12 - bw), style="cyan"),
+                      Text(f"{pct}%", style="dim"))
+        return t
+
+    total_tbl = _goal_table("Total goals", sim.get("total_goals", []))
+    fh_tbl = _goal_table("First-half goals", sim.get("first_half_goals", []))
+
+    ou = sim.get("over_under", {})
+    summary = Text()
+    summary.append(f"  Avg goals: ", style="dim")
+    summary.append(f"{sim.get('avg_total_goals', 0)}", style="bright_white")
+    summary.append(f"  ·  1st-half avg: ", style="dim")
+    summary.append(f"{sim.get('avg_first_half_goals', 0)}", style="bright_white")
+    summary.append(f"  ·  Over 2.5: ", style="dim")
+    summary.append(f"{ou.get(2.5, 0)}%", style="bright_white")
+    summary.append(f"  ·  BTTS: ", style="dim")
+    summary.append(f"{sim.get('btts_pct', 0)}%", style="bright_white")
+
+    body = Text.assemble(
+        ("  Most likely scorelines  ", "dim"),
+        (f"({entity1} home – away {entity2})\n", "dim"),
+    )
+    console.print(Panel(
+        body,
+        title=f"[bold white]🎲  Monte Carlo Simulation[/bold white]  [dim]· {n:,} runs[/dim]",
+        border_style="bright_blue",
+        padding=(0, 1),
+    ))
+    console.print(Padding(score_table, (0, 1)))
+    console.print(Padding(Columns([total_tbl, fh_tbl], expand=True, equal=True), (0, 1)))
+    console.print(Padding(summary, (0, 1)))
 
 
 def render_sports_list():

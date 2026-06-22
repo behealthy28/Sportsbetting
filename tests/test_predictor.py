@@ -96,6 +96,53 @@ class TestDixonColes:
         )
         assert 0.95 < total < 1.05  # not exact due to truncation at 10
 
+    def test_quick_lambdas_match_quick_predict(self):
+        from src.models.dixon_coles import quick_lambdas, _outcome_probs, quick_predict
+        lam_h, lam_a = quick_lambdas(1.5, 1.2, 1.1, 1.3)
+        assert lam_h > lam_a > 0  # home edge from goals + home advantage
+        # Probs derived from the lambdas must equal quick_predict's output.
+        assert _outcome_probs(lam_h, lam_a, -0.13) == quick_predict(1.5, 1.2, 1.1, 1.3)
+
+
+# ── Monte Carlo Tests ──────────────────────────────────────────────────────
+class TestMonteCarlo:
+    def test_scoreline_percentages_sane(self):
+        from src.models.monte_carlo import simulate
+        sim = simulate(1.6, 1.0, n_sims=5000)
+        assert sim["n_sims"] == 5000
+        # Every scoreline count is positive and percentages are bounded.
+        assert all(0 < s["count"] <= 5000 for s in sim["scorelines"])
+        assert all(0 < s["pct"] <= 100 for s in sim["scorelines"])
+
+    def test_outcome_counts_sum_to_n_sims(self):
+        from src.models.monte_carlo import simulate
+        sim = simulate(1.4, 1.1, n_sims=4000)
+        oc = sim["outcome_counts"]
+        assert oc["home_win"] + oc["draw"] + oc["away_win"] == 4000
+
+    def test_first_half_goals_below_total(self):
+        from src.models.monte_carlo import simulate
+        sim = simulate(1.8, 1.2, n_sims=6000)
+        # ~45% of goals fall in the first half, so the average must be lower.
+        assert sim["avg_first_half_goals"] < sim["avg_total_goals"]
+        assert sim["avg_first_half_goals"] > 0
+
+    def test_aligns_with_dixon_coles(self):
+        from src.models.monte_carlo import simulate
+        from src.models.dixon_coles import _outcome_probs
+        lam_h, lam_a = 1.7, 0.9
+        sim = simulate(lam_h, lam_a, n_sims=20000)
+        dc = _outcome_probs(lam_h, lam_a, -0.13)
+        sim_home = sim["outcome_counts"]["home_win"] / sim["n_sims"]
+        # Monte Carlo home-win rate should track the analytic Dixon-Coles value.
+        assert abs(sim_home - dc["home_win"]) < 0.03
+
+    def test_deterministic_with_seed(self):
+        from src.models.monte_carlo import simulate
+        a = simulate(1.5, 1.1, n_sims=3000, seed=7)
+        b = simulate(1.5, 1.1, n_sims=3000, seed=7)
+        assert a["scorelines"] == b["scorelines"]
+
 
 # ── Odds + Kelly Tests ────────────────────────────────────────────────────
 class TestOdds:

@@ -24,6 +24,7 @@ class PredictionResult:
     venue: str = "Unknown"
     competition: str = ""
     is_neutral: bool = False
+    simulation: Optional[dict] = None   # Monte Carlo scoreline/goals breakdown
     # Prop betting fields
     bet_type: str = "match_result"  # match_result | over_under | btts | player_scorer |
                                     # player_foot | player_assists | method_victory |

@@ -167,6 +167,7 @@ def _serialize(result, sport: str) -> dict:
             k: {kk: round(vv * 100, 1) for kk, vv in v.items()} if v else {}
             for k, v in (result.model_breakdown or {}).items()
         },
+        "simulation": getattr(result, "simulation", None),
     }
 
 

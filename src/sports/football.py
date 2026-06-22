@@ -2,7 +2,7 @@
 from src.sports.base import AbstractSport, PredictionResult
 from src.data.scrapers import fbref
 from src.data import news, market
-from src.models import dixon_coles, elo as elo_module, calibrator, ml_ensemble
+from src.models import dixon_coles, elo as elo_module, calibrator, ml_ensemble, monte_carlo
 from src.market import edge as edge_mod, kelly as kelly_mod, odds as odds_mod
 import numpy as np
 
@@ -75,7 +75,7 @@ class FootballPredictor(AbstractSport):
         injury_adj_home = context.get("home_key_players", 1.0)
         injury_adj_away = context.get("away_key_players", 1.0)
 
-        dc_result = dixon_coles.quick_predict(
+        dc_kwargs = dict(
             home_goals_avg=home_data.get("avg_goals", 1.35),
             away_goals_avg=away_data.get("avg_goals", 1.35),
             home_conceded_avg=home_data.get("avg_conceded", 1.20),
@@ -85,6 +85,11 @@ class FootballPredictor(AbstractSport):
             injury_adj_home=injury_adj_home,
             injury_adj_away=injury_adj_away,
         )
+        dc_result = dixon_coles.quick_predict(**dc_kwargs)
+
+        # Monte Carlo simulation — exact scorelines, total & first-half goals
+        lam_home, lam_away = dixon_coles.quick_lambdas(**dc_kwargs)
+        simulation = monte_carlo.simulate(lam_home, lam_away, rho=-0.13)
 
         # 5. ML ensemble
         ctx_dict = {
@@ -168,6 +173,7 @@ class FootballPredictor(AbstractSport):
             venue="Neutral" if is_neutral else f"{entity1} home",
             competition=competition,
             is_neutral=is_neutral,
+            simulation=simulation,
         )
 
 

@@ -199,6 +199,35 @@ class DixonColesModel:
         return _outcome_probs(lam_home, lam_away, self.rho)
 
 
+def quick_lambdas(
+    home_goals_avg: float,
+    away_goals_avg: float,
+    home_conceded_avg: float,
+    away_conceded_avg: float,
+    league_avg_goals: float = 1.35,
+    neutral: bool = False,
+    injury_adj_home: float = 1.0,
+    injury_adj_away: float = 1.0,
+) -> tuple:
+    """
+    Compute the expected-goals rates (λ_home, λ_away) from team averages.
+    Shared by quick_predict and the Monte Carlo simulator so both agree.
+    """
+    # λ_home = (home attack) × (away defensive weakness) × league_avg × home_advantage
+    # λ_away = (away attack) × (home defensive weakness) × league_avg
+    home_attack_str = home_goals_avg / league_avg_goals
+    away_def_weakness = away_conceded_avg / league_avg_goals  # higher = weaker defense
+    away_attack_str = away_goals_avg / league_avg_goals
+    home_def_weakness = home_conceded_avg / league_avg_goals  # higher = weaker defense
+
+    home_adv = math.exp(0.25) if not neutral else 1.0
+
+    lam_home = home_attack_str * away_def_weakness * league_avg_goals * home_adv * injury_adj_home
+    lam_away = away_attack_str * home_def_weakness * league_avg_goals * injury_adj_away
+
+    return max(lam_home, 0.1), max(lam_away, 0.1)
+
+
 def quick_predict(
     home_goals_avg: float,
     away_goals_avg: float,
@@ -213,21 +242,10 @@ def quick_predict(
     Fast prediction using team averages without fitting.
     Uses attack/defense ratings derived from goals data.
     """
-    # λ_home = (home attack) × (away defensive weakness) × league_avg × home_advantage
-    # λ_away = (away attack) × (home defensive weakness) × league_avg
-    home_attack_str = home_goals_avg / league_avg_goals
-    away_def_weakness = away_conceded_avg / league_avg_goals  # higher = weaker defense
-    away_attack_str = away_goals_avg / league_avg_goals
-    home_def_weakness = home_conceded_avg / league_avg_goals  # higher = weaker defense
-
-    home_adv = math.exp(0.25) if not neutral else 1.0
-
-    lam_home = home_attack_str * away_def_weakness * league_avg_goals * home_adv * injury_adj_home
-    lam_away = away_attack_str * home_def_weakness * league_avg_goals * injury_adj_away
-
-    lam_home = max(lam_home, 0.1)
-    lam_away = max(lam_away, 0.1)
-
+    lam_home, lam_away = quick_lambdas(
+        home_goals_avg, away_goals_avg, home_conceded_avg, away_conceded_avg,
+        league_avg_goals, neutral, injury_adj_home, injury_adj_away,
+    )
     return _outcome_probs(lam_home, lam_away, rho=-0.13)
 
 
