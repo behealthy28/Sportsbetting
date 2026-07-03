@@ -719,7 +719,7 @@ function renderPortfolio(d) {
   }
 
   const bs = d.by_sport||{};
-  const sports = Object.entries(bs).sort((a,b)=>(b[1].roi||−999)-(a[1].roi||−999));
+  const sports = Object.entries(bs).sort((a,b)=>(b[1].roi||-999)-(a[1].roi||-999));
   if (sports.length) {
     html+=`<div class="section-block"><div class="section-head">By Sport</div><div class="sport-grid">${sports.map(([sp,sv])=>`
       <div class="sport-stat"><div class="sport-stat-name">${sp}</div>
