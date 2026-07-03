@@ -4,6 +4,7 @@ Primary: ESPN unofficial API (works great from residential IPs).
 Fallback: TheSportsDB free API (no key needed, more permissive).
 """
 import requests
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from src.data import cache
 
@@ -55,20 +56,50 @@ FOOTBALL_LEAGUES = [
 ]
 
 OTHER_SPORTS = [
+    # Tennis
     ("tennis", "atp",       "ATP Tennis 🎾"),
     ("tennis", "wta",       "WTA Tennis 🎾"),
-    ("mma",    "ufc",       "UFC 🥊"),
-    ("boxing", "boxing",    "Boxing 🥊"),
-    ("cricket","icc.world", "Cricket 🏏"),
+    # Combat
+    ("mma",    "ufc",       "UFC / MMA 🥊"),
+    # Basketball
+    ("basketball", "nba",                     "NBA 🏀"),
+    ("basketball", "wnba",                    "WNBA 🏀"),
+    ("basketball", "nba-summer-las-vegas",    "NBA Summer League 🏀"),
+    ("basketball", "mens-college-basketball", "NCAA Basketball 🏀"),
+    ("basketball", "fiba.world",              "FIBA Basketball 🌍🏀"),
+    ("basketball", "euroleague",              "EuroLeague 🏀"),
+    # Baseball
+    ("baseball", "mlb",            "MLB ⚾"),
+    ("baseball", "college-baseball", "NCAA Baseball ⚾"),
+    # Ice hockey
+    ("hockey", "nhl",   "NHL 🏒"),
+    # American football
+    ("football", "nfl",              "NFL 🏈"),
+    ("football", "college-football", "NCAA Football 🏈"),
+    # Cricket (ESPN coverage patchy — SportsDB fills the gaps below)
+    ("cricket", "8048", "Cricket 🏏"),
 ]
 
-# TheSportsDB sport labels mapping
+# TheSportsDB sport labels mapping — covers sports ESPN doesn't (darts, table
+# tennis, badminton, snooker, rugby, handball, motorsport) and acts as a
+# fallback for the rest. Always merged with ESPN, then de-duplicated.
 SPORTSDB_SPORTS = [
-    ("Soccer",  "Football ⚽"),
-    ("Tennis",  "Tennis 🎾"),
-    ("MMA",     "MMA/UFC 🥊"),
-    ("Boxing",  "Boxing 🥊"),
-    ("Cricket", "Cricket 🏏"),
+    ("Soccer",            "Football ⚽"),
+    ("Basketball",        "Basketball 🏀"),
+    ("Ice Hockey",        "Ice Hockey 🏒"),
+    ("Baseball",          "Baseball ⚾"),
+    ("American Football", "American Football 🏈"),
+    ("Tennis",            "Tennis 🎾"),
+    ("MMA",               "MMA/UFC 🥊"),
+    ("Boxing",            "Boxing 🥊"),
+    ("Cricket",           "Cricket 🏏"),
+    ("Rugby",             "Rugby 🏉"),
+    ("Darts",             "Darts 🎯"),
+    ("Snooker",           "Snooker 🎱"),
+    ("Table Tennis",      "Table Tennis 🏓"),
+    ("Badminton",         "Badminton 🏸"),
+    ("Handball",          "Handball 🤾"),
+    ("Volleyball",        "Volleyball 🏐"),
 ]
 
 
@@ -166,33 +197,52 @@ def _parse_sportsdb_events(data: dict, league_label: str) -> list:
     return events
 
 
+# Max concurrent HTTP requests across all fixture sources. ESPN/SportsDB are
+# fine with this from a single client; keeps a ~50-endpoint sweep to a few seconds.
+_FETCH_WORKERS = 16
+
+
 def _fetch_espn(days_ahead: int) -> list:
-    all_events = []
     today = datetime.utcnow()
     leagues = FOOTBALL_LEAGUES + OTHER_SPORTS
 
-    for sport, league_id, label in leagues:
-        for day_offset in range(days_ahead + 1):
-            date_str = (today + timedelta(days=day_offset)).strftime("%Y%m%d")
-            url = f"{ESPN_BASE}/{sport}/{league_id}/scoreboard"
-            data = _get_espn(url, params={"dates": date_str, "limit": 30})
-            all_events.extend(_parse_espn_events(data, label))
+    def _one(sport, league_id, label, day_offset):
+        date_str = (today + timedelta(days=day_offset)).strftime("%Y%m%d")
+        url = f"{ESPN_BASE}/{sport}/{league_id}/scoreboard"
+        data = _get_espn(url, params={"dates": date_str, "limit": 30})
+        return _parse_espn_events(data, label)
 
+    tasks = [
+        (sport, lid, label, d)
+        for sport, lid, label in leagues
+        for d in range(days_ahead + 1)
+    ]
+    all_events = []
+    with ThreadPoolExecutor(max_workers=_FETCH_WORKERS) as pool:
+        for events in pool.map(lambda t: _one(*t), tasks):
+            all_events.extend(events)
     return all_events
 
 
 def _fetch_sportsdb(days_ahead: int) -> list:
     """TheSportsDB free API — no key needed, permissive with server requests."""
-    all_events = []
     today = datetime.utcnow()
 
-    for sport_label, display_label in SPORTSDB_SPORTS:
-        for day_offset in range(days_ahead + 1):
-            date_str = (today + timedelta(days=day_offset)).strftime("%Y-%m-%d")
-            url = "https://www.thesportsdb.com/api/v1/json/3/eventsday.php"
-            data = _get_sportsdb(url, params={"d": date_str, "s": sport_label})
-            all_events.extend(_parse_sportsdb_events(data, display_label))
+    def _one(sport_label, display_label, day_offset):
+        date_str = (today + timedelta(days=day_offset)).strftime("%Y-%m-%d")
+        url = "https://www.thesportsdb.com/api/v1/json/3/eventsday.php"
+        data = _get_sportsdb(url, params={"d": date_str, "s": sport_label})
+        return _parse_sportsdb_events(data, display_label)
 
+    tasks = [
+        (sport_label, display_label, d)
+        for sport_label, display_label in SPORTSDB_SPORTS
+        for d in range(days_ahead + 1)
+    ]
+    all_events = []
+    with ThreadPoolExecutor(max_workers=_FETCH_WORKERS) as pool:
+        for events in pool.map(lambda t: _one(*t), tasks):
+            all_events.extend(events)
     return all_events
 
 
@@ -206,12 +256,18 @@ def get_todays_fixtures(sports: list = None, days_ahead: int = 1) -> list:
     if cached:
         return cached
 
-    # Try ESPN first (best coverage, requires residential/browser-like access)
-    all_events = _fetch_espn(days_ahead)
+    # Fetch both sources concurrently: ESPN (rich match/live data) + TheSportsDB
+    # (covers darts, table tennis, badminton, snooker, rugby, motorsport, etc.).
+    # De-duplication below removes overlaps.
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        f_espn = pool.submit(_fetch_espn, days_ahead)
+        f_sdb = pool.submit(_fetch_sportsdb, days_ahead)
+        all_events = f_espn.result()
+        sdb_events = f_sdb.result()
 
-    # If ESPN came back empty, try TheSportsDB as fallback
-    if not all_events:
-        all_events = _fetch_sportsdb(days_ahead)
+    # Prefer ESPN entries (they carry live scores/clock); append SportsDB after so
+    # the dedup keeps the richer ESPN record when a match exists in both.
+    all_events.extend(sdb_events)
 
     # Sort by date
     all_events.sort(key=lambda e: e.get("date", ""))

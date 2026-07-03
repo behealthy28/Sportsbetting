@@ -261,7 +261,7 @@ async def get_markets_today(days: int = 2, force: int = 0):
                 _cache.invalidate("fixtures_today", {"days": d, "sports": "None"})
         fixtures = get_todays_fixtures(days_ahead=max(1, min(days, 7)))
         sources = list({f.get("source", "unknown") for f in fixtures})
-        return {"fixtures": fixtures[:100], "count": len(fixtures), "sources": sources}
+        return {"fixtures": fixtures[:200], "count": len(fixtures), "sources": sources}
     except Exception as e:
         import traceback
         return {"fixtures": [], "count": 0, "error": str(e), "detail": traceback.format_exc()}
