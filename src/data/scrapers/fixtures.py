@@ -3,6 +3,7 @@ Live fixtures and upcoming matches.
 Primary: ESPN unofficial API (works great from residential IPs).
 Fallback: TheSportsDB free API (no key needed, more permissive).
 """
+import time
 import requests
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
@@ -53,6 +54,51 @@ FOOTBALL_LEAGUES = [
     ("soccer", "col.1",    "Liga BetPlay 🇨🇴"),
     ("soccer", "jpn.1",    "J-League 🇯🇵"),
     ("soccer", "sau.1",    "Saudi Pro League 🇸🇦"),
+    # Second tiers & cups (more matches, more days with fixtures)
+    ("soccer", "eng.2",    "Championship 🏴󠁧󠁢󠁥󠁮󠁧󠁿"),
+    ("soccer", "eng.fa",   "FA Cup 🏴󠁧󠁢󠁥󠁮󠁧󠁿"),
+    ("soccer", "eng.league_cup", "EFL Cup 🏴󠁧󠁢󠁥󠁮󠁧󠁿"),
+    ("soccer", "esp.2",    "La Liga 2 🇪🇸"),
+    ("soccer", "ita.2",    "Serie B 🇮🇹"),
+    ("soccer", "ger.2",    "2. Bundesliga 🇩🇪"),
+    ("soccer", "fra.2",    "Ligue 2 🇫🇷"),
+    ("soccer", "uefa.champions_qual", "UCL Qualifying 🏆"),
+    ("soccer", "uefa.europa.conf",    "Conference League 🏆"),
+    ("soccer", "fifa.cwc",            "Club World Cup 🌍"),
+    ("soccer", "fifa.worldq.conmebol","WC Qualifiers S.America 🌍"),
+    ("soccer", "fifa.worldq.concacaf","WC Qualifiers N.America 🌍"),
+    ("soccer", "fifa.worldq.afc",     "WC Qualifiers Asia 🌍"),
+    ("soccer", "fifa.worldq.caf",     "WC Qualifiers Africa 🌍"),
+    # More national top flights across every confederation
+    ("soccer", "bel.1",    "Belgian Pro League 🇧🇪"),
+    ("soccer", "swi.1",    "Swiss Super League 🇨🇭"),
+    ("soccer", "aut.1",    "Austrian Bundesliga 🇦🇹"),
+    ("soccer", "gre.1",    "Super League Greece 🇬🇷"),
+    ("soccer", "rus.1",    "Russian Premier League 🇷🇺"),
+    ("soccer", "ukr.1",    "Ukrainian Premier League 🇺🇦"),
+    ("soccer", "den.1",    "Danish Superliga 🇩🇰"),
+    ("soccer", "nor.1",    "Eliteserien 🇳🇴"),
+    ("soccer", "swe.1",    "Allsvenskan 🇸🇪"),
+    ("soccer", "pol.1",    "Ekstraklasa 🇵🇱"),
+    ("soccer", "cze.1",    "Czech First League 🇨🇿"),
+    ("soccer", "rou.1",    "Liga I 🇷🇴"),
+    ("soccer", "aus.1",    "A-League 🇦🇺"),
+    ("soccer", "chn.1",    "Chinese Super League 🇨🇳"),
+    ("soccer", "kor.1",    "K League 1 🇰🇷"),
+    ("soccer", "uae.1",    "UAE Pro League 🇦🇪"),
+    ("soccer", "chi.1",    "Chile Primera 🇨🇱"),
+    ("soccer", "uru.1",    "Uruguay Primera 🇺🇾"),
+    ("soccer", "ecu.1",    "Ecuador Serie A 🇪🇨"),
+    ("soccer", "per.1",    "Peru Liga 1 🇵🇪"),
+    ("soccer", "par.1",    "Paraguay Primera 🇵🇾"),
+    ("soccer", "conmebol.libertadores", "Copa Libertadores 🌎"),
+    ("soccer", "conmebol.sudamericana", "Copa Sudamericana 🌎"),
+    ("soccer", "concacaf.champions",    "CONCACAF Champions 🌎"),
+    ("soccer", "caf.champions",         "CAF Champions League 🌍"),
+    ("soccer", "afc.champions",         "AFC Champions League 🌏"),
+    ("soccer", "usa.nwsl",              "NWSL 🇺🇸"),
+    ("soccer", "eng.w.1",               "WSL (Women) 🏴󠁧󠁢󠁥󠁮󠁧󠁿"),
+    ("soccer", "fifa.wwc",              "Women's World Cup 🌍"),
 ]
 
 OTHER_SPORTS = [
@@ -67,15 +113,26 @@ OTHER_SPORTS = [
     ("basketball", "nba-summer-las-vegas",    "NBA Summer League 🏀"),
     ("basketball", "mens-college-basketball", "NCAA Basketball 🏀"),
     ("basketball", "fiba.world",              "FIBA Basketball 🌍🏀"),
+    ("basketball", "fiba.olympics",           "Olympic Basketball 🏀"),
     ("basketball", "euroleague",              "EuroLeague 🏀"),
+    ("basketball", "nbl",                     "NBL Australia 🇦🇺🏀"),
     # Baseball
     ("baseball", "mlb",            "MLB ⚾"),
     ("baseball", "college-baseball", "NCAA Baseball ⚾"),
+    ("baseball", "npb",            "NPB Japan 🇯🇵⚾"),
     # Ice hockey
     ("hockey", "nhl",   "NHL 🏒"),
+    ("hockey", "mens-college-hockey", "NCAA Hockey 🏒"),
     # American football
     ("football", "nfl",              "NFL 🏈"),
     ("football", "college-football", "NCAA Football 🏈"),
+    ("football", "cfl",              "CFL 🇨🇦🏈"),
+    ("football", "xfl",              "UFL 🏈"),
+    # Rugby (ESPN league IDs)
+    ("rugby", "164205",  "Six Nations 🏉"),
+    ("rugby", "289234",  "Rugby World Cup 🏉"),
+    ("rugby", "270559",  "United Rugby Championship 🏉"),
+    ("rugby", "267979",  "Premiership Rugby 🏉"),
     # Cricket (ESPN coverage patchy — SportsDB fills the gaps below)
     ("cricket", "8048", "Cricket 🏏"),
 ]
@@ -148,12 +205,26 @@ def _get_espn(url: str, params: dict = None) -> dict:
 
 
 def _get_sportsdb(url: str, params: dict = None) -> dict:
-    try:
-        resp = requests.get(url, params=params, headers=SPORTSDB_HEADERS, timeout=12)
-        if resp.status_code == 200:
-            return resp.json()
-    except Exception:
-        pass
+    # The free shared key is rate-limited; a per-(sport,date) cache means a full
+    # window only costs a handful of live calls, and 429s get retried with
+    # backoff instead of silently dropping a whole sport.
+    ck = {"u": url, "p": params or {}}
+    cached = cache.get("sportsdb_raw", ck)
+    if cached is not None:
+        return cached
+
+    for attempt in range(3):
+        try:
+            resp = requests.get(url, params=params, headers=SPORTSDB_HEADERS, timeout=12)
+            if resp.status_code == 200:
+                data = resp.json()
+                cache.set("sportsdb_raw", ck, data, ttl_seconds=3600)  # 1h
+                return data
+            if resp.status_code == 429:
+                time.sleep(1.5 * (attempt + 1))
+                continue
+        except Exception:
+            time.sleep(0.5)
     return {}
 
 
@@ -269,7 +340,7 @@ def _parse_sportsdb_events(data: dict, league_label: str, sport_key: str = "") -
 
 # Max concurrent HTTP requests across all fixture sources. ESPN/SportsDB are
 # fine with this from a single client; keeps a ~50-endpoint sweep to a few seconds.
-_FETCH_WORKERS = 16
+_FETCH_WORKERS = 24
 
 
 def _fetch_espn(days_ahead: int) -> list:
@@ -310,7 +381,8 @@ def _fetch_sportsdb(days_ahead: int) -> list:
         for d in range(days_ahead + 1)
     ]
     all_events = []
-    with ThreadPoolExecutor(max_workers=_FETCH_WORKERS) as pool:
+    # Low concurrency on purpose — the free shared key 429s under bursty load.
+    with ThreadPoolExecutor(max_workers=3) as pool:
         for events in pool.map(lambda t: _one(*t), tasks):
             all_events.extend(events)
     return all_events
