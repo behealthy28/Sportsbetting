@@ -19,6 +19,7 @@ from src.sports.ufc import UFCPredictor
 from src.sports.boxing import BoxingPredictor
 from src.sports.cricket import CricketPredictor
 from src.sports.darts import DartsPredictor, BadmintonPredictor
+from src.sports.generic import GenericPredictor
 
 app = FastAPI(title="Sports Betting Predictor", version="1.0.0")
 
@@ -33,6 +34,16 @@ SPORT_HANDLERS = {
     "darts": DartsPredictor(),
     "badminton": BadmintonPredictor(),
     "table tennis": BadmintonPredictor(),
+    # Generic records-driven ELO for team sports without a bespoke model.
+    "basketball": GenericPredictor("Basketball"),
+    "baseball": GenericPredictor("Baseball"),
+    "hockey": GenericPredictor("Ice Hockey"),
+    "americanfootball": GenericPredictor("American Football"),
+    "rugby": GenericPredictor("Rugby"),
+    "handball": GenericPredictor("Handball"),
+    "volleyball": GenericPredictor("Volleyball"),
+    "snooker": GenericPredictor("Snooker"),
+    "motorsport": GenericPredictor("Motorsport"),
 }
 
 SUPPORTED_SPORTS = [
@@ -64,6 +75,12 @@ EXAMPLE_QUERIES = [
 
 class PredictRequest(BaseModel):
     query: str
+    # Optional hints supplied when predicting straight from a Markets fixture:
+    # the fixture already knows its sport and each side's season win%, so we can
+    # route to the right handler instead of guessing the sport from the text.
+    sport: str | None = None
+    p1_winpct: float | None = None
+    p2_winpct: float | None = None
 
 
 @app.get("/")
@@ -99,6 +116,13 @@ async def predict(req: PredictRequest):
         "is_neutral": parsed.get("is_neutral", False),
         "venue": parsed.get("venue", ""),
     }
+
+    # A Markets fixture supplies its own sport + season win%; trust that over the
+    # text-based sport guess so baseball/basketball/hockey/etc. route correctly.
+    if req.sport and req.sport in SPORT_HANDLERS:
+        sport = req.sport
+        context["p1_winpct"] = req.p1_winpct
+        context["p2_winpct"] = req.p2_winpct
 
     handler = SPORT_HANDLERS.get(sport)
     if not handler:

@@ -102,6 +102,40 @@ SPORTSDB_SPORTS = [
     ("Volleyball",        "Volleyball 🏐"),
 ]
 
+# ESPN sport slug -> internal predict-sport key (routes to a prediction handler).
+# Note ESPN uses "soccer" for football/soccer and "football" for American football.
+_ESPN_SPORT_TO_KEY = {
+    "soccer": "football",
+    "tennis": "tennis",
+    "mma": "ufc",
+    "basketball": "basketball",
+    "baseball": "baseball",
+    "hockey": "hockey",
+    "football": "americanfootball",
+    "cricket": "cricket",
+}
+
+# TheSportsDB API sport label -> internal predict-sport key.
+_SPORTSDB_SPORT_TO_KEY = {
+    "Soccer": "football",
+    "Basketball": "basketball",
+    "Ice Hockey": "hockey",
+    "Baseball": "baseball",
+    "American Football": "americanfootball",
+    "Tennis": "tennis",
+    "MMA": "ufc",
+    "Boxing": "boxing",
+    "Cricket": "cricket",
+    "Rugby": "rugby",
+    "Motorsport": "motorsport",
+    "Darts": "darts",
+    "Snooker": "snooker",
+    "Table Tennis": "table tennis",
+    "Badminton": "badminton",
+    "Handball": "handball",
+    "Volleyball": "volleyball",
+}
+
 
 def _get_espn(url: str, params: dict = None) -> dict:
     try:
@@ -123,7 +157,37 @@ def _get_sportsdb(url: str, params: dict = None) -> dict:
     return {}
 
 
-def _parse_espn_events(data: dict, league_label: str) -> list:
+def _winpct_from_competitor(competitor: dict):
+    """Extract season win% from an ESPN competitor's overall record ('50-32').
+
+    Returns a float 0..1, or None when no usable record is present.
+    """
+    records = competitor.get("records") or []
+    summary = ""
+    for rec in records:
+        if rec.get("type") in ("total", "overall") or rec.get("name") in ("overall", "All Splits"):
+            summary = rec.get("summary", "")
+            break
+    if not summary and records:
+        summary = records[0].get("summary", "")
+    if not summary:
+        return None
+    parts = summary.split("-")
+    try:
+        nums = [int(p) for p in parts if p.strip().isdigit()]
+    except ValueError:
+        return None
+    if len(nums) < 2:
+        return None
+    wins, losses = nums[0], nums[1]
+    ties = nums[2] if len(nums) > 2 else 0
+    total = wins + losses + ties
+    if total <= 0:
+        return None
+    return wins / total
+
+
+def _parse_espn_events(data: dict, league_label: str, sport_key: str = "") -> list:
     events = []
     for event in data.get("events", []):
         comps = event.get("competitions", [{}])
@@ -142,12 +206,15 @@ def _parse_espn_events(data: dict, league_label: str) -> list:
 
         events.append({
             "league": league_label,
+            "sport": sport_key,
             "name": event.get("name", ""),
             "date": event.get("date", ""),
             "home": home.get("team", {}).get("displayName", ""),
             "away": away.get("team", {}).get("displayName", ""),
             "home_score": home.get("score", ""),
             "away_score": away.get("score", ""),
+            "home_winpct": _winpct_from_competitor(home),
+            "away_winpct": _winpct_from_competitor(away),
             "status": status,
             "clock": clock,
             "period": period,
@@ -157,7 +224,7 @@ def _parse_espn_events(data: dict, league_label: str) -> list:
     return events
 
 
-def _parse_sportsdb_events(data: dict, league_label: str) -> list:
+def _parse_sportsdb_events(data: dict, league_label: str, sport_key: str = "") -> list:
     events = []
     for event in (data.get("events") or []):
         home = event.get("strHomeTeam", "")
@@ -182,12 +249,15 @@ def _parse_sportsdb_events(data: dict, league_label: str) -> list:
 
         events.append({
             "league": event.get("strLeague", league_label),
+            "sport": sport_key,
             "name": f"{home} vs {away}",
             "date": iso_date,
             "home": home,
             "away": away,
             "home_score": str(home_score) if home_score != "" else "",
             "away_score": str(away_score) if away_score != "" else "",
+            "home_winpct": None,
+            "away_winpct": None,
             "status": status,
             "clock": "",
             "period": 0,
@@ -210,7 +280,7 @@ def _fetch_espn(days_ahead: int) -> list:
         date_str = (today + timedelta(days=day_offset)).strftime("%Y%m%d")
         url = f"{ESPN_BASE}/{sport}/{league_id}/scoreboard"
         data = _get_espn(url, params={"dates": date_str, "limit": 30})
-        return _parse_espn_events(data, label)
+        return _parse_espn_events(data, label, _ESPN_SPORT_TO_KEY.get(sport, sport))
 
     tasks = [
         (sport, lid, label, d)
@@ -232,7 +302,7 @@ def _fetch_sportsdb(days_ahead: int) -> list:
         date_str = (today + timedelta(days=day_offset)).strftime("%Y-%m-%d")
         url = "https://www.thesportsdb.com/api/v1/json/3/eventsday.php"
         data = _get_sportsdb(url, params={"d": date_str, "s": sport_label})
-        return _parse_sportsdb_events(data, display_label)
+        return _parse_sportsdb_events(data, display_label, _SPORTSDB_SPORT_TO_KEY.get(sport_label, ""))
 
     tasks = [
         (sport_label, display_label, d)

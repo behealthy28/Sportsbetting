@@ -508,7 +508,7 @@ function renderFixtures(fixtures) {
           <span class="fixture-vs">vs</span>
           <span class="fixture-away">${f.away}</span>
           <span class="fixture-status">${renderStatus(f)}</span>
-          <button class="btn-predict" onclick="predictFixture('${esc(f.home)}','${esc(f.away)}')">Predict →</button>
+          <button class="btn-predict" onclick="predictFixture('${esc(f.home)}','${esc(f.away)}','${esc(f.sport||'')}',${f.home_winpct==null?'null':f.home_winpct},${f.away_winpct==null?'null':f.away_winpct})">Predict →</button>
           <button class="btn-watch ${watching?'watching':''}" onclick="toggleWatch('${esc(f.home)}','${esc(f.away)}',this)">${watching?'★':'☆'}</button>
         </div>`;
     });
@@ -536,8 +536,10 @@ function fmtTime(iso) {
   catch { return ''; }
 }
 
-function predictFixture(home, away) {
+let predictHint = null;
+function predictFixture(home, away, sport, p1wp, p2wp) {
   document.getElementById('queryInput').value = `${home} vs ${away}`;
+  predictHint = sport ? { sport, p1_winpct: p1wp, p2_winpct: p2wp } : null;
   goView('predict');
   runPredict();
 }
@@ -582,7 +584,9 @@ async function runPredict() {
   set('spinner','active',true); set('errorBox','active',false); set('resultArea','active',false);
   document.getElementById('predictBtn').disabled = true;
   try {
-    const r = await fetch('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q})});
+    const body = { query: q, ...(predictHint || {}) };
+    predictHint = null;
+    const r = await fetch('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     const d = await r.json();
     set('spinner','active',false); document.getElementById('predictBtn').disabled=false;
     if (!r.ok) { showErr(d.detail||'Prediction failed.'); return; }
