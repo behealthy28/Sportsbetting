@@ -61,9 +61,15 @@ def _pinnacle_leagues(sport_id: int) -> list:
 
 
 def _pinnacle_events(league_id: int) -> list:
-    """Fetch events for a league."""
+    """Fetch events for a league (cached 5 min — this is called per league in a
+    scan loop, so an uncached version means dozens of network calls per predict)."""
+    cached = cache.get("pinnacle_events", {"lid": league_id})
+    if cached is not None:
+        return cached
     data = _pinnacle_get(f"/leagues/{league_id}/matchups")
-    return data if isinstance(data, list) else []
+    out = data if isinstance(data, list) else []
+    cache.set("pinnacle_events", {"lid": league_id}, out, ttl_seconds=300)
+    return out
 
 
 def _pinnacle_odds(matchup_id: int) -> dict:
@@ -90,7 +96,7 @@ def get_pinnacle_odds(team1: str, team2: str, sport: str = "football") -> dict |
     t1_words = set(team1.lower().split())
     t2_words = set(team2.lower().split())
 
-    for league in leagues[:40]:  # check top 40 active leagues
+    for league in leagues[:8]:  # scan only the top active leagues — bounded work
         league_id = league.get("id")
         if not league_id:
             continue

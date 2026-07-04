@@ -1,6 +1,8 @@
 """Fetch market odds from Polymarket and Kalshi (no API key required)."""
 import requests
 import re
+import time as _time
+from concurrent.futures import ThreadPoolExecutor
 from typing import Optional
 from src.data import cache
 
@@ -21,7 +23,7 @@ def _search_polymarket(query: str) -> Optional[dict]:
 
     try:
         params = {"limit": 20, "active": "true"}
-        resp = requests.get(POLYMARKET_API, params=params, headers=HEADERS, timeout=10)
+        resp = requests.get(POLYMARKET_API, params=params, headers=HEADERS, timeout=(3, 6))
         if resp.status_code != 200:
             return None
 
@@ -63,7 +65,7 @@ def _search_kalshi(query: str) -> Optional[dict]:
 
     try:
         params = {"limit": 20, "status": "open"}
-        resp = requests.get(KALSHI_API, params=params, headers=HEADERS, timeout=10)
+        resp = requests.get(KALSHI_API, params=params, headers=HEADERS, timeout=(3, 6))
         if resp.status_code != 200:
             return None
 
@@ -162,37 +164,68 @@ def _normalize_prop_probs(probs: dict, bet_type: str, prop_params: dict,
 
 
 def get_market_odds(team1: str, team2: str, sport: str = "") -> dict:
-    # NEW: try Pinnacle first (sharpest market, no vig problem)
-    try:
-        from src.data.scrapers.odds_extra import get_pinnacle_odds
-        pinnacle = get_pinnacle_odds(team1, team2, sport or "football")
-        if pinnacle:
-            return _normalize_football_probs(
-                {
-                    team1.lower().split()[0]: pinnacle.get("home_win", 0),
-                    "draw": pinnacle.get("draw"),
-                    team2.lower().split()[0]: pinnacle.get("away_win", 0),
-                },
-                team1, team2,
-            ) or pinnacle
-    except Exception:
-        pass
+    """Fetch implied probabilities from prediction markets.
+
+    Returns {home_win, draw, away_win} (vig removed), or None if no market.
+
+    Pinnacle, Polymarket and Kalshi are queried concurrently with tight
+    timeouts, and the result — including a 'no market found' miss — is cached, so
+    a prediction never blocks for more than a few seconds and repeats are instant.
+    Most non-headline / non-football fixtures simply have no market, which is
+    exactly the case that used to cost ~60s of sequential timeouts.
     """
-    Fetch implied probabilities from prediction markets.
-    Returns {home_win: float, draw: float, away_win: float} (normalized, vig removed).
-    Falls back to None if no market found.
-    """
+    ck = {"t1": team1.lower(), "t2": team2.lower(), "s": (sport or "").lower()}
+    cached = cache.get("market_odds", ck)
+    if cached is not None:
+        return cached.get("v")  # {"v": <result-or-None>}
+
     query = f"{team1} {team2}".strip()
 
-    pm = _search_polymarket(query)
-    if pm:
-        return _normalize_football_probs(pm["probs"], team1, team2)
+    def _pinnacle():
+        from src.data.scrapers.odds_extra import get_pinnacle_odds
+        p = get_pinnacle_odds(team1, team2, sport or "football")
+        if not p:
+            return None
+        return _normalize_football_probs(
+            {
+                team1.lower().split()[0]: p.get("home_win", 0),
+                "draw": p.get("draw"),
+                team2.lower().split()[0]: p.get("away_win", 0),
+            },
+            team1, team2,
+        ) or p
 
-    ka = _search_kalshi(query)
-    if ka:
-        return _normalize_football_probs(ka["probs"], team1, team2)
+    def _poly():
+        pm = _search_polymarket(query)
+        return _normalize_football_probs(pm["probs"], team1, team2) if pm else None
 
-    return None
+    def _kal():
+        ka = _search_kalshi(query)
+        return _normalize_football_probs(ka["probs"], team1, team2) if ka else None
+
+    # Run all three at once with a hard wall-clock deadline. A source that blows
+    # past the deadline is abandoned (its thread finishes in the background and
+    # populates its own cache), so a prediction never waits more than ~8s.
+    result = None
+    _DEADLINE = 8.0
+    pool = ThreadPoolExecutor(max_workers=3)
+    futures = {"pinnacle": pool.submit(_pinnacle),
+               "poly": pool.submit(_poly),
+               "kalshi": pool.submit(_kal)}
+    deadline = _time.monotonic() + _DEADLINE
+    found = {}
+    for name, fut in futures.items():
+        remaining = max(0.0, deadline - _time.monotonic())
+        try:
+            found[name] = fut.result(timeout=remaining)
+        except Exception:
+            found[name] = None
+    pool.shutdown(wait=False)
+    result = found.get("pinnacle") or found.get("poly") or found.get("kalshi")
+
+    # Cache hit and miss alike (short ttl) so we never re-pay the lookup soon.
+    cache.set("market_odds", ck, {"v": result}, ttl_seconds=600)
+    return result
 
 
 def _normalize_football_probs(probs: dict, team1: str, team2: str) -> dict:

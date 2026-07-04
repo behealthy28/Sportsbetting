@@ -5,6 +5,7 @@ Covers ANY team in the world with live data, not just seeded ones.
 import requests
 import json
 import re
+from concurrent.futures import ThreadPoolExecutor
 from bs4 import BeautifulSoup
 from src.data import cache
 
@@ -139,10 +140,12 @@ def get_team_data(team_name: str) -> dict:
         cache.set("fbref_team", {"team": name_lower}, result, ttl_seconds=3600 * 6)
         return result
 
-    # Unknown team — try ELO databases and use scoring average
+    # Unknown team — try ELO databases and use scoring average.
+    # Cache this fallback too: without it, a team that misses Understat/ESPN/priors
+    # re-runs the full (slow) scrape pipeline on every prediction.
     from src.data.scrapers.elo_db import get_elo
     elo = get_elo(team_name)
-    return {
+    result = {
         "team": team_name,
         "elo": elo,
         "avg_goals": _elo_to_goals(elo),
@@ -151,6 +154,8 @@ def get_team_data(team_name: str) -> dict:
         "is_national": False,
         "data_sources": ["ClubElo (ELO)", "ELO-derived scoring estimate"],
     }
+    cache.set("fbref_team", {"team": name_lower}, result, ttl_seconds=3600 * 6)
+    return result
 
 
 def _elo_to_goals(elo: float) -> float:
@@ -164,37 +169,43 @@ def _elo_to_form(elo: float) -> float:
 
 
 def _get_espn_team_data(team_name: str) -> dict:
-    """Search ESPN across all leagues to find team stats."""
+    """Search ESPN across all leagues to find team stats.
+
+    The per-league team-list lookups are independent, so they run concurrently
+    (a cold 21-league sequential scan was a major slice of prediction latency).
+    """
     name_lower = team_name.lower()
 
-    for league in ESPN_LEAGUES:
+    def _find_in_league(league: str):
         try:
-            url = f"{ESPN_BASE}/{league}/teams"
-            resp = requests.get(url, headers=HEADERS, timeout=8)
+            resp = requests.get(f"{ESPN_BASE}/{league}/teams", headers=HEADERS, timeout=(3, 6))
             if resp.status_code != 200:
-                continue
-
+                return None
             data = resp.json()
             sports = data.get("sports", [{}])
             leagues_data = sports[0].get("leagues", [{}]) if sports else [{}]
             teams = leagues_data[0].get("teams", []) if leagues_data else []
-
             for team_entry in teams:
                 t = team_entry.get("team", {})
                 display = t.get("displayName", "").lower()
                 short = t.get("shortDisplayName", "").lower()
                 abbr = t.get("abbreviation", "").lower()
-
                 if (name_lower in display or display in name_lower
                         or name_lower in short or abbr == name_lower[:3]):
-                    team_id = t.get("id")
-                    stats = _get_espn_team_stats(league, team_id, team_name)
-                    if stats:
-                        from src.data.scrapers.elo_db import get_elo
-                        stats["elo"] = get_elo(team_name)
-                        return stats
+                    return (league, t.get("id"))
         except Exception:
-            continue
+            return None
+        return None
+
+    with ThreadPoolExecutor(max_workers=10) as pool:
+        matches = [m for m in pool.map(_find_in_league, ESPN_LEAGUES) if m]
+
+    for league, team_id in matches:
+        stats = _get_espn_team_stats(league, team_id, team_name)
+        if stats:
+            from src.data.scrapers.elo_db import get_elo
+            stats["elo"] = get_elo(team_name)
+            return stats
     return {}
 
 
@@ -319,7 +330,7 @@ def get_understat_team(team_name: str) -> dict:
     url = f"https://understat.com/team/{team_name.replace(' ', '_')}/{year}"
 
     try:
-        resp = requests.get(url, headers=HEADERS, timeout=15)
+        resp = requests.get(url, headers=HEADERS, timeout=(3, 7))
         if resp.status_code != 200:
             return {}
 

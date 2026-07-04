@@ -4,6 +4,7 @@ from src.data.scrapers import fbref
 from src.data import news, market
 from src.models import dixon_coles, elo as elo_module, calibrator, ml_ensemble
 from src.market import edge as edge_mod, kelly as kelly_mod, odds as odds_mod
+from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 
 
@@ -44,15 +45,23 @@ class FootballPredictor(AbstractSport):
         is_neutral = context.get("is_neutral", False)
         comp_weight = _get_comp_weight(competition)
 
-        # 1. Fetch team data
-        home_data = fbref.get_team_data(entity1)
-        away_data = fbref.get_team_data(entity2)
-        h2h = fbref.get_h2h(entity1, entity2)
+        # 1. Fetch team data + news — all independent, so fetch concurrently
+        # instead of sequentially (each hits several slow scrapers on a cold
+        # cache; serial adds up to ~60s, parallel caps at the slowest one).
+        with ThreadPoolExecutor(max_workers=5) as pool:
+            f_home = pool.submit(fbref.get_team_data, entity1)
+            f_away = pool.submit(fbref.get_team_data, entity2)
+            f_h2h = pool.submit(fbref.get_h2h, entity1, entity2)
+            f_hnews = pool.submit(news.get_sentiment, entity1)
+            f_anews = pool.submit(news.get_sentiment, entity2)
+            home_data = f_home.result()
+            away_data = f_away.result()
+            h2h = f_h2h.result()
+            home_news = f_hnews.result()
+            away_news = f_anews.result()
         sources = ["FBRef/Understat", "H2H records"]
 
-        # 2. News sentiment
-        home_news = news.get_sentiment(entity1)
-        away_news = news.get_sentiment(entity2)
+        # 2. News sentiment flags
         all_flags = home_news.get("flags", []) + away_news.get("flags", [])
         if home_news.get("flags") or away_news.get("flags"):
             sources.append("Google News RSS")
